@@ -6,8 +6,8 @@ on:
   push:
     branches: [ "main", "develop" ] # 브랜치에 push될 때
   pull_request:
-    branches: [ "main", "develop" ] # 브랜치로 pull request가 생성될 때   
-  workflow_dispatch: # Github Actions 수동으로 실행될 때
+    branches: [ "main", "develop" ] # 브랜치로 pull request가 생성될 때
+  workflow_dispatch: # Github Actions 수동으로 실행될 때
 
 # 실행될 작업(Job) 목록
 jobs:
