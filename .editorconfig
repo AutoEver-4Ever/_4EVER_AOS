@@ -1,0 +1,21 @@
+# .editorconfig
+# .editorconfig 파일의 최상단에 위치해야 합니다.
+root = true
+
+# 모든 파일에 적용될 기본 규칙
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# 코틀린 파일(.kt, .kts)에만 적용될 규칙
+[*.{kt,kts}]
+indent_size = 4
+indent_style = space
+max_line_length = 120
+disabled_rules = no-wildcard-imports # 와일드카드 임포트 금지
+
+# Composable 함수 네이밍 규칙을 위한 설정
+ktlint_experimental = true
+ktlint_function_naming_ignore_when_annotated_with = Composable
