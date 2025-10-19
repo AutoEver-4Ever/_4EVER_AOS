@@ -1,4 +1,4 @@
-package com.autoever.everp.data.dto.common
+package com.autoever.everp.data.datasource.remote.dto.common
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

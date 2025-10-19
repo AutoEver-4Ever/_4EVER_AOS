@@ -1,6 +1,6 @@
-package com.autoever.everp.data.dto.request
+package com.autoever.everp.data.datasource.remote.dto.request
 
-import com.autoever.everp.data.dto.common.QuotationItemDto
+import com.autoever.everp.data.datasource.remote.dto.common.QuotationItemDto
 import com.autoever.everp.utils.datetime.LocalDateSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
