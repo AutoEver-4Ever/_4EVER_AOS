@@ -45,7 +45,15 @@ android {
     }
 
     secrets {
-        defaultPropertiesFileName = "local.properties"
+        // 기본 'local.properties' 대신 다른 파일 이름 지정
+        propertiesFileName = "secrets.properties"
+
+        // CI/CD 환경을 위한 기본값 파일 지정 (버전 관리에 포함 가능)
+        defaultPropertiesFileName = "secrets.defaults.properties"
+
+        // 특정 키를 무시하도록 정규식 추가 (기본적으로 "sdk.dir"은 무시됨)
+        ignoreList.add("keyToIgnore")
+        ignoreList.add("ignore*")
     }
 }
 
