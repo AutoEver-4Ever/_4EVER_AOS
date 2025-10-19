@@ -1,6 +1,7 @@
 package com.autoever.everp.di
 
 import com.autoever.everp.BuildConfig
+import com.autoever.everp.data.datasource.remote.service.SdApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -63,9 +64,7 @@ object NetworkModule {
             .build()
     }
 
-//    @Provides
-//    @Singleton
-//    fun provideApiService(retrofit: Retrofit): ApiService {
-//        return retrofit.create(ApiService::class.java)
-//    }
+    @Provides
+    @Singleton
+    fun provideApiService(retrofit: Retrofit): SdApiService = retrofit.create(SdApiService::class.java)
 }
