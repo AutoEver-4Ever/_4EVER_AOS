@@ -1,10 +1,11 @@
-package com.autoever.everp.domain.model
+package com.autoever.everp.domain.model.quotation
 
 enum class QuotationStatus {
     PENDING,
     REVIEW,
     APPROVED,
     REJECTED,
+    ALL,
     ;
 
     fun displayName(): String =
@@ -13,6 +14,7 @@ enum class QuotationStatus {
             REVIEW -> "검토"
             APPROVED -> "승인"
             REJECTED -> "반려"
+            ALL -> "전체"
         }
 
     /**
