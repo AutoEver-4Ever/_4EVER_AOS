@@ -1,8 +1,6 @@
-package com.autoever.everp.utils.mapper
+package com.autoever.everp.domain.model.quotation
 
-import com.autoever.everp.domain.model.Quotation
-import com.autoever.everp.domain.model.QuotationDetail
-import com.autoever.everp.domain.model.QuotationListItem
+import java.time.LocalDate
 
 fun Quotation.toQuotationListItem(): QuotationListItem =
     QuotationListItem(
@@ -11,9 +9,9 @@ fun Quotation.toQuotationListItem(): QuotationListItem =
         customerName = this.customerName,
         managerName = "담당자 이름", // 담당자 이름은 별도로 매핑 필요
         status = "발행됨", // 상태 값은 별도로 매핑 필요
-        issueDate = java.time.LocalDate.now(), // 발행일은 현재 날짜로 설정
+        issueDate = LocalDate.now(), // 발행일은 현재 날짜로 설정
         dueDate =
-            java.time.LocalDate
+            LocalDate
                 .now()
                 .plusDays(30),
         // 납기일은 발행일로부터 30일 후로 설정
@@ -28,12 +26,12 @@ fun Quotation.toQuotationDetail(): QuotationDetail =
         managerName = "담당자 이름", // 담당자 이름은 별도로 매핑 필요
         status = "발행됨", // 상태 값은 별도로 매핑 필요
         issueDate =
-            java.time.LocalDate
+            LocalDate
                 .now()
                 .toString(),
         // 발행일은 현재 날짜로 설정
         dueDate =
-            java.time.LocalDate
+            LocalDate
                 .now()
                 .plusDays(30)
                 .toString(),

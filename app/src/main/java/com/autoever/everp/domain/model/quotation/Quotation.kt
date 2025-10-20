@@ -1,4 +1,4 @@
-package com.autoever.everp.domain.model
+package com.autoever.everp.domain.model.quotation
 
 // TODO 미정
 // Quotation: 견적서 모델 클래스

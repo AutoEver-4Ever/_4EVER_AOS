@@ -1,4 +1,4 @@
-package com.autoever.everp.domain.model
+package com.autoever.everp.domain.model.quotation
 
 data class QuotationItem(
     val id: Long, // 견적서 항목 ID

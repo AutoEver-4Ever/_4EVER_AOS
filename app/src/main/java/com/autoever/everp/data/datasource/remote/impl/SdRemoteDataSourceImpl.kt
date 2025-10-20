@@ -2,9 +2,9 @@ package com.autoever.everp.data.datasource.remote.impl
 
 import com.autoever.everp.data.datasource.remote.SdRemoteDataSource
 import com.autoever.everp.data.datasource.remote.service.SdApiService
-import com.autoever.everp.domain.model.Quotation
-import com.autoever.everp.domain.model.QuotationDetail
-import com.autoever.everp.domain.model.QuotationListItem
+import com.autoever.everp.domain.model.quotation.Quotation
+import com.autoever.everp.domain.model.quotation.QuotationDetail
+import com.autoever.everp.domain.model.quotation.QuotationListItem
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
