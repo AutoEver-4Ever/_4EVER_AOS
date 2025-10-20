@@ -9,6 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
 import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,9 +32,23 @@ object NetworkModule {
                     }
             }
 
+        val headerInterceptor: Interceptor =
+            Interceptor { chain ->
+                val originalRequest = chain.request()
+                val newRequest =
+                    originalRequest
+                        .newBuilder()
+                        .header("Content-Type", "application/json") // 예시: JSON 타입 명시
+                        .header("X-Auth-Token", "your_static_token") // 예시: 고정 인증 토큰
+                        // .header("Authorization", "Bearer ${getAccessToken()}")       // 동적 토큰 (별도 로직 필요)
+                        .build()
+                chain.proceed(newRequest)
+            }
+
         return OkHttpClient
             .Builder()
-            .addInterceptor(logger)
+            .addInterceptor(logger) // 로깅 인터셉터 추가
+            .addInterceptor(headerInterceptor) // 공통 헤더 추가
             .apply {
                 // HTTP Timeout 설정
                 connectTimeout(30, TimeUnit.SECONDS)
