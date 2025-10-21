@@ -2,7 +2,6 @@ package com.autoever.everp.utils.permission
 
 import android.content.Context
 import android.content.pm.PackageManager
-import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -10,7 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.core.content.ContextCompat
 
 /**
@@ -27,12 +26,11 @@ fun rememberPermissionState(
     permission: String,
     onResult: (PermissionStatus) -> Unit,
 ): Pair<PermissionStatus, () -> Unit> {
-    val context = LocalContext.current
+    val context = LocalView.current.context
+    val activity = context as? androidx.activity.ComponentActivity
     var permissionStatus by remember {
         mutableStateOf(checkInitialPermissionStatus(context, permission))
     }
-
-    val activity = LocalActivity.current as? androidx.activity.ComponentActivity
 
     val launcher =
         rememberLauncherForActivityResult(
