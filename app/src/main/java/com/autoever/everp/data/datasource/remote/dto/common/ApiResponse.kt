@@ -13,6 +13,4 @@ data class ApiResponse<T>(
     val message: String,
     @SerialName("data")
     val data: T? = null,
-//    @SerialName("errors")
-//    val errors: List<String>? = null,
 )

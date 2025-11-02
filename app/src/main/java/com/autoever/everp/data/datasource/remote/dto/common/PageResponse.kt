@@ -1,0 +1,30 @@
+package com.autoever.everp.data.datasource.remote.dto.common
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+/**
+ * 페이징 응답 공통 DTO
+ */
+@Serializable
+data class PageResponse<T>(
+    @SerialName("items")
+    val content: List<T>,
+    @SerialName("page")
+    val page: PageDto,
+)
+
+@Serializable
+data class PageDto(
+    @SerialName("number")
+    val number: Int,
+    @SerialName("size")
+    val size: Int,
+    @SerialName("totalElements")
+    val totalElements: Int,
+    @SerialName("totalPages")
+    val totalPages: Int,
+    @SerialName("hasNext")
+    val hasNext: Boolean,
+)
+
