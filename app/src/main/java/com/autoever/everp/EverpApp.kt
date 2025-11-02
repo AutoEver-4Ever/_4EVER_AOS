@@ -7,5 +7,10 @@ import dagger.hilt.android.HiltAndroidApp
 class EverpApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        initTimber()
+    private fun initTimber() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 }
