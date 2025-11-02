@@ -1,6 +1,10 @@
 package com.autoever.everp.di
 
+import com.autoever.everp.data.repository.DeviceInfoRepositoryImpl
+import com.autoever.everp.data.repository.PushNotificationRepositoryImpl
 import com.autoever.everp.data.repository.SdRepositoryImpl
+import com.autoever.everp.domain.repository.DeviceInfoRepository
+import com.autoever.everp.domain.repository.PushNotificationRepository
 import com.autoever.everp.domain.repository.SdRepository
 import dagger.Binds
 import dagger.Module
@@ -20,4 +24,10 @@ abstract class RepositoryModule {
     abstract fun bindsDeviceInfoRepository(
         deviceInfoRepositoryImpl: DeviceInfoRepositoryImpl,
     ): DeviceInfoRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsNotificationRepository(
+        notificationRepositoryImpl: PushNotificationRepositoryImpl,
+    ): PushNotificationRepository
 }
