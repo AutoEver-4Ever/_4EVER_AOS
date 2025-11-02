@@ -1,74 +1,73 @@
 package com.autoever.everp.di
 
 import com.autoever.everp.BuildConfig
-import com.autoever.everp.data.datasource.remote.service.SdApiService
+import com.autoever.everp.data.datasource.remote.interceptor.AuthInterceptor
+import com.autoever.everp.data.datasource.remote.service.*
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import jakarta.inject.Singleton
 import kotlinx.serialization.json.Json
-import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
+/**
+ * 네트워크 관련 의존성 제공 Module
+ * Retrofit, OkHttpClient, ApiService 등록
+ */
 @Module
-@InstallIn(SingletonComponent::class) // Application 범위에 설치
+@InstallIn(SingletonComponent::class)
 object NetworkModule {
+
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        val logger: HttpLoggingInterceptor =
-            HttpLoggingInterceptor().apply {
-                level =
-                    if (BuildConfig.DEBUG) {
-                        HttpLoggingInterceptor.Level.BODY
-                    } else {
-                        HttpLoggingInterceptor.Level.NONE
-                    }
-            }
+    fun provideJson(): Json =
+        Json {
+            isLenient = true // 유연한 JSON 파싱 허용
+            ignoreUnknownKeys = true // DTO에 없는 필드 무시
+            coerceInputValues = true // 기본값 허용(null 대신 기본값 사용)
+            prettyPrint = BuildConfig.DEBUG // 디버그 모드에서 보기 좋은 형식
+        }
 
-        val headerInterceptor: Interceptor =
-            Interceptor { chain ->
-                val originalRequest = chain.request()
-                val newRequest =
-                    originalRequest
-                        .newBuilder()
-                        .header("Content-Type", "application/json") // 예시: JSON 타입 명시
-                        .header("X-Auth-Token", "your_static_token") // 예시: 고정 인증 토큰
-                        // .header("Authorization", "Bearer ${getAccessToken()}")       // 동적 토큰 (별도 로직 필요)
-                        .build()
-                chain.proceed(newRequest)
-            }
+    @Provides
+    @Singleton
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor =
+        HttpLoggingInterceptor().apply {
+            level =
+                if (BuildConfig.DEBUG) {
+                    HttpLoggingInterceptor.Level.BODY
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
+                }
+        }
 
-        return OkHttpClient
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(
+        loggingInterceptor: HttpLoggingInterceptor,
+        authInterceptor: AuthInterceptor,
+    ): OkHttpClient =
+        OkHttpClient
             .Builder()
-            .addInterceptor(logger) // 로깅 인터셉터 추가
-            .addInterceptor(headerInterceptor) // 공통 헤더 추가
+            .addInterceptor(authInterceptor) // JWT 인증 헤더 추가
+            .addInterceptor(loggingInterceptor) // 로깅 인터셉터 추가
             .apply {
-                // HTTP Timeout 설정
                 connectTimeout(30, TimeUnit.SECONDS)
                 readTimeout(30, TimeUnit.SECONDS)
                 writeTimeout(30, TimeUnit.SECONDS)
             }.build()
-    }
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-        // kotlinx.serialization의 Json 객체 설정 (선택적)
-        // 기본 설정을 사용해도 무방합니다.
-        val json: Json =
-            Json {
-                isLenient = true // 유연한 JSON 파싱 허용
-                ignoreUnknownKeys = true // DTO에 없는 필드 무시
-                coerceInputValues = true // 기본값 허용(null 대신 기본값 사용)
-            }
-
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        json: Json,
+    ): Retrofit {
         val contentType = "application/json".toMediaType()
 
         return Retrofit
@@ -79,7 +78,50 @@ object NetworkModule {
             .build()
     }
 
+    // ========== ApiService 제공 ==========
+
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): SdApiService = retrofit.create(SdApiService::class.java)
+    fun provideAlarmApiService(retrofit: Retrofit): AlarmApiService =
+        retrofit.create(AlarmApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFcmTokenApiService(retrofit: Retrofit): FcmTokenApiService =
+        retrofit.create(FcmTokenApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideSdApiService(retrofit: Retrofit): SdApiService =
+        retrofit.create(SdApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideHrmApiService(retrofit: Retrofit): HrmApiService =
+        retrofit.create(HrmApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideFcmFinanceApiService(retrofit: Retrofit): FcmFinanceApiService =
+        retrofit.create(FcmFinanceApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideInventoryApiService(retrofit: Retrofit): InventoryApiService =
+        retrofit.create(InventoryApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMaterialApiService(retrofit: Retrofit): MaterialApiService =
+        retrofit.create(MaterialApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideUserApiService(retrofit: Retrofit): UserApiService =
+        retrofit.create(UserApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDashboardApiService(retrofit: Retrofit): DashboardApiService =
+        retrofit.create(DashboardApiService::class.java)
 }
