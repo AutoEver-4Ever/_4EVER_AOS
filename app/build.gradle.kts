@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.perf)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.config)
 
     // Retrofit dependencies
     implementation(libs.retrofit)
