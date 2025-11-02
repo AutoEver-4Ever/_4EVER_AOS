@@ -14,4 +14,10 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsSdRepository(sdRepositoryImpl: SdRepositoryImpl): SdRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsDeviceInfoRepository(
+        deviceInfoRepositoryImpl: DeviceInfoRepositoryImpl,
+    ): DeviceInfoRepository
 }
