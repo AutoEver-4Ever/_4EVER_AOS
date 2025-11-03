@@ -1,4 +1,4 @@
-package com.autoever.everp.utils.datetime
+package com.autoever.everp.utils.serializer
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
