@@ -33,6 +33,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.autoever.everp.auth.AuthState
 import com.autoever.everp.ui.navigation.Routes
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.autoever.everp.R
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 
@@ -83,11 +86,12 @@ private fun Header() {
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // 로고 플레이스홀더 (리소스 준비되면 Image로 교체)
-        Text(
-            text = "EVERP",
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-            color = MaterialTheme.colorScheme.primary,
+        androidx.compose.foundation.Image(
+            painter = painterResource(id = R.drawable.everp_logo),
+            contentDescription = "EVERP 로고",
+            modifier = Modifier.height(32.dp),
+            contentScale = ContentScale.Fit,
+            alignment = Alignment.CenterStart
         )
         Spacer(modifier = Modifier.weight(1f))
     }
@@ -316,4 +320,3 @@ private fun EverCard(
 // 모델들 (iOS와 유사)
 private data class QuickAction(val title: String, val symbol: String, val color: Color)
 private data class RecentActivity(val type: String, val title: String, val date: String, val status: String)
-

@@ -20,8 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.autoever.everp.R
 
 @Composable
 fun LoginScreen(
@@ -53,12 +56,15 @@ fun LoginScreen(
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // 로고 플레이스홀더 (리소스 준비 시 Image로 교체)
-                    Text(
-                        text = "EVERP",
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = brand,
-                        modifier = Modifier.padding(bottom = 24.dp)
+                    // 로고 이미지
+                    androidx.compose.foundation.Image(
+                        painter = painterResource(id = R.drawable.everp_logo),
+                        contentDescription = "EVERP 로고",
+                        modifier = Modifier
+                            .fillMaxWidth(0.6f)
+                            .padding(bottom = 24.dp),
+                        contentScale = ContentScale.Fit,
+                        alignment = Alignment.Center
                     )
 
                     Text(
@@ -106,4 +112,3 @@ fun LoginScreen(
         }
     }
 }
-
