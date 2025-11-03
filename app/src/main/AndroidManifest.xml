@@ -38,6 +38,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 로그인 화면 (Compose) -->
+        <activity
+            android:name="org.ever.everp.aos.ui.login.LoginActivity"
+            android:exported="false"
+            android:label="@string/app_name" />
+
+        <!-- OAuth2 Redirect 수신 (everp-aos://callback) -->
+        <activity
+            android:name="org.ever.everp.aos.ui.redirect.RedirectReceiverActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Transparent">
+            <intent-filter android:label="oauth2-redirect">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="everp-aos" android:host="callback" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
