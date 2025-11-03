@@ -3,7 +3,6 @@ package com.autoever.everp.di
 import com.autoever.everp.BuildConfig
 import com.autoever.everp.data.datasource.remote.http.service.AlarmApi
 import com.autoever.everp.data.datasource.remote.http.service.AlarmTokenApi
-import com.autoever.everp.data.datasource.remote.http.service.DashboardApi
 import com.autoever.everp.data.datasource.remote.http.service.FcmApi
 import com.autoever.everp.data.datasource.remote.http.service.HrmApi
 import com.autoever.everp.data.datasource.remote.http.service.InventoryApi
@@ -127,9 +126,4 @@ object NetworkModule {
     @Singleton
     fun provideUserApiService(retrofit: Retrofit): UserApi =
         retrofit.create(UserApi::class.java)
-
-    @Provides
-    @Singleton
-    fun provideDashboardApiService(retrofit: Retrofit): DashboardApi =
-        retrofit.create(DashboardApi::class.java)
 }
