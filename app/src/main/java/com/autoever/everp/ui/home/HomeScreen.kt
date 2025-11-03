@@ -22,6 +22,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +47,7 @@ fun HomeScreen(
     vm: HomeViewModel = hiltViewModel(),
 ) {
     val stateFlow = vm.authState
+    val user by vm.user.collectAsState(initial = null)
 
     LaunchedEffect(Unit) {
         stateFlow
@@ -54,6 +57,8 @@ fun HomeScreen(
                         popUpTo(Routes.HOME) { inclusive = true }
                         launchSingleTop = true
                     }
+                } else if (st is AuthState.Authenticated) {
+                    vm.refreshUserIfAuthenticated()
                 }
             }
             .collect()
@@ -68,7 +73,7 @@ fun HomeScreen(
         ) {
             Header()
 
-            UserInfoBanner()
+            UserInfoBanner(user = user)
 
             QuickActionsSection(onActionClick = { /* TODO: 목적지 네비게이션 연결 */ })
 
@@ -99,7 +104,7 @@ private fun Header() {
 
 // 사용자 배너: 간단 정보
 @Composable
-private fun UserInfoBanner() {
+private fun UserInfoBanner(user: com.autoever.everp.network.UserInfoResponse?) {
     EverCard {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
@@ -118,14 +123,14 @@ private fun UserInfoBanner() {
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "사용자 정보 로딩 중",
+                    text = user?.userName ?: "사용자 정보 로딩 중",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = "",
+                    text = user?.loginEmail.orEmpty(),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
