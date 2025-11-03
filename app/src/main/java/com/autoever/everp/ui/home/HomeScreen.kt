@@ -317,6 +317,6 @@ private fun EverCard(
     }
 }
 
-// 모델들 (iOS와 유사)
+// 모델들
 private data class QuickAction(val title: String, val symbol: String, val color: Color)
 private data class RecentActivity(val type: String, val title: String, val date: String, val status: String)
