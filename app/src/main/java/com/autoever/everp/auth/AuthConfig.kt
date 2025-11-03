@@ -2,7 +2,6 @@ package com.autoever.everp.auth
 
 import android.net.Uri
 import android.util.Log
-import com.autoever.everp.BuildConfig
 
 /**
  * OAuth2 Authorization Code + PKCE 설정 및 인가 URL 생성 유틸.
@@ -64,11 +63,15 @@ data class AuthConfig(
          * - redirectUri: everp-aos://callback (Manifest에 등록됨)
          */
         fun default(): AuthConfig {
-            val authBase = if (BuildConfig.DEBUG) {
-                "http://10.0.2.2:8081"
-            } else {
-                "https://auth.everp.co.kr"
+            val isDebug = try {
+                val clazz = Class.forName("com.autoever.everp.BuildConfig")
+                val field = clazz.getField("DEBUG")
+                field.getBoolean(null)
+            } catch (e: Exception) {
+                Log.w(TAG, "[INFO] BuildConfig.DEBUG 확인 실패, 개발 모드로 가정합니다: ${e.message}")
+                true
             }
+            val authBase = if (isDebug) "http://10.0.2.2:8081" else "https://auth.everp.co.kr"
             return AuthConfig(
                 authorizationEndpoint = "$authBase/oauth2/authorize",
                 tokenEndpoint = "$authBase/oauth2/token",
