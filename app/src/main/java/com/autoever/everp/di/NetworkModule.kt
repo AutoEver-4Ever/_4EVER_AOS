@@ -1,8 +1,16 @@
 package com.autoever.everp.di
 
 import com.autoever.everp.BuildConfig
+import com.autoever.everp.data.datasource.remote.http.service.AlarmApi
+import com.autoever.everp.data.datasource.remote.http.service.AlarmTokenApi
+import com.autoever.everp.data.datasource.remote.http.service.DashboardApi
+import com.autoever.everp.data.datasource.remote.http.service.FcmApi
+import com.autoever.everp.data.datasource.remote.http.service.HrmApi
+import com.autoever.everp.data.datasource.remote.http.service.InventoryApi
+import com.autoever.everp.data.datasource.remote.http.service.MaterialApi
+import com.autoever.everp.data.datasource.remote.http.service.SdApi
+import com.autoever.everp.data.datasource.remote.http.service.UserApi
 import com.autoever.everp.data.datasource.remote.interceptor.AuthInterceptor
-import com.autoever.everp.data.datasource.remote.service.*
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -82,46 +90,46 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAlarmApiService(retrofit: Retrofit): AlarmApiService =
-        retrofit.create(AlarmApiService::class.java)
+    fun provideAlarmApiService(retrofit: Retrofit): AlarmApi =
+        retrofit.create(AlarmApi::class.java)
 
     @Provides
     @Singleton
-    fun provideFcmTokenApiService(retrofit: Retrofit): FcmTokenApiService =
-        retrofit.create(FcmTokenApiService::class.java)
+    fun provideFcmTokenApiService(retrofit: Retrofit): AlarmTokenApi =
+        retrofit.create(AlarmTokenApi::class.java)
 
     @Provides
     @Singleton
-    fun provideSdApiService(retrofit: Retrofit): SdApiService =
-        retrofit.create(SdApiService::class.java)
+    fun provideSdApiService(retrofit: Retrofit): SdApi =
+        retrofit.create(SdApi::class.java)
 
     @Provides
     @Singleton
-    fun provideHrmApiService(retrofit: Retrofit): HrmApiService =
-        retrofit.create(HrmApiService::class.java)
+    fun provideHrmApiService(retrofit: Retrofit): HrmApi =
+        retrofit.create(HrmApi::class.java)
 
     @Provides
     @Singleton
-    fun provideFcmFinanceApiService(retrofit: Retrofit): FcmFinanceApiService =
-        retrofit.create(FcmFinanceApiService::class.java)
+    fun provideFcmFinanceApiService(retrofit: Retrofit): FcmApi =
+        retrofit.create(FcmApi::class.java)
 
     @Provides
     @Singleton
-    fun provideInventoryApiService(retrofit: Retrofit): InventoryApiService =
-        retrofit.create(InventoryApiService::class.java)
+    fun provideInventoryApiService(retrofit: Retrofit): InventoryApi =
+        retrofit.create(InventoryApi::class.java)
 
     @Provides
     @Singleton
-    fun provideMaterialApiService(retrofit: Retrofit): MaterialApiService =
-        retrofit.create(MaterialApiService::class.java)
+    fun provideMaterialApiService(retrofit: Retrofit): MaterialApi =
+        retrofit.create(MaterialApi::class.java)
 
     @Provides
     @Singleton
-    fun provideUserApiService(retrofit: Retrofit): UserApiService =
-        retrofit.create(UserApiService::class.java)
+    fun provideUserApiService(retrofit: Retrofit): UserApi =
+        retrofit.create(UserApi::class.java)
 
     @Provides
     @Singleton
-    fun provideDashboardApiService(retrofit: Retrofit): DashboardApiService =
-        retrofit.create(DashboardApiService::class.java)
+    fun provideDashboardApiService(retrofit: Retrofit): DashboardApi =
+        retrofit.create(DashboardApi::class.java)
 }
