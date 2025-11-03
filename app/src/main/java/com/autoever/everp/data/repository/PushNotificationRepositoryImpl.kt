@@ -1,6 +1,6 @@
 package com.autoever.everp.data.repository
 
-import com.autoever.everp.data.datasource.remote.FirebaseDataSource
+import com.autoever.everp.data.datasource.remote.firebase.FirebaseDataSource
 import com.autoever.everp.domain.repository.PushNotificationRepository
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber

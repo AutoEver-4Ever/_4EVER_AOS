@@ -1,6 +1,6 @@
 package com.autoever.everp.data.datasource.remote.dto.response
 
-import com.autoever.everp.utils.datetime.LocalDateSerializer
+import com.autoever.everp.utils.serializer.LocalDateSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDate

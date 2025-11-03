@@ -1,4 +1,4 @@
-package com.autoever.everp.data.datasource.remote
+package com.autoever.everp.data.datasource.remote.firebase
 
 import javax.inject.Inject
 import javax.inject.Singleton
