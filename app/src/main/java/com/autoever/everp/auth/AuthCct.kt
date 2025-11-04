@@ -1,6 +1,7 @@
 package com.autoever.everp.auth
 
 import android.content.Context
+import android.util.Log
 import androidx.browser.customtabs.CustomTabsIntent
 
 /**
@@ -8,6 +9,7 @@ import androidx.browser.customtabs.CustomTabsIntent
  */
 object AuthCct {
     fun start(context: Context) {
+        Log.i("AuthCCT", "[INFO] CCT 플로우 시작")
         val config = AuthConfig.default()
         val pkce = PKCEGenerator.generatePair()
         val state = StateGenerator.makeState()
@@ -16,10 +18,12 @@ object AuthCct {
         AuthFlowMemory.pkce = pkce
         AuthFlowMemory.state = state
 
+
         val uri = config.buildAuthorizationUri(
             codeChallenge = pkce.codeChallenge,
             state = state,
         )
+        Log.i("AuthCCT", "[INFO] Authorize 요청 URL: $uri")
 
         val cct = CustomTabsIntent.Builder()
             .setShowTitle(true)
