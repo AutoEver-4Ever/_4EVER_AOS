@@ -151,9 +151,7 @@ private fun TabNavHost(navController: NavHostController, appNavController: NavCo
 }
 
 @Composable private fun ProfileRootScreen() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("프로필 탭")
-    }
+    com.autoever.everp.ui.profile.ProfileScreen()
 }
 
 @Composable private fun HomeRootScreen(appNavController: NavController) {
