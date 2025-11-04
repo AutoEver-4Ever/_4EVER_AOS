@@ -9,7 +9,7 @@ import com.autoever.everp.service.fcm.MyFirebaseMessagingService
 import timber.log.Timber
 
 @HiltAndroidApp
-class EverpApp : Application() {
+class EverpApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initTimber()
