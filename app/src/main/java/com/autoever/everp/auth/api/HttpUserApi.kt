@@ -30,6 +30,10 @@ class HttpUserApi : UserApi {
             val status = conn.responseCode
             val stream = if (status in 200..299) conn.inputStream else conn.errorStream
             val resp = stream.bufferedReader(Charsets.UTF_8).use(BufferedReader::readText)
+            if (status == 401) {
+                Log.e(TAG, "[ERROR] 사용자 정보 조회 실패: HTTP ${status} | ${resp}")
+                throw UnauthorizedException("HTTP 401")
+            }
             if (status !in 200..299) {
                 Log.e(TAG, "[ERROR] 사용자 정보 조회 실패: HTTP ${status} | ${resp}")
                 throw IllegalStateException("사용자 정보 조회 실패: HTTP ${status}")

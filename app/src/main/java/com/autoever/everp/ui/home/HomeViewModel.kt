@@ -9,6 +9,7 @@ import com.autoever.everp.auth.repository.UserRepository
 import com.autoever.everp.auth.model.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import com.autoever.everp.auth.api.UnauthorizedException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -39,6 +40,9 @@ class HomeViewModel @Inject constructor(
                             "role=${info.userRole ?: "null"}, " +
                             "userType=${info.userType ?: "null"}"
                     )
+                } catch (e: UnauthorizedException) {
+                    Log.w(TAG, "[WARN] 인증 만료로 로그아웃 처리")
+                    sessionManager.signOut()
                 } catch (e: Exception) {
                     Log.e(TAG, "[ERROR] 사용자 정보 로드 실패: ${e.message}")
                 }
