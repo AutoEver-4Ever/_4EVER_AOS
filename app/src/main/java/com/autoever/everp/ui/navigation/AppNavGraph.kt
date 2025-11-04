@@ -1,5 +1,6 @@
 package com.autoever.everp.ui.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -8,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.autoever.everp.ui.home.HomeScreen
 import com.autoever.everp.ui.login.LoginScreen
 import androidx.compose.ui.platform.LocalContext
+import com.autoever.everp.auth.AuthCct
 
 object Routes {
     const val HOME = "home"
@@ -32,9 +34,11 @@ fun AppNavGraph(
         composable(route = Routes.LOGIN) {
             val ctx = LocalContext.current
             LoginScreen(
-                onLoginClick = { com.autoever.everp.auth.AuthCct.start(ctx) }
+                onLoginClick = {
+                    Log.i("AuthFlow", "[INFO] 로그인 버튼 클릭")
+                    AuthCct.start(ctx) }
             )
         }
-        
+
     }
 }
