@@ -4,12 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.provider.Settings
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DeviceLocalDataSource @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
 ) {
     /**
      * Android ID를 가져옵니다.
