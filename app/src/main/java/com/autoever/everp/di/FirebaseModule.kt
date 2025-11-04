@@ -56,7 +56,7 @@ object FirebaseModule {
      */
     @Provides
     @Singleton
-    fun provideFirebaseRemoteConfig(application: Application): FirebaseRemoteConfig {
-        return FirebaseRemoteConfig.getInstance(application)
+    fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
+        return FirebaseRemoteConfig.getInstance()
     }
 }

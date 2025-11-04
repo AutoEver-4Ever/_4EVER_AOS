@@ -11,7 +11,8 @@ object NotificationSourceEnumSerializer : KSerializer<NotificationSourceEnum> {
     override val descriptor: SerialDescriptor = serialDescriptor<String>()
 
     override fun serialize(encoder: Encoder, value: NotificationSourceEnum) {
-        encoder.encodeString(value.toApiString())
+//        encoder.encodeString(value.toApiString() ?: )
+        encoder.encodeString(value.name)
     }
 
     override fun deserialize(decoder: Decoder): NotificationSourceEnum {

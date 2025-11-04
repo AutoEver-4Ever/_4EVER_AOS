@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.autoever.everp.utils.serializer.NotificationSourceEnumSerializer
 import kotlinx.serialization.Serializable
 
-@Serializable(with = NotificationSourceEnumSerializer::class)
+//@Serializable(with = NotificationSourceEnumSerializer::class)
 enum class NotificationSourceEnum {
     UNKNOWN, // 알 수 없는 소스, 기본값
     PR,  // 구매부
