@@ -2,13 +2,14 @@ package com.autoever.everp.auth.api
 
 import android.util.Log
 import com.autoever.everp.auth.endpoint.AuthEndpoint
+import com.autoever.everp.common.error.UnauthorizedException
 import com.autoever.everp.auth.model.UserInfo
-import java.io.BufferedReader
-import java.net.HttpURLConnection
-import java.net.URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.net.HttpURLConnection
+import java.net.URL
 
 /**
  * HttpURLConnection 기반 UserApi 구현.
