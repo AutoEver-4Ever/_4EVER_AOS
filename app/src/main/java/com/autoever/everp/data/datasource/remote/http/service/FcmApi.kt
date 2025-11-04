@@ -31,10 +31,15 @@ interface FcmApi {
         @Path("invoiceId") invoiceId: String,
     ): ApiResponse<InvoiceDetailResponseDto>
 
+    /**
+     * 공급사(Supplier)
+     * 매입 전표 상태 수정
+     * 확인 요청 -> 완납
+     */
     @PATCH("$BASE_URL/invoice/ap/{invoiceId}")
     suspend fun updateApInvoice(
         @Path("invoiceId") invoiceId: String,
-        @Body request: InvoiceUpdateRequestDto,
+//        @Body request: InvoiceUpdateRequestDto,
     ): ApiResponse<Any>
 
     /**
@@ -60,16 +65,21 @@ interface FcmApi {
         @Path("invoiceId") invoiceId: String,
     ): ApiResponse<InvoiceDetailResponseDto>
 
+    /**
+     * 고객사(Customer)
+     * 매출 전표 상태 수정
+     * 미납 -> 확인 요청
+     */
     @PATCH("$BASE_URL/invoice/ar/{invoiceId}")
     suspend fun updateArInvoice(
         @Path("invoiceId") invoiceId: String,
-        @Body request: InvoiceUpdateRequestDto,
+//        @Body request: InvoiceUpdateRequestDto,
     ): ApiResponse<Any>
 
-    @POST("$BASE_URL/invoice/ar/{invoiceId}/receivable/complete")
-    suspend fun completeReceivable(
-        @Path("invoiceId") invoiceId: String,
-    ): ApiResponse<Any>
+//    @POST("$BASE_URL/invoice/ar/{invoiceId}/receivable/complete")
+//    suspend fun completeReceivable(
+//        @Path("invoiceId") invoiceId: String,
+//    ): ApiResponse<Any>
 
     companion object {
         private const val BASE_URL = "/business/fcm"
@@ -82,27 +92,30 @@ data class InvoiceListItemDto(
     val invoiceId: String,
     @SerialName("invoiceNumber")
     val invoiceNumber: String,
-    @SerialName("supply")
-    val supply: InvoiceSupplierDto,
+    @SerialName("connection")
+    val connection: InvoiceConnectionDto,
     @SerialName("totalAmount")
     val totalAmount: Long,
+    @SerialName("issueDate")
+    @Serializable(with = LocalDateSerializer::class)
+    val issueDate: LocalDate,
     @SerialName("dueDate")
     @Serializable(with = LocalDateSerializer::class)
     val dueDate: LocalDate,
-    @SerialName("statusCode")
+    @SerialName("status")
     val statusCode: InvoiceStatusEnum, // PENDING, PAID, UNPAID
     @SerialName("reference")
     val reference: InvoiceReferenceDto,
 )
 
 @Serializable
-data class InvoiceSupplierDto(
-    @SerialName("supplierId")
-    val supplierId: String,
-    @SerialName("supplierCode")
-    val supplierNumber: String,
-    @SerialName("supplierName")
-    val supplierName: String,
+data class InvoiceConnectionDto(
+    @SerialName("connectionId")
+    val connectionId: String,
+    @SerialName("connectionNumber")
+    val connectionCode: String,
+    @SerialName("connectionName")
+    val connectionName: String,
 )
 
 @Serializable
@@ -167,4 +180,3 @@ data class InvoiceUpdateRequestDto(
     @SerialName("memo")
     val memo: String? = null,
 )
-

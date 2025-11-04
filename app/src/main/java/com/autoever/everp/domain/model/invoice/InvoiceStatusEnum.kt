@@ -28,7 +28,7 @@ enum class InvoiceStatusEnum {
     /**
      * API 통신용 문자열 (대문자)
      */
-    fun toApiString(): String = this.name
+    fun toApiString(): String? = if (this == UNKNOWN) null else this.name
 
     /**
      * 상태 설명
