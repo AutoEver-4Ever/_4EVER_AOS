@@ -32,7 +32,7 @@ object SdMapper {
         )
 
         return QuotationListItem(
-            id = dto.quotationId,
+            id = dto.quotationId.toString(),
             number = dto.quotationNumber,
             customer = customer,
             status = dto.statusCode,
