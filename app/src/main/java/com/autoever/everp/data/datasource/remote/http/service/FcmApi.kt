@@ -11,9 +11,8 @@ import retrofit2.http.*
 import java.time.LocalDate
 
 /**
- * FCM(재무 관리) API Service
+ * 재무관리(FCM, Financial and Cost Management) API Service
  * Base URL: /business/fcm
- * TODO: Response DTO 작성 필요
  */
 interface FcmApi {
 
@@ -49,7 +48,7 @@ interface FcmApi {
     // ========== 매출 인보이스 (AR - Accounts Receivable) ==========
     @GET("$BASE_URL/invoice/ar")
     suspend fun getArInvoiceList(
-        @Query("company") company: String? = null,
+        @Query("company") companyName: String? = null,
         @Query("startDate") startDate: LocalDate? = null,
         @Query("endDate") endDate: LocalDate? = null,
         @Query("page") page: Int = 0,
@@ -86,7 +85,7 @@ data class InvoiceListItemDto(
     @SerialName("supply")
     val supply: InvoiceSupplierDto,
     @SerialName("totalAmount")
-    val totalAmount: Int,
+    val totalAmount: Long,
     @SerialName("dueDate")
     @Serializable(with = LocalDateSerializer::class)
     val dueDate: LocalDate,
@@ -135,7 +134,7 @@ data class InvoiceDetailResponseDto(
     @SerialName("referenceNumber")
     val referenceNumber: String,
     @SerialName("totalAmount")
-    val totalAmount: Int,
+    val totalAmount: Long,
     @SerialName("note")
     val note: String,
     @SerialName("items")
@@ -153,9 +152,9 @@ data class InvoiceDetailItemDto(
     @SerialName("unitOfMaterialName")
     val unitOfMaterialName: String,
     @SerialName("unitPrice")
-    val unitPrice: Int,
+    val unitPrice: Long,
     @SerialName("totalPrice")
-    val totalPrice: Int,
+    val totalPrice: Long,
 )
 
 @Serializable

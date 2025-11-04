@@ -1,6 +1,9 @@
 package com.autoever.everp.data.datasource.remote.http.service
 
 import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
+import com.autoever.everp.domain.model.user.UserRoleEnum
+import com.autoever.everp.domain.model.user.UserTypeEnum
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import retrofit2.http.GET
 
@@ -24,10 +27,15 @@ interface UserApi {
 
 @Serializable
 data class UserInfoResponseDto(
+    @SerialName("userId")
     val userId: String,
-    val username: String,
+    @SerialName("userName")
+    val userName: String,
+    @SerialName("loginEmail")
     val email: String,
-    val userType: String, // INTERNAL, CUSTOMER, SUPPLIER
-    val roles: List<String>,
+    @SerialName("userType")
+    val userType: UserTypeEnum, // INTERNAL, CUSTOMER, SUPPLIER
+    @SerialName("userRole")
+    val userRole: UserRoleEnum,
 )
 
