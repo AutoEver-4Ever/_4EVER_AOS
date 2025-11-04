@@ -1,11 +1,19 @@
 package com.autoever.everp.di
 
+import com.autoever.everp.data.repository.AlarmRepositoryImpl
 import com.autoever.everp.data.repository.DeviceInfoRepositoryImpl
+import com.autoever.everp.data.repository.FcmRepositoryImpl
+import com.autoever.everp.data.repository.MmRepositoryImpl
 import com.autoever.everp.data.repository.PushNotificationRepositoryImpl
 import com.autoever.everp.data.repository.SdRepositoryImpl
+import com.autoever.everp.data.repository.UserRepositoryImpl
+import com.autoever.everp.domain.repository.AlarmRepository
 import com.autoever.everp.domain.repository.DeviceInfoRepository
+import com.autoever.everp.domain.repository.FcmRepository
+import com.autoever.everp.domain.repository.MmRepository
 import com.autoever.everp.domain.repository.PushNotificationRepository
 import com.autoever.everp.domain.repository.SdRepository
+import com.autoever.everp.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,7 +25,9 @@ import javax.inject.Singleton
 abstract class RepositoryModule {
     @Binds
     @Singleton
-    abstract fun bindsSdRepository(sdRepositoryImpl: SdRepositoryImpl): SdRepository
+    abstract fun bindsSdRepository(
+        sdRepositoryImpl: SdRepositoryImpl
+    ): SdRepository
 
     @Binds
     @Singleton
@@ -30,4 +40,28 @@ abstract class RepositoryModule {
     abstract fun bindsNotificationRepository(
         notificationRepositoryImpl: PushNotificationRepositoryImpl,
     ): PushNotificationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsAlarmRepository(
+        alarmRepositoryImpl: AlarmRepositoryImpl,
+    ): AlarmRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsMmRepository(
+        mmRepositoryImpl: MmRepositoryImpl,
+    ): MmRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsUserRepository(
+        userRepositoryImpl: UserRepositoryImpl,
+    ): UserRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsFcmFinanceRepository(
+        fcmFinanceRepositoryImpl: FcmRepositoryImpl,
+    ): FcmRepository
 }

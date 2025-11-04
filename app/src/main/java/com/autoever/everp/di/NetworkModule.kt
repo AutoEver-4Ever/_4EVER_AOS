@@ -5,8 +5,8 @@ import com.autoever.everp.data.datasource.remote.http.service.AlarmApi
 import com.autoever.everp.data.datasource.remote.http.service.AlarmTokenApi
 import com.autoever.everp.data.datasource.remote.http.service.FcmApi
 import com.autoever.everp.data.datasource.remote.http.service.HrmApi
-import com.autoever.everp.data.datasource.remote.http.service.InventoryApi
-import com.autoever.everp.data.datasource.remote.http.service.MaterialApi
+import com.autoever.everp.data.datasource.remote.http.service.ImApi
+import com.autoever.everp.data.datasource.remote.http.service.MmApi
 import com.autoever.everp.data.datasource.remote.http.service.SdApi
 import com.autoever.everp.data.datasource.remote.http.service.UserApi
 import com.autoever.everp.data.datasource.remote.interceptor.AuthInterceptor
@@ -114,13 +114,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideInventoryApiService(retrofit: Retrofit): InventoryApi =
-        retrofit.create(InventoryApi::class.java)
+    fun provideInventoryApiService(retrofit: Retrofit): ImApi =
+        retrofit.create(ImApi::class.java)
 
     @Provides
     @Singleton
-    fun provideMaterialApiService(retrofit: Retrofit): MaterialApi =
-        retrofit.create(MaterialApi::class.java)
+    fun provideMaterialApiService(retrofit: Retrofit): MmApi =
+        retrofit.create(MmApi::class.java)
 
     @Provides
     @Singleton
