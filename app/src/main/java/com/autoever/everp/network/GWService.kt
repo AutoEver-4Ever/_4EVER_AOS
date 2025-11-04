@@ -1,13 +1,13 @@
 package com.autoever.everp.network
 
 import android.util.Log
-import com.autoever.everp.auth.TokenResponse
-import java.io.BufferedReader
-import java.net.HttpURLConnection
-import java.net.URL
+import com.autoever.everp.auth.AuthEndpoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.net.HttpURLConnection
+import java.net.URL
 
 data class UserInfoResponse(
     val userId: String?,
@@ -20,20 +20,8 @@ data class UserInfoResponse(
 object GWService {
     private const val TAG = "GWService"
 
-    private fun isDebug(): Boolean = try {
-        val clazz = Class.forName("com.autoever.everp.BuildConfig")
-        val field = clazz.getField("DEBUG")
-        field.getBoolean(null)
-    } catch (e: Exception) {
-        Log.w(TAG, "[INFO] BuildConfig.DEBUG 확인 실패, 개발 모드로 가정합니다: ${e.message}")
-        true
-    }
-
-    // On Android emulator, host machine's localhost is 10.0.2.2
-    private fun gwBase(): String = if (isDebug()) "http://10.0.2.2:8080" else "https://api.everp.co.kr"
-
     suspend fun getUserInfo(accessToken: String): UserInfoResponse = withContext(Dispatchers.IO) {
-        val url = URL(gwBase() + "/api/user/info")
+        val url = URL(AuthEndpoint.USER_INFO)
         val conn = (url.openConnection() as HttpURLConnection).apply {
             requestMethod = "GET"
             setRequestProperty("Accept", "application/json")
