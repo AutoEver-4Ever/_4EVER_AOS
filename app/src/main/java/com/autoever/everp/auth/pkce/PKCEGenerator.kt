@@ -1,4 +1,4 @@
-package com.autoever.everp.auth
+package com.autoever.everp.auth.pkce
 
 import android.util.Base64
 import android.util.Log
@@ -46,4 +46,3 @@ object PKCEGenerator {
         return Base64.encodeToString(digest, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
     }
 }
-

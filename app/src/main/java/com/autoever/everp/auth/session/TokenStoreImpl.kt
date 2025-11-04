@@ -1,4 +1,4 @@
-package com.autoever.everp.auth
+package com.autoever.everp.auth.session
 
 import android.content.SharedPreferences
 import android.util.Log

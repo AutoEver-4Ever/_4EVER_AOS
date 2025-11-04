@@ -1,4 +1,4 @@
-package com.autoever.everp.auth
+package com.autoever.everp.auth.model
 
 data class TokenResponse(
     val access_token: String,
@@ -7,4 +7,3 @@ data class TokenResponse(
     val expires_in: Long? = null,
     val id_token: String? = null,
 )
-

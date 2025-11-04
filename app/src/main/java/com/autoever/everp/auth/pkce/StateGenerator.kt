@@ -1,4 +1,4 @@
-package com.autoever.everp.auth
+package com.autoever.everp.auth.pkce
 
 import android.util.Base64
 import android.util.Log
@@ -25,4 +25,3 @@ object StateGenerator {
         }
     }
 }
-

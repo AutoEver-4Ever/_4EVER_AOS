@@ -1,4 +1,4 @@
-package com.autoever.everp.auth
+package com.autoever.everp.auth.session
 
 /**
  * 토큰 저장/조회 간단 스텁 인터페이스.
@@ -9,4 +9,3 @@ interface TokenStore {
     fun saveAccessToken(token: String)
     fun clear()
 }
-

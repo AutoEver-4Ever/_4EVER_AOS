@@ -1,6 +1,8 @@
-package com.autoever.everp.auth
+package com.autoever.everp.auth.session
 
 import android.util.Log
+import com.autoever.everp.auth.session.AuthState
+import com.autoever.everp.auth.session.TokenStore
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,4 +59,3 @@ class SessionManager @Inject constructor(
         const val TAG = "SessionManager"
     }
 }
-

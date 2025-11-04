@@ -6,17 +6,23 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import com.autoever.everp.MainActivity
-import com.autoever.everp.auth.AuthFlowMemory
-import com.autoever.everp.auth.AuthService
-import com.autoever.everp.auth.TokenStoreImpl
+import com.autoever.everp.auth.flow.AuthFlowMemory
+import com.autoever.everp.auth.repository.AuthRepository
+import com.autoever.everp.auth.session.SessionManager
 import kotlinx.coroutines.launch
 
 /**
  * OAuth2 리다이렉트를 수신하는 투명 액티비티.
  * - CCT 리다이렉트(intent-filter) 종료 지점에서 토큰 교환 처리.
  */
+@AndroidEntryPoint
 class RedirectReceiverActivity : ComponentActivity() {
+
+    @Inject lateinit var authRepository: AuthRepository
+    @Inject lateinit var sessionManager: SessionManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -54,14 +60,13 @@ class RedirectReceiverActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             try {
-                val token = AuthService.exchangeCodeForToken(
-                    config = config,
+                val token = authRepository.exchange(
                     code = code,
-                    codeVerifier = pkce.codeVerifier,
+                    verifier = pkce.codeVerifier,
+                    config = config,
                 )
-                val prefs = getSharedPreferences("auth", MODE_PRIVATE)
-                TokenStoreImpl(prefs).saveAccessToken(token.access_token)
-                Log.i(TAG, "[INFO] 토큰 교환 및 저장 성공")
+                sessionManager.setAuthenticated(token.access_token)
+                Log.i(TAG, "[INFO] 토큰 교환 및 세션 반영 성공")
             } catch (e: Exception) {
                 Log.e(TAG, "[ERROR] 토큰 교환 처리 실패: ${e.message}")
             } finally {
@@ -82,4 +87,3 @@ class RedirectReceiverActivity : ComponentActivity() {
         const val TAG = "RedirectReceiver"
     }
 }
-

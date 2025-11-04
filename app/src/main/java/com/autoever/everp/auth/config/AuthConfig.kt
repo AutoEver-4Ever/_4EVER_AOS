@@ -1,7 +1,8 @@
-package com.autoever.everp.auth
+package com.autoever.everp.auth.config
 
 import android.net.Uri
 import android.util.Log
+import com.autoever.everp.auth.endpoint.AuthEndpoint
 
 /**
  * OAuth2 Authorization Code + PKCE 설정 및 인가 URL 생성 유틸.

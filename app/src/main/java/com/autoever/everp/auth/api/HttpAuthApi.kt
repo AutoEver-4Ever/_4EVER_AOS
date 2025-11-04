@@ -1,23 +1,24 @@
-package com.autoever.everp.auth
+package com.autoever.everp.auth.api
 
-import android.net.Uri
 import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
+import com.autoever.everp.auth.config.AuthConfig
+import com.autoever.everp.auth.model.TokenResponse
 import java.io.BufferedReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-object AuthService {
-    private const val TAG = "AuthService"
+/**
+ * HttpURLConnection 기반 AuthApi 구현.
+ * 기존 AuthService/LogoutService 로직을 통합.
+ */
+class HttpAuthApi : AuthApi {
+    private companion object { const val TAG = "AuthApi" }
 
-    /**
-     * Authorization Code + PKCE 토큰 교환 (x-www-form-urlencoded)
-     */
-    suspend fun exchangeCodeForToken(
+    override suspend fun exchangeCodeForToken(
         config: AuthConfig,
         code: String,
         codeVerifier: String,
@@ -39,7 +40,9 @@ object AuthService {
             "client_id" to config.clientId,
             "code_verifier" to codeVerifier,
         )
-        val body = buildFormBody(params)
+        val body = params.entries.joinToString("&") { (k, v) ->
+            "${urlEncode(k)}=${urlEncode(v)}"
+        }
 
         try {
             OutputStreamWriter(conn.outputStream, Charsets.UTF_8).use { it.write(body) }
@@ -50,7 +53,7 @@ object AuthService {
                 Log.e(TAG, "[ERROR] 토큰 교환 실패: HTTP ${status} | ${resp}")
                 throw IllegalStateException("토큰 교환 실패: HTTP ${status}")
             }
-            val json = JSONObject(resp)
+            val json = org.json.JSONObject(resp)
             val token = TokenResponse(
                 access_token = json.optString("access_token"),
                 refresh_token = json.optString("refresh_token").ifBlank { null },
@@ -69,12 +72,36 @@ object AuthService {
         }
     }
 
-    private fun buildFormBody(params: Map<String, String>): String =
-        params.entries.joinToString("&") { (k, v) ->
-            "${urlEncode(k)}=${urlEncode(v)}"
+    override suspend fun logout(accessToken: String?): Boolean = withContext(Dispatchers.IO) {
+        val url = URL(com.autoever.everp.auth.endpoint.AuthEndpoint.LOGOUT)
+        val conn = (url.openConnection() as HttpURLConnection).apply {
+            requestMethod = "POST"
+            doOutput = false
+            connectTimeout = 10000
+            readTimeout = 15000
+            if (!accessToken.isNullOrBlank()) {
+                setRequestProperty("Authorization", "Bearer $accessToken")
+            }
         }
+        try {
+            val status = conn.responseCode
+            val stream = if (status in 200..299) conn.inputStream else conn.errorStream
+            val resp = stream?.bufferedReader(Charsets.UTF_8)?.use(BufferedReader::readText)
+            if (status in 200..299) {
+                Log.i(TAG, "[INFO] 로그아웃 성공: HTTP $status")
+                true
+            } else {
+                Log.e(TAG, "[ERROR] 로그아웃 실패: HTTP $status | ${resp ?: "(no body)"}")
+                false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "[ERROR] 로그아웃 호출 중 예외: ${e.message}")
+            false
+        } finally {
+            conn.disconnect()
+        }
+    }
 
     private fun urlEncode(v: String): String =
         URLEncoder.encode(v, Charsets.UTF_8.name())
 }
-

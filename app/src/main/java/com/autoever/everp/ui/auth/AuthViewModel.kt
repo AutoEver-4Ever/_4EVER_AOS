@@ -3,10 +3,10 @@ package com.autoever.everp.ui.auth
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.autoever.everp.auth.AuthConfig
-import com.autoever.everp.auth.PKCEGenerator
-import com.autoever.everp.auth.PKCEPair
-import com.autoever.everp.auth.StateGenerator
+import com.autoever.everp.auth.config.AuthConfig
+import com.autoever.everp.auth.pkce.PKCEGenerator
+import com.autoever.everp.auth.pkce.PKCEPair
+import com.autoever.everp.auth.pkce.StateGenerator
 
 class AuthViewModel : ViewModel() {
     var requestUri: Uri? = null
@@ -95,4 +95,3 @@ class AuthViewModel : ViewModel() {
         const val TAG = "AuthViewModel"
     }
 }
-

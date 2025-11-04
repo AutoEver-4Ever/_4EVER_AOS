@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.autoever.everp.ui.home.HomeScreen
 import com.autoever.everp.ui.login.LoginScreen
 import androidx.compose.ui.platform.LocalContext
-import com.autoever.everp.auth.AuthCct
+import com.autoever.everp.auth.flow.AuthCct
 
 object Routes {
     const val HOME = "home"

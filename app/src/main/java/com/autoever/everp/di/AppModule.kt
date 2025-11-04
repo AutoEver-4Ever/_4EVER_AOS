@@ -2,8 +2,8 @@ package com.autoever.everp.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.autoever.everp.auth.TokenStore
-import com.autoever.everp.auth.TokenStoreImpl
+import com.autoever.everp.auth.session.TokenStore
+import com.autoever.everp.auth.session.TokenStoreImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,4 +25,3 @@ object AppModule {
     @Singleton
     fun provideTokenStore(prefs: SharedPreferences): TokenStore = TokenStoreImpl(prefs)
 }
-

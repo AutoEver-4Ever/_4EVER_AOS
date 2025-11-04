@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.autoever.everp.auth.AuthState
+import com.autoever.everp.auth.session.AuthState
 import com.autoever.everp.ui.navigation.Routes
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -104,7 +104,7 @@ private fun Header() {
 
 // 사용자 배너: 간단 정보
 @Composable
-private fun UserInfoBanner(user: com.autoever.everp.network.UserInfoResponse?) {
+private fun UserInfoBanner(user: com.autoever.everp.auth.model.UserInfo?) {
     EverCard {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(

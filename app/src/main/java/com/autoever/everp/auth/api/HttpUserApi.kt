@@ -1,26 +1,23 @@
-package com.autoever.everp.network
+package com.autoever.everp.auth.api
 
 import android.util.Log
-import com.autoever.everp.auth.AuthEndpoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
+import com.autoever.everp.auth.endpoint.AuthEndpoint
+import com.autoever.everp.auth.model.UserInfo
 import java.io.BufferedReader
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
-data class UserInfoResponse(
-    val userId: String?,
-    val userName: String?,
-    val loginEmail: String?,
-    val userRole: String?,
-    val userType: String?,
-)
+/**
+ * HttpURLConnection 기반 UserApi 구현.
+ * 기존 GWService.getUserInfo와 동일한 동작을 제공한다.
+ */
+class HttpUserApi : UserApi {
+    private companion object { const val TAG = "UserApi" }
 
-object GWService {
-    private const val TAG = "GWService"
-
-    suspend fun getUserInfo(accessToken: String): UserInfoResponse = withContext(Dispatchers.IO) {
+    override suspend fun getUserInfo(accessToken: String): UserInfo = withContext(Dispatchers.IO) {
         val url = URL(AuthEndpoint.USER_INFO)
         val conn = (url.openConnection() as HttpURLConnection).apply {
             requestMethod = "GET"
@@ -38,7 +35,7 @@ object GWService {
                 throw IllegalStateException("사용자 정보 조회 실패: HTTP ${status}")
             }
             val json = JSONObject(resp)
-            UserInfoResponse(
+            UserInfo(
                 userId = json.optString("userId").ifBlank { null },
                 userName = json.optString("userName").ifBlank { null },
                 loginEmail = json.optString("loginEmail").ifBlank { null },
