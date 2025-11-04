@@ -34,7 +34,9 @@ class HttpUserApi : UserApi {
                 Log.e(TAG, "[ERROR] 사용자 정보 조회 실패: HTTP ${status} | ${resp}")
                 throw IllegalStateException("사용자 정보 조회 실패: HTTP ${status}")
             }
-            val json = JSONObject(resp)
+            // API 응답은 { success, message, data: { ... } } 형태일 수 있으므로 data 객체를 우선 시도
+            val root = JSONObject(resp)
+            val json = root.optJSONObject("data") ?: root
             UserInfo(
                 userId = json.optString("userId").ifBlank { null },
                 userName = json.optString("userName").ifBlank { null },
