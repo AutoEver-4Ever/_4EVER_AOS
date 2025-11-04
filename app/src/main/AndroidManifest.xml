@@ -26,7 +26,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Everp">
+        android:theme="@style/Theme.Everp"
+        android:usesCleartextTraffic="true"
+        >
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -39,15 +41,9 @@
             </intent-filter>
         </activity>
 
-        <!-- 로그인 화면 (Compose) -->
-        <activity
-            android:name="org.ever.everp.aos.ui.login.LoginActivity"
-            android:exported="false"
-            android:label="@string/app_name" />
-
         <!-- OAuth2 Redirect 수신 (everp-aos://callback) -->
         <activity
-            android:name="org.ever.everp.aos.ui.redirect.RedirectReceiverActivity"
+            android:name="com.autoever.everp.ui.redirect.RedirectReceiverActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Transparent">

@@ -29,6 +29,7 @@ object GWService {
         true
     }
 
+    // On Android emulator, host machine's localhost is 10.0.2.2
     private fun gwBase(): String = if (isDebug()) "http://10.0.2.2:8080" else "https://api.everp.co.kr"
 
     suspend fun getUserInfo(accessToken: String): UserInfoResponse = withContext(Dispatchers.IO) {
@@ -61,4 +62,3 @@ object GWService {
         }
     }
 }
-

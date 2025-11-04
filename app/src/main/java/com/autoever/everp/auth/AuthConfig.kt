@@ -71,7 +71,7 @@ data class AuthConfig(
                 Log.w(TAG, "[INFO] BuildConfig.DEBUG 확인 실패, 개발 모드로 가정합니다: ${e.message}")
                 true
             }
-            val authBase = if (isDebug) "http://10.0.2.2:8081" else "https://auth.everp.co.kr"
+            val authBase = if (isDebug) "http://localhost:8081" else "https://auth.everp.co.kr"
             return AuthConfig(
                 authorizationEndpoint = "$authBase/oauth2/authorize",
                 tokenEndpoint = "$authBase/oauth2/token",

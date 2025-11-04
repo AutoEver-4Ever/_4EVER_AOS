@@ -86,6 +86,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     // Timber dependency for logging
     implementation(libs.timber)
+    // Browser (Chrome Custom Tabs)
+    implementation(libs.androidx.browser)
 //    // DataStore dependencies
 //    implementation("androidx.datastore:datastore-preferences:1.0.0")
 //    // Room dependencies
