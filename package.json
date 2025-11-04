@@ -1,17 +1,28 @@
 {
-  "name": "4ever-aos",
+  "name": "4ever-android",
   "version": "1.0.0",
-  "private": true,
-  "description": "Commitlint + Husky setup for AOS",
+  "description": "1.  프로젝트를 클론 받습니다. 2.  아래 명령어를 실행하여 Git pre-commit hook을 설치합니다. (최초 1회만 실행)",
+  "main": "index.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
     "lint:commit": "commitlint --from=HEAD~1 --to=HEAD --format ./scripts/commitlint-formatter-korean.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AutoEver-4Ever/4Ever-Android.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AutoEver-4Ever/4Ever-Android/issues"
+  },
+  "homepage": "https://github.com/AutoEver-4Ever/4Ever-Android#readme",
   "devDependencies": {
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",
     "husky": "^8.0.0"
   }
 }
-
