@@ -41,7 +41,7 @@ enum class NotificationSourceEnum {
     /**
      * API 통신용 문자열 (대문자)
      */
-    fun toApiString(): String = this.name
+    fun toApiString(): String? = if (this == UNKNOWN) null else this.name
 
     /**
      * 모듈 설명

@@ -19,9 +19,9 @@ interface AlarmApi {
      */
     @GET("$BASE_URL/list")
     suspend fun getNotificationList(
-        @Query("sortBy") sortBy: String? = "createdAt", // createdAt
-        @Query("order") order: String? = "desc", // asc, desc
-        @Query("source") source: NotificationSourceEnum? = null,
+        @Query("sortBy") sortBy: String? = null, // createdAt, etc.
+        @Query("order") order: String? = null, // asc, desc
+        @Query("source") source: String? = null,
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 20,
     ): ApiResponse<PageResponse<NotificationListItemDto>>

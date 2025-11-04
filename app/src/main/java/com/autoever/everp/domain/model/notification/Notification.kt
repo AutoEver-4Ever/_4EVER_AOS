@@ -6,20 +6,20 @@ import java.time.LocalDateTime
  * 알림 Domain Model
  */
 data class Notification(
-    val notificationId: String,
+    val id: String,
     val title: String,
     val message: String,
     val linkType: NotificationLinkEnum,
     val linkId: String?,
     val source: NotificationSourceEnum,
-    val status: NotificationStatus,
+    val status: NotificationStatusEnum,
     val createdAt: LocalDateTime,
 ) {
     /**
      * 읽음 상태 확인
      */
     val isRead: Boolean
-        get() = status == NotificationStatus.READ
+        get() = status == NotificationStatusEnum.READ
 
     /**
      * 화면 이동 가능 여부
