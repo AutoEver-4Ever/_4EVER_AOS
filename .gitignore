@@ -417,3 +417,4 @@ obj/
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,android,androidstudio,kotlin,java,gradle,maven,intellij,git
+/node_modules/
