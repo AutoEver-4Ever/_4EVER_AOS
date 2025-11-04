@@ -7,7 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.autoever.everp.ui.home.HomeScreen
+import com.autoever.everp.ui.main.MainScreen
 import com.autoever.everp.ui.login.LoginScreen
 import androidx.compose.ui.platform.LocalContext
 import com.autoever.everp.auth.flow.AuthCct
@@ -36,7 +36,7 @@ fun AppNavGraph(
         navController = navController,
         startDestination = Routes.HOME,
     ) {
-        composable(route = Routes.HOME) { HomeScreen(navController = navController) }
+        composable(route = Routes.HOME) { MainScreen(appNavController = navController) }
         composable(route = Routes.LOGIN) {
             val ctx = LocalContext.current
             val homeVm: HomeViewModel = hiltViewModel()

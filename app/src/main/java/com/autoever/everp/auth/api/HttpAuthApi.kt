@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 class HttpAuthApi : AuthApi {
     private companion object { const val TAG = "AuthApi" }
 
-    override suspend fun exchangeCodeForToken(
+    override suspend fun exchangeAuthCodeForToken(
         config: AuthConfig,
         code: String,
         codeVerifier: String,

@@ -9,7 +9,7 @@ class DefaultAuthRepository @Inject constructor(
     private val api: AuthApi,
 ) : AuthRepository {
     override suspend fun exchange(code: String, verifier: String, config: AuthConfig): TokenResponse {
-        return api.exchangeCodeForToken(config, code, verifier)
+        return api.exchangeAuthCodeForToken(config, code, verifier)
     }
 
     override suspend fun logout(accessToken: String?): Boolean {
