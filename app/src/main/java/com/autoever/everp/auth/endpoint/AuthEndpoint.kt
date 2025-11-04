@@ -20,6 +20,6 @@ object AuthEndpoint {
     const val TOKEN: String = "$AUTH_BASE/oauth2/token"
     const val LOGOUT: String = "$AUTH_BASE/logout"
 
-    // 사용자 정보 (게이트웨이 -> `/api` 기본 경로로 문서화됨)
-    const val USER_INFO: String = "$EVERP_BASE/api/user/info"
+    // 사용자 정보 (게이트웨이 -> `/api` 기본 경로)
+    const val USER_INFO: String = "https://api.everp.co.kr/api/user/info"
 }
