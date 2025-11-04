@@ -2,7 +2,6 @@ package com.autoever.everp.data.datasource.remote.http.service
 
 import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
-import com.autoever.everp.data.datasource.remote.dto.response.QuotationListItem
 import com.autoever.everp.domain.model.customer.CustomerStatusEnum
 import com.autoever.everp.domain.model.quotation.QuotationSearchTypeEnum
 import com.autoever.everp.domain.model.sale.SalesOrderSearchTypeEnum
@@ -33,7 +32,7 @@ interface SdApi {
         @Query("sort") sort: String? = null, // BUSINESS 서버의 Quotation Entity의 필드 값 기준
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 20,
-    ): ApiResponse<PageResponse<QuotationListItem>>
+    ): ApiResponse<PageResponse<QuotationListItemDto>>
 
     /**
      * 견적 상세 조회
@@ -101,6 +100,30 @@ interface SdApi {
 
 // ========== DTOs ==========
 // 견적서
+@Serializable
+data class QuotationListItemDto(
+    @SerialName("quotationId")
+    val quotationId: Long,
+    @SerialName("quotationCode")
+    val quotationCode: String,
+    @SerialName("customerName")
+    val customerName: String,
+    @SerialName("ownerName")
+    val ownerName: String,
+    @Serializable(with = LocalDateSerializer::class)
+    @SerialName("quotationDate")
+    val quotationDate: LocalDate,
+    @Serializable(with = LocalDateSerializer::class)
+    @SerialName("dueDate")
+    val dueDate: LocalDate,
+    @SerialName("totalAmount")
+    val totalAmount: Int,
+    @SerialName("statusCode")
+    val statusCode: String,
+    @SerialName("actions")
+    val actions: List<String>,
+)
+
 @Serializable
 data class QuotationDetailResponseDto(
     @SerialName("quotationId")
