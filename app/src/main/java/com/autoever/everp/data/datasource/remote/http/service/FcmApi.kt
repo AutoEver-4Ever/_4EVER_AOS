@@ -113,7 +113,7 @@ data class InvoiceConnectionDto(
     @SerialName("connectionId")
     val connectionId: String,
     @SerialName("connectionNumber")
-    val connectionCode: String,
+    val connectionNumber: String,
     @SerialName("connectionName")
     val connectionName: String,
 )

@@ -3,7 +3,6 @@ package com.autoever.everp.data.datasource.remote.mapper
 import com.autoever.everp.data.datasource.remote.http.service.InvoiceDetailResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.InvoiceListItemDto
 import com.autoever.everp.domain.model.invoice.InvoiceDetail
-import com.autoever.everp.domain.model.invoice.InvoiceDetailItem
 import com.autoever.everp.domain.model.invoice.InvoiceListItem
 
 /**
@@ -12,21 +11,44 @@ import com.autoever.everp.domain.model.invoice.InvoiceListItem
 object InvoiceMapper {
 
     fun toDomain(dto: InvoiceListItemDto): InvoiceListItem {
+
+        val connection: InvoiceListItem.InvoiceListItemConnection = InvoiceListItem.InvoiceListItemConnection(
+            id = dto.connection.connectionId,
+            number = dto.connection.connectionNumber,
+            name = dto.connection.connectionName,
+        )
+
+        val reference: InvoiceListItem.InvoiceListItemReference = InvoiceListItem.InvoiceListItemReference(
+            id = dto.reference.referenceId,
+            number = dto.reference.referenceNumber,
+        )
+
+
+
         return InvoiceListItem(
             id = dto.invoiceId,
             number = dto.invoiceNumber,
-            supplierId = dto.connection.supplierId,
-            supplierNumber = dto.connection.supplierNumber,
-            supplierName = dto.connection.supplierName,
+            connection = connection,
             totalAmount = dto.totalAmount,
             dueDate = dto.dueDate,
             status = dto.statusCode,
-            referenceId = dto.reference.referenceId,
-            referenceNumber = dto.reference.referenceNumber,
+            reference = reference,
         )
     }
 
     fun toDetailDomain(dto: InvoiceDetailResponseDto): InvoiceDetail {
+
+        val items: List<InvoiceDetail.InvoiceDetailItem> = dto.items.map {
+            InvoiceDetail.InvoiceDetailItem(
+                id = it.itemId,
+                name = it.itemName,
+                quantity = it.quantity,
+                unitOfMaterialName = it.unitOfMaterialName,
+                unitPrice = it.unitPrice,
+                totalPrice = it.totalPrice,
+            )
+        }
+
         return InvoiceDetail(
             id = dto.invoiceId,
             number = dto.invoiceNumber,
@@ -38,16 +60,7 @@ object InvoiceMapper {
             referenceNumber = dto.referenceNumber,
             totalAmount = dto.totalAmount,
             note = dto.note,
-            items = dto.items.map {
-                InvoiceDetailItem(
-                    itemId = it.itemId,
-                    itemName = it.itemName,
-                    quantity = it.quantity,
-                    unitOfMaterialName = it.unitOfMaterialName,
-                    unitPrice = it.unitPrice,
-                    totalPrice = it.totalPrice,
-                )
-            },
+            items = items,
         )
     }
 
