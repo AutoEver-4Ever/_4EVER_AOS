@@ -16,7 +16,7 @@ object AuthEndpoint {
     const val EVERP_BASE: String = "https://everp.co.kr"
 
     // OAuth2 인가 코드 (PKCE 적용)
-    const val AUTHORIZE: String = "$LOCAL_BASE/oauth2/authorize"
+    const val AUTHORIZE: String = "$AUTH_BASE/oauth2/authorize"
     const val TOKEN: String = "$AUTH_BASE/oauth2/token"
     const val LOGOUT: String = "$AUTH_BASE/logout"
 

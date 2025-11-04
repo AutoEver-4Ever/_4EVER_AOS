@@ -2,6 +2,7 @@ package com.autoever.everp.ui.navigation
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,6 +11,11 @@ import com.autoever.everp.ui.home.HomeScreen
 import com.autoever.everp.ui.login.LoginScreen
 import androidx.compose.ui.platform.LocalContext
 import com.autoever.everp.auth.flow.AuthCct
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.autoever.everp.ui.home.HomeViewModel
+import com.autoever.everp.auth.session.AuthState
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collect
 
 object Routes {
     const val HOME = "home"
@@ -33,6 +39,21 @@ fun AppNavGraph(
         composable(route = Routes.HOME) { HomeScreen(navController = navController) }
         composable(route = Routes.LOGIN) {
             val ctx = LocalContext.current
+            // Observe auth state and navigate to HOME on successful authentication
+            val homeVm: HomeViewModel = hiltViewModel()
+            val stateFlow = homeVm.authState
+            LaunchedEffect(Unit) {
+                stateFlow
+                    .onEach { st ->
+                        if (st is AuthState.Authenticated) {
+                            navController.navigate(Routes.HOME) {
+                                popUpTo(Routes.LOGIN) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        }
+                    }
+                    .collect()
+            }
             LoginScreen(
                 onLoginClick = {
                     Log.i("AuthFlow", "[INFO] 로그인 버튼 클릭")
