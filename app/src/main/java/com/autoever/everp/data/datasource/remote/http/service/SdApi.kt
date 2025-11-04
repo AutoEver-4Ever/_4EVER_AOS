@@ -235,7 +235,7 @@ data class CustomerUpdateRequestDto(
     @SerialName("detailAddress")
     val detailAddress: String,
     @SerialName("statusCode")
-    val statusCode: CustomerStatusEnum,
+    val statusCode: CustomerStatusEnum = CustomerStatusEnum.ACTIVE,
     @SerialName("manager")
     val manager: CustomerManagerDto,
     @SerialName("note")
