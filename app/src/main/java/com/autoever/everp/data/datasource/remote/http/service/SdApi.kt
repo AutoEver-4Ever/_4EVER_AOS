@@ -4,6 +4,7 @@ import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
 import com.autoever.everp.domain.model.customer.CustomerStatusEnum
 import com.autoever.everp.domain.model.quotation.QuotationSearchTypeEnum
+import com.autoever.everp.domain.model.quotation.QuotationStatusEnum
 import com.autoever.everp.domain.model.sale.SalesOrderSearchTypeEnum
 import com.autoever.everp.domain.model.sale.SalesOrderStatusEnum
 import com.autoever.everp.utils.serializer.LocalDateSerializer
@@ -27,7 +28,7 @@ interface SdApi {
         @Query("startDate") startDate: LocalDate? = null,
         @Query("endDate") endDate: LocalDate? = null,
         @Query("status") status: String? = null,
-        @Query("type") type: QuotationSearchTypeEnum? = null,
+        @Query("type") type: String? = null,
         @Query("search") search: String? = null,
         @Query("sort") sort: String? = null, // BUSINESS 서버의 Quotation Entity의 필드 값 기준
         @Query("page") page: Int = 0,
@@ -79,7 +80,7 @@ interface SdApi {
         @Query("startDate") startDate: LocalDate? = null,
         @Query("endDate") endDate: LocalDate? = null,
         @Query("search") search: String? = null,
-        @Query("type") type: SalesOrderSearchTypeEnum? = null,
+        @Query("type") type: String? = null,
         @Query("status") status: String? = null,
         @Query("page") page: Int = 0,
         @Query("size") size: Int = 20,
@@ -104,24 +105,21 @@ interface SdApi {
 data class QuotationListItemDto(
     @SerialName("quotationId")
     val quotationId: Long,
-    @SerialName("quotationCode")
-    val quotationCode: String,
+    @SerialName("quotationNumber")
+    val quotationNumber: String,
     @SerialName("customerName")
     val customerName: String,
-    @SerialName("ownerName")
-    val ownerName: String,
-    @Serializable(with = LocalDateSerializer::class)
-    @SerialName("quotationDate")
-    val quotationDate: LocalDate,
     @Serializable(with = LocalDateSerializer::class)
     @SerialName("dueDate")
     val dueDate: LocalDate,
-    @SerialName("totalAmount")
-    val totalAmount: Int,
     @SerialName("statusCode")
-    val statusCode: String,
-    @SerialName("actions")
-    val actions: List<String>,
+    val statusCode: QuotationStatusEnum = QuotationStatusEnum.UNKNOWN,
+    @SerialName("productId")
+    val productId: String, // 첫번째 상품 ID
+    @SerialName("quantity")
+    val quantity: Int, // 첫번째 상품 수량
+    @SerialName("uomName")
+    val uomName: String, // 첫번째 상품 단위 이름
 )
 
 @Serializable
@@ -130,30 +128,22 @@ data class QuotationDetailResponseDto(
     val quotationId: String,
     @SerialName("quotationNumber")
     val quotationNumber: String,
-    @SerialName("customerId")
-    val customerId: String,
-    @SerialName("customerName")
-    val customerName: String,
-    @SerialName("managerName")
-    val managerName: String,
-    @SerialName("managerPhone")
-    val managerPhone: String,
-    @SerialName("managerEmail")
-    val managerEmail: String,
     @Serializable(with = LocalDateSerializer::class)
     @SerialName("quotationDate")
     val quotationDate: LocalDate,
     @Serializable(with = LocalDateSerializer::class)
     @SerialName("dueDate")
     val dueDate: LocalDate,
+    @SerialName("statusCode")
+    val statusCode: QuotationStatusEnum,
+    @SerialName("customerName")
+    val customerName: String,
+    @SerialName("ceoName")
+    val ceoName: String,
     @SerialName("items")
     val items: List<QuotationItemDto>,
     @SerialName("totalAmount")
     val totalAmount: Long,
-    @SerialName("statusCode")
-    val statusCode: String,
-    @SerialName("note")
-    val note: String? = null,
 )
 
 @Serializable
@@ -164,6 +154,8 @@ data class QuotationItemDto(
     val itemName: String,
     @SerialName("quantity")
     val quantity: Int,
+    @SerialName("uomName")
+    val uomName: String,
     @SerialName("unitPrice")
     val unitPrice: Long,
     @SerialName("totalPrice")

@@ -30,7 +30,7 @@ enum class QuotationStatusEnum {
     /**
      * Enum을 문자열로 변환 (대문자)
      */
-    fun toApiString(): String = this.name
+    fun toApiString(): String? = if (this != UNKNOWN) this.name else null
 
     /**
      * 상태 설명

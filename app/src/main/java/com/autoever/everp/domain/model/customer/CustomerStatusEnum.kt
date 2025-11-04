@@ -3,7 +3,6 @@ package com.autoever.everp.domain.model.customer
 import androidx.compose.ui.graphics.Color
 
 enum class CustomerStatusEnum {
-    UNKNOWN, // 알 수 없음, 기본값
     ACTIVE, // 활성
     INACTIVE, // 비활성
     ;
@@ -13,7 +12,6 @@ enum class CustomerStatusEnum {
      */
     fun toKorean(): String =
         when (this) {
-            UNKNOWN -> "알 수 없음"
             ACTIVE -> "활성"
             INACTIVE -> "비활성"
         }
@@ -33,7 +31,6 @@ enum class CustomerStatusEnum {
      */
     fun description(): String =
         when (this) {
-            UNKNOWN -> "알 수 없는 상태"
             ACTIVE -> "활성화된 거래 가능 고객사"
             INACTIVE -> "비활성화된 거래 불가 고객사"
         }
@@ -44,7 +41,6 @@ enum class CustomerStatusEnum {
      */
     fun toColor(): Color =
         when (this) {
-            UNKNOWN -> Color(0xFF9E9E9E) // Grey
             ACTIVE -> Color(0xFF4CAF50) // Green
             INACTIVE -> Color(0xFFF44336) // Red
         }
@@ -69,10 +65,6 @@ enum class CustomerStatusEnum {
      */
     fun canTrade(): Boolean = this == ACTIVE
 
-    /**
-     * 편집 가능한 상태인지 확인
-     */
-    fun isEditable(): Boolean = this != UNKNOWN
 
     /**
      * 알림이 필요한 상태인지 확인
@@ -109,7 +101,7 @@ enum class CustomerStatusEnum {
          */
         fun fromStringOrDefault(
             value: String,
-            default: CustomerStatusEnum = UNKNOWN,
+            default: CustomerStatusEnum = ACTIVE,
         ): CustomerStatusEnum = fromStringOrNull(value) ?: default
 
         /**
@@ -121,6 +113,6 @@ enum class CustomerStatusEnum {
          * 필터 가능한 상태 목록 (UNKNOWN 제외)
          */
         fun getFilterableStatuses(): List<CustomerStatusEnum> =
-            entries.filter { it != UNKNOWN }
+            entries.filter { it != ACTIVE }
     }
 }

@@ -26,7 +26,7 @@ enum class QuotationSearchTypeEnum {
     /**
      * API 통신용 문자열
      */
-    fun toApiString(): String = this.name
+    fun toApiString(): String? = if (this != UNKNOWN) this.name else null
 
     /**
      * 검색 유형 설명

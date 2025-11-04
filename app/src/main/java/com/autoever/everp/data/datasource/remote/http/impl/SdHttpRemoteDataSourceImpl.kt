@@ -1,40 +1,155 @@
 package com.autoever.everp.data.datasource.remote.http.impl
 
 import com.autoever.everp.data.datasource.remote.SdRemoteDataSource
+import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
+import com.autoever.everp.data.datasource.remote.http.service.QuotationListItemDto
+import com.autoever.everp.data.datasource.remote.http.service.CustomerDetailResponseDto
+import com.autoever.everp.data.datasource.remote.http.service.QuotationCreateRequestDto
+import com.autoever.everp.data.datasource.remote.http.service.QuotationDetailResponseDto
+import com.autoever.everp.data.datasource.remote.http.service.SalesOrderDetailResponseDto
+import com.autoever.everp.data.datasource.remote.http.service.SalesOrderListItemDto
 import com.autoever.everp.data.datasource.remote.http.service.SdApi
-import com.autoever.everp.domain.model.quotation.Quotation
-import com.autoever.everp.domain.model.quotation.QuotationDetail
-import com.autoever.everp.domain.model.quotation.QuotationListItem
+import com.autoever.everp.domain.model.quotation.QuotationSearchTypeEnum
+import com.autoever.everp.domain.model.quotation.QuotationStatusEnum
+import com.autoever.everp.domain.model.sale.SalesOrderSearchTypeEnum
+import com.autoever.everp.domain.model.sale.SalesOrderStatusEnum
+import timber.log.Timber
+import java.time.LocalDate
 import javax.inject.Inject
 
+/**
+ * SD(영업 관리) 원격 데이터소스 구현체
+ */
 class SdHttpRemoteDataSourceImpl @Inject constructor(
-    private val sdApiService: SdApi,
+    private val sdApi: SdApi,
 ) : SdRemoteDataSource {
-    override fun fetchQuotationList(): Result<List<QuotationListItem>> {
-        TODO("Not yet implemented")
+
+    // ========== 견적서 ==========
+    override suspend fun getQuotationList(
+        startDate: LocalDate?,
+        endDate: LocalDate?,
+        status: QuotationStatusEnum,
+        type: QuotationSearchTypeEnum,
+        search: String,
+        sort: String, // Busintess/sd Quotation Enity의 sort와 동일
+        page: Int,
+        size: Int,
+    ): Result<PageResponse<QuotationListItemDto>> {
+        return try {
+            val response = sdApi.getQuotationList(
+                startDate = startDate,
+                endDate = endDate,
+                status = status.toApiString(),
+                type = type.toApiString(),
+                search = search.ifBlank { null },
+                sort = sort,
+                page = page,
+                size = size,
+            )
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message ?: "견적서 목록 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "견적서 목록 조회 실패")
+            Result.failure(e)
+        }
     }
 
-    override fun getQuotationList(): Result<List<QuotationListItem>> {
-        TODO("Not yet implemented")
+    override suspend fun getQuotationDetail(
+        quotationId: String,
+    ): Result<QuotationDetailResponseDto> {
+        return try {
+            val response = sdApi.getQuotationDetail(quotationId = quotationId)
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message ?: "견적서 상세 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "견적서 상세 조회 실패")
+            Result.failure(e)
+        }
     }
 
-    override fun getQuotationDetail(quotationId: String): Result<QuotationDetail?> {
-        TODO("Not yet implemented")
+    override suspend fun createQuotation(
+        request: QuotationCreateRequestDto,
+    ): Result<String> {
+        return try {
+            val response = sdApi.createQuotation(request = request)
+            if (response.success && response.data != null) {
+                Result.success(response.data.quotationId)
+            } else {
+                Result.failure(Exception(response.message ?: "견적서 생성 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "견적서 생성 실패")
+            Result.failure(e)
+        }
     }
 
-    override suspend fun createQuotation(quotation: Quotation): Result<Boolean> {
-        TODO("Not yet implemented")
+    // ========== 고객사 ==========
+    override suspend fun getCustomerDetail(
+        customerId: String,
+    ): Result<CustomerDetailResponseDto> {
+        return try {
+            val response = sdApi.getCustomerDetail(customerId = customerId)
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message ?: "고객사 상세 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "고객사 상세 조회 실패")
+            Result.failure(e)
+        }
     }
 
-    override suspend fun updateQuotation(quotation: Quotation): Result<Boolean> {
-        TODO("Not yet implemented")
+    // ========== 주문서 ==========
+    override suspend fun getSalesOrderList(
+        startDate: LocalDate?,
+        endDate: LocalDate?,
+        search: String,
+        type: SalesOrderSearchTypeEnum,
+        status: SalesOrderStatusEnum,
+        page: Int,
+        size: Int,
+    ): Result<PageResponse<SalesOrderListItemDto>> {
+        return try {
+            val response = sdApi.getSalesOrderList(
+                startDate = startDate,
+                endDate = endDate,
+                search = search,
+                type = type.toApiString(),
+                status = status.toApiString(),
+                page = page,
+                size = size,
+            )
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message ?: "주문서 목록 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "주문서 목록 조회 실패")
+            Result.failure(e)
+        }
     }
 
-    override suspend fun deleteQuotation(quotationId: Long): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun requestQuotationApproval(quotationId: Long): Result<Boolean> {
-        TODO("Not yet implemented")
+    override suspend fun getSalesOrderDetail(
+        salesOrderId: String,
+    ): Result<SalesOrderDetailResponseDto> {
+        return try {
+            val response = sdApi.getSalesOrderDetail(salesOrderId = salesOrderId)
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message ?: "주문서 상세 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "주문서 상세 조회 실패")
+            Result.failure(e)
+        }
     }
 }
