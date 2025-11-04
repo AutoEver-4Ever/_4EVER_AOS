@@ -26,7 +26,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Everp">
+        android:theme="@style/Theme.Everp"
+        android:usesCleartextTraffic="true"
+        >
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -36,6 +38,20 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- OAuth2 Redirect 수신 (everp-aos://callback) -->
+        <activity
+            android:name="com.autoever.everp.ui.redirect.RedirectReceiverActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Transparent">
+            <intent-filter android:label="oauth2-redirect">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="everp-aos" android:host="callback" />
             </intent-filter>
         </activity>
     </application>
