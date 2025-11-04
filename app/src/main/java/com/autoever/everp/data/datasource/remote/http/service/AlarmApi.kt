@@ -57,7 +57,7 @@ interface AlarmApi {
     ): ApiResponse<Unit>
 
     companion object {
-        private const val BASE_URL = "/alarm/notifications"
+        private const val BASE_URL = "alarm/notifications"
     }
 }
 

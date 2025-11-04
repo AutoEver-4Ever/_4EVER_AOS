@@ -62,7 +62,7 @@ interface MmApi {
     ): ApiResponse<PurchaseOrderDetailResponseDto>
 
     companion object {
-        private const val BASE_URL = "/scm-pp/mm"
+        private const val BASE_URL = "scm-pp/mm"
     }
 }
 

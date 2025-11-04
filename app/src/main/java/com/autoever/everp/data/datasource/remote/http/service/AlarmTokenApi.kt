@@ -21,7 +21,7 @@ interface AlarmTokenApi {
     ): ApiResponse<Unit>
 
     companion object {
-        private const val BASE_URL = "/alarm/fcm-tokens"
+        private const val BASE_URL = "alarm/fcm-tokens"
     }
 }
 

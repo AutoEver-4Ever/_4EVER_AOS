@@ -21,7 +21,7 @@ interface UserApi {
     suspend fun getUserInfo(): ApiResponse<UserInfoResponseDto>
 
     companion object {
-        private const val BASE_URL = "/user"
+        private const val BASE_URL = "user"
     }
 }
 

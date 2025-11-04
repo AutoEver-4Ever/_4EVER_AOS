@@ -95,7 +95,7 @@ interface SdApi {
     ): ApiResponse<SalesOrderDetailResponseDto>
 
     companion object {
-        const val BASE_URL = "/business/sd"
+        const val BASE_URL = "business/sd"
     }
 }
 

@@ -7,7 +7,7 @@ package com.autoever.everp.data.datasource.remote.http.service
 interface HrmApi {
 
     companion object {
-        private const val BASE_URL = "/business/hrm"
+        private const val BASE_URL = "business/hrm"
     }
 }
 

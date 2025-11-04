@@ -82,7 +82,7 @@ interface FcmApi {
 //    ): ApiResponse<Any>
 
     companion object {
-        private const val BASE_URL = "/business/fcm"
+        private const val BASE_URL = "business/fcm"
     }
 }
 

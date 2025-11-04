@@ -7,7 +7,7 @@ package com.autoever.everp.data.datasource.remote.http.service
 interface ImApi {
 
     companion object {
-        private const val BASE_URL = "/scm-pp/iv"
+        private const val BASE_URL = "scm-pp/iv"
     }
 }
 
