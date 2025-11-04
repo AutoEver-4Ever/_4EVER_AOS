@@ -2,6 +2,8 @@ package com.autoever.everp.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.autoever.everp.auth.session.TokenStore
 import com.autoever.everp.auth.session.TokenStoreImpl
 import dagger.Module
@@ -19,7 +21,18 @@ object AppModule {
     @Singleton
     fun provideSharedPreferences(
         @ApplicationContext context: Context,
-    ): SharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+    ): SharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+        return EncryptedSharedPreferences.create(
+            context,
+            "secure_auth_prefs",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+        )
+    }
 
     @Provides
     @Singleton

@@ -30,7 +30,15 @@ class HomeViewModel @Inject constructor(
                 try {
                     val info = userRepository.fetchUserInfo(st.accessToken)
                     _user.value = info
-                    Log.i(TAG, "[INFO] 사용자 정보 로딩 완료")
+                    Log.i(
+                        TAG,
+                        "[INFO] 사용자 정보 로딩 완료 | " +
+                            "userId=${info.userId ?: "null"}, " +
+                            "userName=${info.userName ?: "null"}, " +
+                            "email=${info.loginEmail ?: "null"}, " +
+                            "role=${info.userRole ?: "null"}, " +
+                            "userType=${info.userType ?: "null"}"
+                    )
                 } catch (e: Exception) {
                     Log.e(TAG, "[ERROR] 사용자 정보 로드 실패: ${e.message}")
                 }

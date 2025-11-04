@@ -88,6 +88,8 @@ dependencies {
     implementation(libs.timber)
     // Browser (Chrome Custom Tabs)
     implementation(libs.androidx.browser)
+    // Security Crypto for EncryptedSharedPreferences
+    implementation(libs.androidx.security.crypto)
 //    // DataStore dependencies
 //    implementation("androidx.datastore:datastore-preferences:1.0.0")
 //    // Room dependencies
