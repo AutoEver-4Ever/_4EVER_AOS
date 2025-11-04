@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -16,6 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -24,6 +27,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
+import android.content.res.Configuration
+import com.autoever.everp.ui.theme.EverpTheme
+import androidx.compose.foundation.layout.navigationBarsPadding
 import com.autoever.everp.R
 
 @Composable
@@ -31,6 +38,7 @@ fun LoginScreen(
     onLoginClick: () -> Unit,
 ) {
     val brand = Color(red = 55 / 255f, green = 83 / 255f, blue = 150 / 255f)
+    var isLoading by remember { mutableStateOf(false) }
 
     Surface(color = MaterialTheme.colorScheme.background) {
         Box(
@@ -44,71 +52,62 @@ fun LoginScreen(
                         )
                     )
                 )
+                .navigationBarsPadding()
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                Spacer(modifier = Modifier.height(40.dp))
+            // 로고: 중앙 상단
+            androidx.compose.foundation.Image(
+                painter = painterResource(id = R.drawable.everp_logo),
+                contentDescription = "EVERP 로고",
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 360.dp)
+                    .fillMaxWidth(0.5f),
+                contentScale = ContentScale.Fit,
+                alignment = Alignment.Center
+            )
 
-                // 중앙 콘텐츠 (로고 + 카피)
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // 로고 이미지
-                    androidx.compose.foundation.Image(
-                        painter = painterResource(id = R.drawable.everp_logo),
-                        contentDescription = "EVERP 로고",
-                        modifier = Modifier
-                            .fillMaxWidth(0.6f)
-                            .padding(bottom = 24.dp),
-                        contentScale = ContentScale.Fit,
-                        alignment = Alignment.Center
-                    )
+            // 카피: 중앙
+            Text(
+                text = "하나의 계정으로 ERP 서비스를 이용하세요",
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(top = 60.dp)
+            )
 
-                    Text(
-                        text = "현장을 하나로, 조직을 연결하는 ERP",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 24.dp)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "지금 로그인하고 업무를 시작하세요.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 24.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                // 하단 CTA 영역
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .navigationBarsPadding()
-                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Button(
-                        onClick = onLoginClick,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp)
-                            .padding(top = 12.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = brand)
-                    ) {
-                        Text(text = "로그인 하기")
+            // 버튼: 중앙 하단
+            Button(
+                onClick = {
+                    if (!isLoading) {
+                        isLoading = true
+                        onLoginClick()
                     }
-
-                    Spacer(modifier = Modifier.height(48.dp))
-                }
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(horizontal = 24.dp, vertical = 24.dp)
+                    .fillMaxWidth()
+                    .height(60.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = brand),
+                enabled = !isLoading,
+            ) {
+                Text(
+                    text = if (isLoading) "브라우저를 여는 중..." else "로그인하기",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                )
             }
         }
+    }
+}
+
+@Preview(showBackground = true, name = "Login – Light")
+@Composable
+private fun PreviewLoginScreen() {
+    EverpTheme {
+        LoginScreen(onLoginClick = {})
     }
 }
