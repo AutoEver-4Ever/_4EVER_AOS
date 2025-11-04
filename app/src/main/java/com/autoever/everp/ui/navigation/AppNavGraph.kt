@@ -39,7 +39,6 @@ fun AppNavGraph(
         composable(route = Routes.HOME) { HomeScreen(navController = navController) }
         composable(route = Routes.LOGIN) {
             val ctx = LocalContext.current
-            // Observe auth state and navigate to HOME on successful authentication
             val homeVm: HomeViewModel = hiltViewModel()
             val stateFlow = homeVm.authState
             LaunchedEffect(Unit) {
