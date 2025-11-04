@@ -8,6 +8,7 @@ import com.autoever.everp.domain.model.quotation.QuotationStatusEnum
 import com.autoever.everp.domain.model.sale.SalesOrderSearchTypeEnum
 import com.autoever.everp.domain.model.sale.SalesOrderStatusEnum
 import com.autoever.everp.utils.serializer.LocalDateSerializer
+import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import retrofit2.http.*
@@ -249,6 +250,7 @@ data class CustomerUpdateRequestDto(
     val baseAddress: String,
     @SerialName("detailAddress")
     val detailAddress: String,
+    @Required
     @SerialName("statusCode")
     val statusCode: CustomerStatusEnum = CustomerStatusEnum.ACTIVE,
     @SerialName("manager")

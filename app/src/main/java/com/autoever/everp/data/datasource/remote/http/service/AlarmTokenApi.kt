@@ -1,6 +1,7 @@
 package com.autoever.everp.data.datasource.remote.http.service
 
 import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
+import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import retrofit2.http.Body
@@ -31,6 +32,7 @@ data class FcmTokenRegisterRequestDto(
     val token: String,
     @SerialName("deviceId")
     val deviceId: String,
+    @Required
     @SerialName("deviceType")
     val deviceType: String = "ANDROID",
 )

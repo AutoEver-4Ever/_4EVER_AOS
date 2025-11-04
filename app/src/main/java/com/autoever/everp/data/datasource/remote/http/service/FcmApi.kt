@@ -170,6 +170,7 @@ data class InvoiceDetailItemDto(
     val totalPrice: Long,
 )
 
+// TODO 전표 업데이트시 필요한지 확인 필요 - 기본값이 있는 경우 값이 전달되지 않음
 @Serializable
 data class InvoiceUpdateRequestDto(
     @SerialName("status")

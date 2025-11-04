@@ -7,6 +7,8 @@ import com.autoever.everp.domain.model.purchase.PurchaseOrderStatusEnum
 import com.autoever.everp.domain.model.supplier.SupplierCatetoryEnum
 import com.autoever.everp.domain.model.supplier.SupplierStatusEnum
 import com.autoever.everp.utils.serializer.LocalDateSerializer
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import retrofit2.http.*
@@ -121,10 +123,13 @@ data class SupplierUpdateRequestDto(
     val supplierPhone: String,
     @SerialName("supplierBaseAddress")
     val supplierBaseAddress: String,
+//    @EncodeDefault
     @SerialName("supplierDetailAddress")
     val supplierDetailAddress: String? = null,
+    @Required
     @SerialName("category")
     val category: SupplierCatetoryEnum = SupplierCatetoryEnum.MATERIAL,
+    @Required
     @SerialName("statusCode")
     val statusCode: SupplierStatusEnum = SupplierStatusEnum.ACTIVE,
     @SerialName("deliveryLeadTime")
