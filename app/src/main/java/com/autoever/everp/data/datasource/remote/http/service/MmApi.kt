@@ -44,7 +44,7 @@ interface MmApi {
      */
     @GET("$BASE_URL/purchase-orders")
     suspend fun getPurchaseOrderList(
-        @Query("statusCode") statusCode: String = "ALL",
+        @Query("statusCode") statusCode: String? = null,
         @Query("type") type: String? = null,
         @Query("keyword") keyword: String? = null,
         @Query("startDate") startDate: LocalDate? = null,
@@ -75,8 +75,6 @@ data class SupplierDetailResponseDto(
     val supplierInfo: SupplierInfoDto,
     @SerialName("managerInfo")
     val managerInfo: SupplierManagerDto,
-    @SerialName("statusCode")
-    val statusCode: String,
 )
 
 @Serializable
@@ -126,7 +124,7 @@ data class SupplierUpdateRequestDto(
     @SerialName("supplierDetailAddress")
     val supplierDetailAddress: String? = null,
     @SerialName("category")
-    val category: SupplierCatetoryEnum,
+    val category: SupplierCatetoryEnum = SupplierCatetoryEnum.MATERIAL,
     @SerialName("statusCode")
     val statusCode: SupplierStatusEnum = SupplierStatusEnum.ACTIVE,
     @SerialName("deliveryLeadTime")
@@ -159,7 +157,7 @@ data class PurchaseOrderListItemDto(
     @SerialName("totalAmount")
     val totalAmount: Long,
     @SerialName("statusCode")
-    val statusCode: String,
+    val statusCode: PurchaseOrderStatusEnum = PurchaseOrderStatusEnum.UNKNOWN,
 )
 
 @Serializable
@@ -169,7 +167,7 @@ data class PurchaseOrderDetailResponseDto(
     @SerialName("purchaseOrderNumber")
     val purchaseOrderNumber: String,
     @SerialName("statusCode")
-    val statusCode: PurchaseOrderStatusEnum,
+    val statusCode: PurchaseOrderStatusEnum = PurchaseOrderStatusEnum.UNKNOWN,
     @Serializable(with = LocalDateSerializer::class)
     @SerialName("orderDate")
     val orderDate: LocalDate,
