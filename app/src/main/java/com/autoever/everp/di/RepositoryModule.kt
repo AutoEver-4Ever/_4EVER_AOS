@@ -49,6 +49,12 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindsFcmRepository(
+        fcmRepositoryImpl: FcmRepositoryImpl,
+    ): FcmRepository
+
+    @Binds
+    @Singleton
     abstract fun bindsMmRepository(
         mmRepositoryImpl: MmRepositoryImpl,
     ): MmRepository
@@ -58,10 +64,4 @@ abstract class RepositoryModule {
     abstract fun bindsUserRepository(
         userRepositoryImpl: UserRepositoryImpl,
     ): UserRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindsFcmFinanceRepository(
-        fcmFinanceRepositoryImpl: FcmRepositoryImpl,
-    ): FcmRepository
 }

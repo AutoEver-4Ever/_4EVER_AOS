@@ -94,17 +94,4 @@ abstract class DataSourceModule {
     abstract fun bindsSdLocalDataSource(
         sdLocalDataSourceImpl: SdLocalDataSourceImpl,
     ): SdLocalDataSource
-
-    // FcmFinance Data Sources
-    @Binds
-    @Singleton
-    abstract fun bindsFcmFinanceRemoteDataSource(
-        fcmHttpRemoteDataSourceImpl: FcmHttpRemoteDataSourceImpl,
-    ): FcmRemoteDataSource
-
-    @Binds
-    @Singleton
-    abstract fun bindsFcmFinanceLocalDataSource(
-        fcmLocalDataSourceImpl: FcmLocalDataSourceImpl,
-    ): FcmLocalDataSource
 }
