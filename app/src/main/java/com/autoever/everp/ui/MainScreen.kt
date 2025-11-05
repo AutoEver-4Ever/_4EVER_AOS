@@ -9,7 +9,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.autoever.everp.domain.model.user.UserTypeEnum
 import com.autoever.everp.ui.customer.CustomerApp
 import com.autoever.everp.ui.login.LoginScreen
-import com.autoever.everp.ui.supplier.VendorApp
+import com.autoever.everp.ui.supplier.SupplierApp
 import com.autoever.everp.utils.permission.PermissionStatus
 import com.autoever.everp.utils.permission.rememberPermissionState
 import timber.log.Timber
@@ -39,7 +39,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     // 역할 상태에 따라 적절한 UI를 렌더링
     when (userRole) {
         UserTypeEnum.CUSTOMER -> CustomerApp()
-        UserTypeEnum.SUPPLIER -> VendorApp()
+        UserTypeEnum.SUPPLIER -> SupplierApp()
         else -> LoginScreen(
             onLoginSuccess = { role ->
                 viewModel.updateUserRole(role)

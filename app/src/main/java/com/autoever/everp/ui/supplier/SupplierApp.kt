@@ -11,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.autoever.everp.ui.navigation.CustomNavigationBar
 
 @Composable
-fun VendorApp() {
+fun SupplierApp() {
     val navController = rememberNavController()
 
     Scaffold(
@@ -45,13 +45,13 @@ fun VendorApp() {
     showSystemUi = true,
 )
 @Composable
-fun VendorAppPreview() {
-    VendorApp()
+fun SupplierAppPreview() {
+    SupplierApp()
 }
 
 @Preview(showBackground = true)
 @Composable
-fun VendorBottomBarPreview() {
+fun SupplierNavigationBarPreview() {
     val navController = rememberNavController()
     CustomNavigationBar(
         navController = navController,
