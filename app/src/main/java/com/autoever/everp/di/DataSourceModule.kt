@@ -4,7 +4,9 @@ import com.autoever.everp.data.datasource.local.AlarmLocalDataSource
 import com.autoever.everp.data.datasource.local.FcmLocalDataSource
 import com.autoever.everp.data.datasource.local.MmLocalDataSource
 import com.autoever.everp.data.datasource.local.SdLocalDataSource
+import com.autoever.everp.data.datasource.local.TokenLocalDataSource
 import com.autoever.everp.data.datasource.local.UserLocalDataSource
+import com.autoever.everp.data.datasource.local.datastore.TokenDataStoreLocalDataSourceImpl
 import com.autoever.everp.data.datasource.local.impl.AlarmLocalDataSourceImpl
 import com.autoever.everp.data.datasource.local.impl.FcmLocalDataSourceImpl
 import com.autoever.everp.data.datasource.local.impl.MmLocalDataSourceImpl
@@ -94,4 +96,11 @@ abstract class DataSourceModule {
     abstract fun bindsSdLocalDataSource(
         sdLocalDataSourceImpl: SdLocalDataSourceImpl,
     ): SdLocalDataSource
+
+    // Token Data Sources (AccessToken, FcmToken)
+    @Binds
+    @Singleton
+    abstract fun bindsTokenLocalDataSource(
+        tokenDataStoreLocalDataSourceImpl: TokenDataStoreLocalDataSourceImpl
+    ): TokenLocalDataSource
 }
