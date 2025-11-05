@@ -1,10 +1,11 @@
 package com.autoever.everp.domain.model.sale
 
+// TODO 서버 통신후 제대로 안된면 Serializer 추가하기
 enum class SalesOrderSearchTypeEnum {
     UNKNOWN, // 알 수 없음, 기본값
-    salesOrderNumber, // 주문 번호
-    customerName, // 고객사명
-    managerName, // 담당자명
+    SALES_ORDER_NUMBER, // 주문 번호
+    CUSTOMER_NAME, // 고객사명
+    MANAGER_NAME, // 담당자명
     ;
 
     /**
@@ -13,9 +14,9 @@ enum class SalesOrderSearchTypeEnum {
     fun toKorean(): String =
         when (this) {
             UNKNOWN -> "알 수 없음"
-            salesOrderNumber -> "주문번호"
-            customerName -> "고객사명"
-            managerName -> "담당자명"
+            SALES_ORDER_NUMBER -> "주문번호"
+            CUSTOMER_NAME -> "고객사명"
+            MANAGER_NAME -> "담당자명"
         }
 
     /**
@@ -34,9 +35,9 @@ enum class SalesOrderSearchTypeEnum {
     fun description(): String =
         when (this) {
             UNKNOWN -> "알 수 없는 검색 유형"
-            salesOrderNumber -> "주문 번호로 검색"
-            customerName -> "고객사 이름으로 검색"
-            managerName -> "담당자 이름으로 검색"
+            SALES_ORDER_NUMBER -> "주문 번호로 검색"
+            CUSTOMER_NAME -> "고객사 이름으로 검색"
+            MANAGER_NAME -> "담당자 이름으로 검색"
         }
 
     /**
@@ -45,9 +46,9 @@ enum class SalesOrderSearchTypeEnum {
     fun getPlaceholder(): String =
         when (this) {
             UNKNOWN -> "검색어를 입력하세요"
-            salesOrderNumber -> "주문번호를 입력하세요"
-            customerName -> "고객사명을 입력하세요"
-            managerName -> "담당자명을 입력하세요"
+            SALES_ORDER_NUMBER -> "주문번호를 입력하세요"
+            CUSTOMER_NAME -> "고객사명을 입력하세요"
+            MANAGER_NAME -> "담당자명을 입력하세요"
         }
 
     /**
@@ -63,17 +64,17 @@ enum class SalesOrderSearchTypeEnum {
     /**
      * 주문번호 검색 여부
      */
-    fun isSalesOrderNumberSearch(): Boolean = this == salesOrderNumber
+    fun isSalesOrderNumberSearch(): Boolean = this == SALES_ORDER_NUMBER
 
     /**
      * 고객사명 검색 여부
      */
-    fun isCustomerNameSearch(): Boolean = this == customerName
+    fun isCustomerNameSearch(): Boolean = this == CUSTOMER_NAME
 
     /**
      * 담당자명 검색 여부
      */
-    fun isManagerNameSearch(): Boolean = this == managerName
+    fun isManagerNameSearch(): Boolean = this == MANAGER_NAME
 
     companion object {
         /**

@@ -6,7 +6,11 @@ import com.autoever.everp.domain.model.notification.NotificationLinkEnum
 import com.autoever.everp.domain.model.notification.NotificationSourceEnum
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.PATCH
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * 알림 관련 API Service

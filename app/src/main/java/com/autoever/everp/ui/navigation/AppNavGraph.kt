@@ -16,6 +16,7 @@ import com.autoever.everp.ui.home.HomeViewModel
 import com.autoever.everp.auth.session.AuthState
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 object Routes {
     const val HOME = "home"
@@ -55,8 +56,9 @@ fun AppNavGraph(
             }
             LoginScreen(
                 onLoginClick = {
-                    Log.i("AuthFlow", "[INFO] 로그인 버튼 클릭")
-                    AuthCct.start(ctx) }
+                    Timber.tag("AuthFlow").i("[INFO] 로그인 버튼 클릭")
+                    AuthCct.start(ctx)
+                }
             )
         }
 

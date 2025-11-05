@@ -11,7 +11,12 @@ import com.autoever.everp.utils.serializer.LocalDateSerializer
 import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 import java.time.LocalDate
 
 /**
@@ -210,15 +215,19 @@ data class CustomerDetailResponseDto(
     val contactPhone: String,
     @SerialName("customerEmail")
     val contactEmail: String,
-    @SerialName("baseAddress") // 기본 주소
+    // 기본 주소
+    @SerialName("baseAddress")
     val address: String,
-    @SerialName("detailAddress") // 상세 주소
+    // 상세 주소
+    @SerialName("detailAddress")
     val detailAddress: String? = null,
     @SerialName("manager")
     val manager: CustomerManagerDto,
-    @SerialName("totalOrders") // 총 주문 수
+    // 총 주문 수
+    @SerialName("totalOrders")
     val totalOrders: Long,
-    @SerialName("totalTransactionAmount") // 총 거래 금액
+    // 총 거래 금액
+    @SerialName("totalTransactionAmount")
     val totalTransactionAmount: Long,
     @SerialName("note")
     val note: String? = null,

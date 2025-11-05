@@ -7,7 +7,12 @@ import com.autoever.everp.domain.model.invoice.InvoiceTypeEnum
 import com.autoever.everp.utils.serializer.LocalDateSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 import java.time.LocalDate
 
 /**

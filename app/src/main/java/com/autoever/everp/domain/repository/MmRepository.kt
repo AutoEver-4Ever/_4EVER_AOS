@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface MmRepository {
     // ========== 공급업체 ==========
+
     /**
      * 로컬 캐시된 공급업체 상세 관찰
      */

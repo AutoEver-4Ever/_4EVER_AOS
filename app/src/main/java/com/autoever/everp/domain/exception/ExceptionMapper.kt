@@ -222,21 +222,21 @@ object CommonExceptionMapper {
  * Extension Functions
  */
 
-// 범용 매핑
+/** 범용 매핑 */
 fun <T> Result<T>.mapException(): Result<T> {
     return this.onFailure { throwable ->
         throw ExceptionMapper.mapToEverpException(throwable)
     }
 }
 
-// Remote용 매핑
+/** Remote용 매핑 */
 fun <T> Result<T>.mapRemoteException(): Result<T> {
     return this.onFailure { throwable ->
         throw RemoteExceptionMapper.map(throwable)
     }
 }
 
-// Local용 매핑
+/** Local용 매핑 */
 fun <T> Result<T>.mapLocalException(): Result<T> {
     return this.onFailure { throwable ->
         throw LocalExceptionMapper.map(throwable)

@@ -1,8 +1,6 @@
 package com.autoever.everp.domain.model.quotation
 
-import java.time.LocalDate
-
 /**
- * Quotation(견적서) Mapper
- *
+ * Quotation(견적서) 관련 Domain 변환 유틸리티
  */
+object QuotationMapper

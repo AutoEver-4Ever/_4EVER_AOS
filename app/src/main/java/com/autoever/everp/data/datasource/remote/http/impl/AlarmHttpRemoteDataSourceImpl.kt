@@ -54,7 +54,9 @@ class AlarmHttpRemoteDataSourceImpl @Inject constructor(
         status: NotificationStatusEnum,
     ): Result<NotificationCountResponseDto> {
         return try {
-            val response = alarmApi.getNotificationCount(status = status.toApiString())
+            val response = alarmApi.getNotificationCount(
+                status = status.toApiString(),
+            )
             if (response.success && response.data != null) {
                 Result.success(response.data)
             } else {
@@ -73,7 +75,9 @@ class AlarmHttpRemoteDataSourceImpl @Inject constructor(
     ): Result<NotificationReadResponseDto> {
         return try {
             val request = NotificationMarkReadRequestDto(notificationIds = notificationIds)
-            val response = alarmApi.markNotificationsAsRead(request)
+            val response = alarmApi.markNotificationsAsRead(
+                request,
+            )
             if (response.success && response.data != null) {
                 Result.success(response.data)
             } else {
