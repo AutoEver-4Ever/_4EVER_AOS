@@ -1,9 +1,11 @@
 package com.autoever.everp.data.datasource.remote.http.impl
 
-import com.autoever.everp.auth.api.AuthApi
 import com.autoever.everp.data.datasource.remote.AuthRemoteDataSource
+import com.autoever.everp.data.datasource.remote.http.service.AuthApi
 import com.autoever.everp.data.datasource.remote.http.service.TokenResponseDto
+import com.autoever.everp.domain.model.auth.AccessToken
 import timber.log.Timber
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class AuthHttpRemoteDataSourceImpl @Inject constructor(
@@ -14,7 +16,7 @@ class AuthHttpRemoteDataSourceImpl @Inject constructor(
         redirectUri: String,
         code: String,
         codeVerifier: String,
-    ): Result<TokenResponseDto> {
+    ): Result<AccessToken> {
         return try {
             val dto = authApi.exchangeAuthCodeForToken(
                 clientId = clientId,
@@ -22,7 +24,13 @@ class AuthHttpRemoteDataSourceImpl @Inject constructor(
                 code = code,
                 codeVerifier = codeVerifier,
             )
-            Result.success(dto)
+            Result.success(
+                AccessToken(
+                    token = dto.accessToken,
+                    expiresIn = LocalDateTime.now().plusSeconds(dto.expiresIn),
+                    type = dto.tokenType,
+                )
+            )
         } catch (e: Exception) {
             Timber.tag("Auth").e(e, "exchangeAuthCodeForToken failed")
             Result.failure(e)

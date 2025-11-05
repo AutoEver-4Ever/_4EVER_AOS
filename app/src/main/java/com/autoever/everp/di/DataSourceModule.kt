@@ -7,6 +7,7 @@ import com.autoever.everp.data.datasource.local.MmLocalDataSource
 import com.autoever.everp.data.datasource.local.SdLocalDataSource
 import com.autoever.everp.data.datasource.local.TokenLocalDataSource
 import com.autoever.everp.data.datasource.local.UserLocalDataSource
+import com.autoever.everp.data.datasource.local.datastore.AuthDataStoreLocalDataSourceImpl
 import com.autoever.everp.data.datasource.local.datastore.TokenDataStoreLocalDataSourceImpl
 import com.autoever.everp.data.datasource.local.impl.AlarmLocalDataSourceImpl
 import com.autoever.everp.data.datasource.local.impl.FcmLocalDataSourceImpl
@@ -20,6 +21,7 @@ import com.autoever.everp.data.datasource.remote.MmRemoteDataSource
 import com.autoever.everp.data.datasource.remote.SdRemoteDataSource
 import com.autoever.everp.data.datasource.remote.UserRemoteDataSource
 import com.autoever.everp.data.datasource.remote.http.impl.AlarmHttpRemoteDataSourceImpl
+import com.autoever.everp.data.datasource.remote.http.impl.AuthHttpRemoteDataSourceImpl
 import com.autoever.everp.data.datasource.remote.http.impl.FcmHttpRemoteDataSourceImpl
 import com.autoever.everp.data.datasource.remote.http.impl.MmHttpRemoteDataSourceImpl
 import com.autoever.everp.data.datasource.remote.http.impl.SdHttpRemoteDataSourceImpl
@@ -103,13 +105,13 @@ abstract class DataSourceModule {
     @Binds
     @Singleton
     abstract fun bindsAuthRemoteDataSource(
-        authHttpRemoteDataSourceImpl: AlarmHttpRemoteDataSourceImpl
+        authHttpRemoteDataSourceImpl: AuthHttpRemoteDataSourceImpl
     ): AuthRemoteDataSource
 
     @Binds
     @Singleton
     abstract fun bindsAuthLocalDataSource(
-        authDataStoreLocalDataSourceImpl: AlarmHttpRemoteDataSourceImpl
+        authDataStoreLocalDataSourceImpl: AuthDataStoreLocalDataSourceImpl
     ): AuthLocalDataSource
 
     // Token Data Sources (AccessToken, FcmToken)

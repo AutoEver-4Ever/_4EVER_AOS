@@ -1,6 +1,7 @@
 package com.autoever.everp.di
 
 import com.autoever.everp.data.repository.AlarmRepositoryImpl
+import com.autoever.everp.data.repository.AuthRepositoryImpl
 import com.autoever.everp.data.repository.DeviceInfoRepositoryImpl
 import com.autoever.everp.data.repository.FcmRepositoryImpl
 import com.autoever.everp.data.repository.MmRepositoryImpl
@@ -8,6 +9,7 @@ import com.autoever.everp.data.repository.PushNotificationRepositoryImpl
 import com.autoever.everp.data.repository.SdRepositoryImpl
 import com.autoever.everp.data.repository.UserRepositoryImpl
 import com.autoever.everp.domain.repository.AlarmRepository
+import com.autoever.everp.domain.repository.AuthRepository
 import com.autoever.everp.domain.repository.DeviceInfoRepository
 import com.autoever.everp.domain.repository.FcmRepository
 import com.autoever.everp.domain.repository.MmRepository
@@ -64,4 +66,10 @@ abstract class RepositoryModule {
     abstract fun bindsUserRepository(
         userRepositoryImpl: UserRepositoryImpl,
     ): UserRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl
+    ): AuthRepository
 }
