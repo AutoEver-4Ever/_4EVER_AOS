@@ -6,13 +6,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.autoever.everp.ui.navigation.CustomNavigationBar
 
 @Composable
-fun CustomerApp() {
+fun CustomerApp(
+    loginNavController: NavHostController
+) {
     val navController = rememberNavController()
 
     Scaffold(
@@ -50,7 +53,7 @@ fun CustomerApp() {
 )
 @Composable
 fun CustomerAppPreview() {
-    CustomerApp()
+    CustomerApp(rememberNavController())
 }
 
 @Preview(showBackground = true)
