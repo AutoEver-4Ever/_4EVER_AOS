@@ -14,7 +14,9 @@ trim_trailing_whitespace = true
 indent_size = 4
 indent_style = space
 max_line_length = 120
-disabled_rules = no-wildcard-imports # 와일드카드 임포트 금지
+
+# 파일명 규칙 비활성화 (더 명확한 형식)
+ktlint_standard_filename = disabled
 
 # Composable 함수 네이밍 규칙을 위한 설정
 ktlint_experimental = true

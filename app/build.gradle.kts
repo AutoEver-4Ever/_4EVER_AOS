@@ -6,6 +6,10 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.firebase.perf)
 }
 
 android {
@@ -24,6 +28,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -37,8 +46,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    buildFeatures {
-        compose = true
+
+    secrets {
+        // 기본 'local.properties' 대신 다른 파일 이름 지정
+        propertiesFileName = "secrets.properties"
+
+        // CI/CD 환경을 위한 기본값 파일 지정 (버전 관리에 포함 가능)
+        defaultPropertiesFileName = "secrets.defaults.properties"
+
+        // 특정 키를 무시하도록 정규식 추가 (기본적으로 "sdk.dir"은 무시됨)
+        ignoreList.add("keyToIgnore")
+        ignoreList.add("ignore*")
     }
 }
 
@@ -53,6 +71,10 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx) // ViewModel
     implementation(libs.androidx.navigation.compose) // Navigation
+    implementation(libs.androidx.datastore.preferences) // DataStore Preferences
+    implementation(libs.androidx.room.runtime) // Room Runtime
+    ksp(libs.androidx.room.compiler) // Room Compiler
+    implementation(libs.androidx.room.ktx) // Room KTX
 
     // Jetpack Compose dependencies
     implementation(platform(libs.androidx.compose.bom))
@@ -60,6 +82,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.extended) // TODO 배포시 해당 의존성 삭제하고 필요한 아이콘만 개별 추가
     // Debug dependencies
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
@@ -69,11 +92,19 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    // Firebase dependencies
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.perf)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.config)
 
     // Retrofit dependencies
     implementation(libs.retrofit)
     implementation(libs.logging.interceptor)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
+    implementation(libs.kotlinx.serialization.json)
     // Coroutines dependencies
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
@@ -86,6 +117,10 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     // Timber dependency for logging
     implementation(libs.timber)
+    // Browser (Chrome Custom Tabs)
+    implementation(libs.androidx.browser)
+    // Security Crypto for EncryptedSharedPreferences
+    implementation(libs.androidx.security.crypto)
 //    // DataStore dependencies
 //    implementation("androidx.datastore:datastore-preferences:1.0.0")
 //    // Room dependencies

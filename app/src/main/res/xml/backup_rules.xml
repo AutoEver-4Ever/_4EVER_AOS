@@ -6,8 +6,8 @@
    See https://developer.android.com/about/versions/12/backup-restore
 -->
 <full-backup-content>
-    <!--
-   <include domain="sharedpref" path="."/>
-   <exclude domain="sharedpref" path="device.xml"/>
--->
+    <!-- Exclude secure auth preferences from backups -->
+    <exclude domain="sharedpref" path="secure_auth_prefs.xml"/>
+    <!-- Exclude legacy auth prefs if present -->
+    <exclude domain="sharedpref" path="auth_prefs.xml"/>
 </full-backup-content>

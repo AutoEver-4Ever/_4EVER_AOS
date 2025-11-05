@@ -6,4 +6,9 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.secrets.gradle.plugin) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.firebase.perf) apply false
 }
