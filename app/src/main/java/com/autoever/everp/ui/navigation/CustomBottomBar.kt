@@ -41,12 +41,20 @@ fun CustomNavigationBar(
             NavigationBarItem(
                 selected = isSelected, // (4) selected 상태 전달
                 onClick = {
-                    navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+                    if (isSelected) {
+                        // (A) Behavior 2: 이미 선택된 탭을 또 누름
+                        // 이 탭의 루트 스크린으로 이동하고, 그 위의 모든 스택을 날림
+                        navController.popBackStack(screen.route, inclusive = false)
+                    } else {
+                        // (B) Behavior 1: 다른 탭을 누름
+                        // 상태를 저장/복원하며 탭 이동
+                        navController.navigate(screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true // 현재 탭의 백 스택 저장
+                            }
+                            launchSingleTop = true // 중복 화면 방지
+                            restoreState = true // 이동할 탭의 백 스택 복원
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 },
                 // (5) ⭐ 아이콘 동적 변경
