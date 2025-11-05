@@ -21,11 +21,13 @@ class AuthInterceptor @Inject constructor(
         val token = getAccessToken()
 
         val newRequest = if (token != null) {
+            // 토큰이 존재하면 Authorization 헤더 추가 -> Authenticated 상태 처리
             originalRequest.newBuilder()
                 .header("Authorization", "Bearer $token")
                 .header("Content-Type", "application/json")
                 .build()
         } else {
+            // 토큰이 없으면 원본 요청 유지 -> Authenticated 상태 처리 필요
             originalRequest.newBuilder()
                 .header("Content-Type", "application/json")
                 .build()
