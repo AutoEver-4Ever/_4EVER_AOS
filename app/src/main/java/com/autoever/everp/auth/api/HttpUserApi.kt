@@ -1,12 +1,12 @@
 package com.autoever.everp.auth.api
 
-import android.util.Log
 import com.autoever.everp.auth.endpoint.AuthEndpoint
-import com.autoever.everp.common.error.UnauthorizedException
 import com.autoever.everp.auth.model.UserInfo
+import com.autoever.everp.common.error.UnauthorizedException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import timber.log.Timber
 import java.io.BufferedReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -32,11 +32,11 @@ class HttpUserApi : UserApi {
             val stream = if (status in 200..299) conn.inputStream else conn.errorStream
             val resp = stream.bufferedReader(Charsets.UTF_8).use(BufferedReader::readText)
             if (status == 401) {
-                Log.e(TAG, "[ERROR] 사용자 정보 조회 실패: HTTP ${status} | ${resp}")
+                Timber.tag(TAG).e("[ERROR] 사용자 정보 조회 실패: HTTP ${status} | ${resp}")
                 throw UnauthorizedException("HTTP 401")
             }
             if (status !in 200..299) {
-                Log.e(TAG, "[ERROR] 사용자 정보 조회 실패: HTTP ${status} | ${resp}")
+                Timber.tag(TAG).e("[ERROR] 사용자 정보 조회 실패: HTTP ${status} | ${resp}")
                 throw IllegalStateException("사용자 정보 조회 실패: HTTP ${status}")
             }
             // API 응답은 { success, message, data: { ... } } 형태일 수 있으므로 data 객체를 우선 시도

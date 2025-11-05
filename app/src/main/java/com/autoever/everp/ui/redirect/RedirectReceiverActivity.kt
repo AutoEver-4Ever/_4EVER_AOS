@@ -65,7 +65,7 @@ class RedirectReceiverActivity : ComponentActivity() {
                     verifier = pkce.codeVerifier,
                     config = config,
                 )
-                sessionManager.setAuthenticated(token.access_token)
+                sessionManager.setAuthenticated(token.accessToken)
                 Log.i(TAG, "[INFO] 토큰 교환 및 세션 반영 성공")
             } catch (e: Exception) {
                 Log.e(TAG, "[ERROR] 토큰 교환 처리 실패: ${e.message}")

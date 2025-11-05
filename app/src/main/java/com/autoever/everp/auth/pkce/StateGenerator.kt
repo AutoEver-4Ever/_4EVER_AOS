@@ -1,7 +1,7 @@
 package com.autoever.everp.auth.pkce
 
 import android.util.Base64
-import android.util.Log
+import timber.log.Timber
 import java.security.SecureRandom
 
 /**
@@ -17,10 +17,10 @@ object StateGenerator {
             val bytes = ByteArray(lengthBytes)
             random.nextBytes(bytes)
             val state = Base64.encodeToString(bytes, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
-            Log.i(TAG, "[INFO] state 생성 완료 (길이: ${state.length})")
+            Timber.tag(TAG).i("[INFO] state 생성 완료 (길이: ${state.length})")
             state
         } catch (e: Exception) {
-            Log.e(TAG, "[ERROR] state 생성 중 오류가 발생했습니다: ${e.message}")
+            Timber.tag(TAG).e("[ERROR] state 생성 중 오류가 발생했습니다: ${e.message}")
             throw e
         }
     }

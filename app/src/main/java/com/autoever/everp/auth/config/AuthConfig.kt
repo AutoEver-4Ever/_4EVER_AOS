@@ -3,6 +3,8 @@ package com.autoever.everp.auth.config
 import android.net.Uri
 import android.util.Log
 import com.autoever.everp.auth.endpoint.AuthEndpoint
+import timber.log.Timber
+import androidx.core.net.toUri
 
 /**
  * OAuth2 Authorization Code + PKCE 설정 및 인가 URL 생성 유틸.
@@ -18,7 +20,7 @@ data class AuthConfig(
         get() = try {
             Uri.parse(redirectUri)
         } catch (e: Exception) {
-            Log.e(TAG, "[ERROR] 검증되지 않은 Redirect URI: $redirectUri")
+            Timber.tag(TAG).e("[ERROR] 검증되지 않은 Redirect URI: $redirectUri")
             throw IllegalArgumentException("검증되지 않은 Redirect URI 형식입니다.")
         }
 
@@ -36,7 +38,7 @@ data class AuthConfig(
         state: String,
     ): Uri {
         return try {
-            val base = Uri.parse(authorizationEndpoint)
+            val base = authorizationEndpoint.toUri()
             val scopeValue = scopes.joinToString(separator = " ")
             base.buildUpon()
                 .appendQueryParameter("response_type", "code")
@@ -48,7 +50,7 @@ data class AuthConfig(
                 .appendQueryParameter("code_challenge_method", "S256")
                 .build()
         } catch (e: Exception) {
-            Log.e(TAG, "[ERROR] Authorization URL 생성 실패: ${e.message}")
+            Timber.tag(TAG).e("[ERROR] Authorization URL 생성 실패: ${e.message}")
             throw IllegalStateException("Authorization URL 생성 실패", e)
         }
     }

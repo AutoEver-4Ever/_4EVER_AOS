@@ -1,9 +1,9 @@
 package com.autoever.everp.auth.model
 
 data class TokenResponse(
-    val access_token: String,
-    val refresh_token: String? = null,
-    val token_type: String? = null,
-    val expires_in: Long? = null,
-    val id_token: String? = null,
+    val accessToken: String,
+    val refreshToken: String? = null,
+    val tokenType: String? = null,
+    val expiresIn: Long? = null,
+    val idToken: String? = null,
 )

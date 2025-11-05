@@ -1,7 +1,7 @@
 package com.autoever.everp.auth.pkce
 
 import android.util.Base64
-import android.util.Log
+import timber.log.Timber
 import java.security.MessageDigest
 import java.security.SecureRandom
 
@@ -22,7 +22,7 @@ object PKCEGenerator {
     fun generatePair(verifierBytes: Int = DEFAULT_VERIFIER_BYTES): PKCEPair {
         val verifier = generateCodeVerifier(verifierBytes)
         val challenge = generateCodeChallenge(verifier)
-        Log.i(TAG, "[INFO] PKCE 값 생성 완료 (verifier 길이: ${verifier.length})")
+        Timber.tag(TAG).i("[INFO] PKCE 값 생성 완료 (verifier 길이: ${verifier.length})")
         return PKCEPair(verifier, challenge)
     }
 
@@ -35,7 +35,7 @@ object PKCEGenerator {
         val b64 = Base64.encodeToString(bytes, Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING)
         // Base64.URL_SAFE는 '-'와 '_'를 사용하므로 URL-safe 만족
         if (b64.length < 43 || b64.length > 128) {
-            Log.i(TAG, "[INFO] code_verifier 길이 조정이 필요할 수 있습니다. (현재: ${b64.length})")
+            Timber.tag(TAG).i("[INFO] code_verifier 길이 조정이 필요할 수 있습니다. (현재: ${b64.length})")
         }
         return b64
     }

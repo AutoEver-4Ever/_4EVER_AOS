@@ -1,6 +1,5 @@
 package com.autoever.everp.auth.api
 
-import android.util.Log
 import com.autoever.everp.auth.config.AuthConfig
 import com.autoever.everp.auth.model.TokenResponse
 import java.io.BufferedReader
@@ -10,13 +9,16 @@ import java.net.URL
 import java.net.URLEncoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 /**
  * HttpURLConnection 기반 AuthApi 구현.
  * 기존 AuthService/LogoutService 로직을 통합.
  */
 class HttpAuthApi : AuthApi {
-    private companion object { const val TAG = "AuthApi" }
+    private companion object {
+        const val TAG = "AuthApi"
+    }
 
     override suspend fun exchangeAuthCodeForToken(
         config: AuthConfig,
@@ -50,22 +52,22 @@ class HttpAuthApi : AuthApi {
             val stream = if (status in 200..299) conn.inputStream else conn.errorStream
             val resp = stream.bufferedReader(Charsets.UTF_8).use(BufferedReader::readText)
             if (status !in 200..299) {
-                Log.e(TAG, "[ERROR] 토큰 교환 실패: HTTP ${status} | ${resp}")
+                Timber.tag(TAG).e("[ERROR] 토큰 교환 실패: HTTP ${status} | ${resp}")
                 throw IllegalStateException("토큰 교환 실패: HTTP ${status}")
             }
             val json = org.json.JSONObject(resp)
             val token = TokenResponse(
-                access_token = json.optString("access_token"),
-                refresh_token = json.optString("refresh_token").ifBlank { null },
-                token_type = json.optString("token_type").ifBlank { null },
-                expires_in = json.optLong("expires_in").let { if (it == 0L) null else it },
-                id_token = json.optString("id_token").ifBlank { null },
+                accessToken = json.optString("access_token"),
+                refreshToken = json.optString("refresh_token").ifBlank { null },
+                tokenType = json.optString("token_type").ifBlank { null },
+                expiresIn = json.optLong("expires_in").let { if (it == 0L) null else it },
+                idToken = json.optString("id_token").ifBlank { null },
             )
-            if (token.access_token.isBlank()) {
-                Log.e(TAG, "[ERROR] 토큰 응답에 access_token이 없습니다: ${resp}")
+            if (token.accessToken.isBlank()) {
+                Timber.tag(TAG).e("[ERROR] 토큰 응답에 access_token이 없습니다: ${resp}")
                 throw IllegalStateException("토큰 응답 파싱 실패")
             }
-            Log.i(TAG, "[INFO] 토큰 교환 성공")
+            Timber.tag(TAG).i("[INFO] 토큰 교환 성공")
             token
         } finally {
             conn.disconnect()
@@ -88,14 +90,14 @@ class HttpAuthApi : AuthApi {
             val stream = if (status in 200..299) conn.inputStream else conn.errorStream
             val resp = stream?.bufferedReader(Charsets.UTF_8)?.use(BufferedReader::readText)
             if (status in 200..299) {
-                Log.i(TAG, "[INFO] 로그아웃 성공: HTTP $status")
+                Timber.tag(TAG).i("[INFO] 로그아웃 성공: HTTP $status")
                 true
             } else {
-                Log.e(TAG, "[ERROR] 로그아웃 실패: HTTP $status | ${resp ?: "(no body)"}")
+                Timber.tag(TAG).e("[ERROR] 로그아웃 실패: HTTP $status | ${resp ?: "(no body)"}")
                 false
             }
         } catch (e: Exception) {
-            Log.e(TAG, "[ERROR] 로그아웃 호출 중 예외: ${e.message}")
+            Timber.tag(TAG).e("[ERROR] 로그아웃 호출 중 예외: ${e.message}")
             false
         } finally {
             conn.disconnect()
