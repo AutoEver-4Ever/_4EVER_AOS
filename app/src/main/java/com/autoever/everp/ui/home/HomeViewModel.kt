@@ -1,18 +1,18 @@
 package com.autoever.everp.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.autoever.everp.auth.model.UserInfo
+import com.autoever.everp.auth.repository.UserRepository
 import com.autoever.everp.auth.session.AuthState
 import com.autoever.everp.auth.session.SessionManager
-import com.autoever.everp.auth.repository.UserRepository
-import com.autoever.everp.auth.model.UserInfo
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import com.autoever.everp.common.error.UnauthorizedException
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -31,8 +31,7 @@ class HomeViewModel @Inject constructor(
                 try {
                     val info = userRepository.fetchUserInfo(st.accessToken)
                     _user.value = info
-                    Log.i(
-                        TAG,
+                    Timber.tag(TAG).i(
                         "[INFO] 사용자 정보 로딩 완료 | " +
                             "userId=${info.userId ?: "null"}, " +
                             "userName=${info.userName ?: "null"}, " +
@@ -41,10 +40,10 @@ class HomeViewModel @Inject constructor(
                             "userType=${info.userType ?: "null"}"
                     )
                 } catch (e: UnauthorizedException) {
-                    Log.w(TAG, "[WARN] 인증 만료로 로그아웃 처리")
+                    Timber.tag(TAG).w("[WARN] 인증 만료로 로그아웃 처리")
                     sessionManager.signOut()
                 } catch (e: Exception) {
-                    Log.e(TAG, "[ERROR] 사용자 정보 로드 실패: ${e.message}")
+                    Timber.tag(TAG).e("[ERROR] 사용자 정보 로드 실패: ${e.message}")
                 }
             }
         } else {

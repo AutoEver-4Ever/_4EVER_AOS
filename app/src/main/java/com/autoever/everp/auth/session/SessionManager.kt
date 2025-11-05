@@ -30,7 +30,7 @@ class SessionManager @Inject constructor(
             }
         } catch (e: Exception) {
             _state.value = AuthState.Unauthenticated
-            Log.e(TAG, "[ERROR] 저장소에서 토큰을 불러오는 중 오류가 발생했습니다: ${e.message}")
+            Timber.tag(TAG).e("[ERROR] 저장소에서 토큰을 불러오는 중 오류가 발생했습니다: ${e.message}")
         }
     }
 

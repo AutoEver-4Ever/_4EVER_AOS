@@ -13,6 +13,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 data class ProfileUiState(
     val isLoading: Boolean = false,
@@ -46,7 +47,7 @@ class ProfileViewModel @Inject constructor(
                 val info = userRepository.fetchUserInfo(st.accessToken)
                 _ui.value = ProfileUiState(isLoading = false, user = info)
             } catch (e: Exception) {
-                Log.e(TAG, "[ERROR] 프로필 조회 실패: ${e.message}")
+                Timber.tag(TAG).e("[ERROR] 프로필 조회 실패: ${e.message}")
                 _ui.value = ProfileUiState(isLoading = false, errorMessage = e.message)
             }
         }
