@@ -71,6 +71,10 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx) // ViewModel
     implementation(libs.androidx.navigation.compose) // Navigation
+    implementation(libs.androidx.datastore.preferences) // DataStore Preferences
+    implementation(libs.androidx.room.runtime) // Room Runtime
+    ksp(libs.androidx.room.compiler) // Room Compiler
+    implementation(libs.androidx.room.ktx) // Room KTX
 
     // Jetpack Compose dependencies
     implementation(platform(libs.androidx.compose.bom))
