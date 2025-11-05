@@ -9,42 +9,40 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel
-    @Inject
-    constructor(
-        // TODO: AuthRepository 주입 예정
-    ) : ViewModel() {
-        private val _userRole = MutableStateFlow<UserTypeEnum>(UserTypeEnum.SUPPLIER) // TODO 초기값 NONE으로 변경 예정
-        val userRole: StateFlow<UserTypeEnum> = _userRole.asStateFlow()
+class MainViewModel @Inject constructor(
+    // TODO: AuthRepository 주입 예정
+) : ViewModel() {
+    private val _userRole = MutableStateFlow<UserTypeEnum>(UserTypeEnum.UNKNOWN)
+    val userRole: StateFlow<UserTypeEnum> = _userRole.asStateFlow()
 
-        /**
-         * 사용자 역할 설정 (로그인 후 호출)
-         */
-        fun setUserRole(role: UserTypeEnum) {
-            _userRole.value = role
-        }
-
-        /**
-         * 사용자 역할 설정 (문자열로)
-         */
-        fun updateUserRole(roleString: String) {
-            _userRole.value = UserTypeEnum.fromStringOrDefault(roleString)
-        }
-
-        /**
-         * 사용자 역할 초기화 (로그아웃 시 호출)
-         */
-        fun clearUserRole() {
-            _userRole.value = UserTypeEnum.UNKNOWN
-        }
-
-        /**
-         * 현재 역할이 고객사인지 확인
-         */
-        fun isCustomer(): Boolean = _userRole.value == UserTypeEnum.CUSTOMER
-
-        /**
-         * 현재 역할이 공급사인지 확인
-         */
-        fun isVendor(): Boolean = _userRole.value == UserTypeEnum.SUPPLIER
+    /**
+     * 사용자 역할 설정 (로그인 후 호출)
+     */
+    fun setUserRole(role: UserTypeEnum) {
+        _userRole.value = role
     }
+
+    /**
+     * 사용자 역할 설정 (문자열로)
+     */
+    fun updateUserRole(roleString: String) {
+        _userRole.value = UserTypeEnum.fromStringOrDefault(roleString)
+    }
+
+    /**
+     * 사용자 역할 초기화 (로그아웃 시 호출)
+     */
+    fun clearUserRole() {
+        _userRole.value = UserTypeEnum.UNKNOWN
+    }
+
+    /**
+     * 현재 역할이 고객사인지 확인
+     */
+    fun isCustomer(): Boolean = _userRole.value == UserTypeEnum.CUSTOMER
+
+    /**
+     * 현재 역할이 공급사인지 확인
+     */
+    fun isVendor(): Boolean = _userRole.value == UserTypeEnum.SUPPLIER
+}

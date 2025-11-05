@@ -33,6 +33,7 @@ import android.content.res.Configuration
 import com.autoever.everp.ui.theme.EverpTheme
 import androidx.compose.foundation.layout.navigationBarsPadding
 import com.autoever.everp.R
+import com.autoever.everp.domain.model.user.UserTypeEnum
 
 @Composable
 fun LoginScreen(
@@ -109,6 +110,8 @@ fun LoginScreen(
 @Composable
 private fun PreviewLoginScreen() {
     EverpTheme {
-        LoginScreen(onLoginClick = {})
+        LoginScreen {
+
+        }
     }
 }

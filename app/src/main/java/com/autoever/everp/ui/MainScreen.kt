@@ -40,10 +40,10 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     when (userRole) {
         UserTypeEnum.CUSTOMER -> CustomerApp()
         UserTypeEnum.SUPPLIER -> SupplierApp()
-        else -> LoginScreen(
-            onLoginSuccess = { role ->
-                viewModel.updateUserRole(role)
-            },
-        )
+        else -> LoginScreen {
+//            onLoginSuccess = { role ->
+//                viewModel.updateUserRole(role)
+//            },
+        }
     }
 }
