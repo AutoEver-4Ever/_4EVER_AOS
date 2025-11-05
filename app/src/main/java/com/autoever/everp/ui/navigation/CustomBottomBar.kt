@@ -47,13 +47,20 @@ fun CustomNavigationBar(
                         navController.popBackStack(screen.route, inclusive = false)
                     } else {
                         // (B) Behavior 1: 다른 탭을 누름
-                        // 상태를 저장/복원하며 탭 이동
-                        navController.navigate(screen.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true // 현재 탭의 백 스택 저장
+                        // 먼저 백 스택에 해당 destination이 있는지 확인하고 popBackStack 시도
+                        val popped = navController.popBackStack(screen.route, inclusive = false)
+                        
+                        if (!popped) {
+                            // 백 스택에 없으면 navigate
+                            // 빠른 동작 버튼으로 이동한 경우를 고려하여 restoreState 사용하지 않음
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true // 현재 탭의 백 스택 저장
+                                }
+                                launchSingleTop = true // 중복 화면 방지
+                                // restoreState를 false로 설정하여 항상 새로운 인스턴스로 이동
+                                restoreState = false
                             }
-                            launchSingleTop = true // 중복 화면 방지
-                            restoreState = true // 이동할 탭의 백 스택 복원
                         }
                     }
                 },
