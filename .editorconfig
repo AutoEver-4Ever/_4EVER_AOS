@@ -17,7 +17,6 @@ max_line_length = 120
 
 # 파일명 규칙 비활성화 (더 명확한 형식)
 ktlint_standard_filename = disabled
-ktlint_standard = disabled_rules=filename
 
 # Composable 함수 네이밍 규칙을 위한 설정
 ktlint_experimental = true
