@@ -1,6 +1,7 @@
 package com.autoever.everp.di
 
 import com.autoever.everp.data.datasource.local.AlarmLocalDataSource
+import com.autoever.everp.data.datasource.local.AuthLocalDataSource
 import com.autoever.everp.data.datasource.local.FcmLocalDataSource
 import com.autoever.everp.data.datasource.local.MmLocalDataSource
 import com.autoever.everp.data.datasource.local.SdLocalDataSource
@@ -13,6 +14,7 @@ import com.autoever.everp.data.datasource.local.impl.MmLocalDataSourceImpl
 import com.autoever.everp.data.datasource.local.impl.SdLocalDataSourceImpl
 import com.autoever.everp.data.datasource.local.impl.UserLocalDataSourceImpl
 import com.autoever.everp.data.datasource.remote.AlarmRemoteDataSource
+import com.autoever.everp.data.datasource.remote.AuthRemoteDataSource
 import com.autoever.everp.data.datasource.remote.FcmRemoteDataSource
 import com.autoever.everp.data.datasource.remote.MmRemoteDataSource
 import com.autoever.everp.data.datasource.remote.SdRemoteDataSource
@@ -96,6 +98,19 @@ abstract class DataSourceModule {
     abstract fun bindsSdLocalDataSource(
         sdLocalDataSourceImpl: SdLocalDataSourceImpl,
     ): SdLocalDataSource
+
+    // Auth Data Sources
+    @Binds
+    @Singleton
+    abstract fun bindsAuthRemoteDataSource(
+        authHttpRemoteDataSourceImpl: AlarmHttpRemoteDataSourceImpl
+    ): AuthRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindsAuthLocalDataSource(
+        authDataStoreLocalDataSourceImpl: AlarmHttpRemoteDataSourceImpl
+    ): AuthLocalDataSource
 
     // Token Data Sources (AccessToken, FcmToken)
     @Binds
