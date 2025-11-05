@@ -9,6 +9,8 @@ lifecycleRuntimeKtx = "2.9.4"
 lifecycleViewmodelKtx = "2.9.4"
 datastore = "1.1.7"
 room = "2.8.3"
+securityCrypto = "1.1.0-alpha06"
+browser = "1.8.0"
 # Compose
 navigationCompose = "2.9.5"
 composeBom = "2025.09.01"
@@ -50,6 +52,8 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
 # Compose dependencies
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }

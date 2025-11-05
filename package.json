@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint:commit": "commitlint --from=HEAD~1 --to=HEAD --format ./scripts/commitlint-formatter-korean.js"
   },
   "repository": {
     "type": "git",

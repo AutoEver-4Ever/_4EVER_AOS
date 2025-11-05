@@ -57,6 +57,20 @@
         <meta-data
             android:name="firebase_performance_logcat_enabled"
             android:value="true" />
+
+        <!-- OAuth2 Redirect 수신 (everp-aos://callback) -->
+        <activity
+            android:name="com.autoever.everp.ui.redirect.RedirectReceiverActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Transparent">
+            <intent-filter android:label="oauth2-redirect">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="everp-aos" android:host="callback" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
