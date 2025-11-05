@@ -38,6 +38,14 @@
             </intent-filter>
         </activity>
 
+        <!-- 크래시 발생 시 표시되는 에러 화면 -->
+        <activity
+            android:name=".ui.error.ErrorActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.Everp" />
+
         <service
             android:name=".service.fcm.MyFirebaseMessagingService"
             android:exported="false">
