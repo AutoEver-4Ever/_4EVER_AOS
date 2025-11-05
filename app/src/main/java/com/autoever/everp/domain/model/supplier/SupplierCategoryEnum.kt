@@ -2,7 +2,7 @@ package com.autoever.everp.domain.model.supplier
 
 import androidx.compose.ui.graphics.Color
 
-enum class SupplierCatetoryEnum {
+enum class SupplierCategoryEnum {
     UNKNOWN, // 알 수 없음, 기본값
     MATERIAL, // 자재
     ITEMS, // 물품
@@ -100,7 +100,7 @@ enum class SupplierCatetoryEnum {
          * 문자열을 SupplierCategoryEnum으로 변환
          * @throws IllegalArgumentException
          */
-        fun fromString(value: String): SupplierCatetoryEnum =
+        fun fromString(value: String): SupplierCategoryEnum =
             try {
                 valueOf(value.uppercase())
             } catch (e: IllegalArgumentException) {
@@ -113,7 +113,7 @@ enum class SupplierCatetoryEnum {
         /**
          * 문자열을 SupplierCategoryEnum으로 안전하게 변환 (null 반환)
          */
-        fun fromStringOrNull(value: String?): SupplierCatetoryEnum? =
+        fun fromStringOrNull(value: String?): SupplierCategoryEnum? =
             if (value.isNullOrBlank()) {
                 null
             } else {
@@ -129,13 +129,13 @@ enum class SupplierCatetoryEnum {
          */
         fun fromStringOrDefault(
             value: String?,
-            default: SupplierCatetoryEnum = UNKNOWN,
-        ): SupplierCatetoryEnum = fromStringOrNull(value) ?: default
+            default: SupplierCategoryEnum = UNKNOWN,
+        ): SupplierCategoryEnum = fromStringOrNull(value) ?: default
 
         /**
          * 유효한 카테고리 목록 (UNKNOWN 제외)
          */
-        fun validCategories(): List<SupplierCatetoryEnum> =
+        fun validCategories(): List<SupplierCategoryEnum> =
             entries.filter { it != UNKNOWN }
 
         /**
@@ -146,7 +146,7 @@ enum class SupplierCatetoryEnum {
         /**
          * 카테고리별 그룹핑을 위한 우선순위
          */
-        fun SupplierCatetoryEnum.priority(): Int =
+        fun SupplierCategoryEnum.priority(): Int =
             when (this) {
                 MATERIAL -> 1
                 ITEMS -> 2

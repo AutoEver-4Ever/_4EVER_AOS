@@ -12,7 +12,7 @@ data class SupplierDetail(
     val baseAddress: String,
     val detailAddress: String?,
     val status: SupplierStatusEnum,
-    val category: SupplierCatetoryEnum,
+    val category: SupplierCategoryEnum,
     val deliveryLeadTime: Int,
     val manager: SupplierManager,
 ) {

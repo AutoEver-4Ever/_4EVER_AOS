@@ -25,7 +25,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
         when (status) {
             PermissionStatus.GRANTED -> Timber.tag("TAG").i("Permission Granted")
             PermissionStatus.DENIED -> Timber.tag("TAG").i("Permission Denied")
-            PermissionStatus.NEEDS_RATIONALE -> Timber.tag("TAG").i("Permission Needs_rationals")
+            PermissionStatus.NEEDS_RATIONALE -> Timber.tag("TAG").i("Permission Needs_rationale")
             PermissionStatus.UNKNOWN -> TODO()
         }
     }

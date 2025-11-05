@@ -2,12 +2,10 @@ package com.autoever.everp.data.datasource.remote.http.service
 
 import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
-import com.autoever.everp.domain.model.purchase.PurchaseOrderSearchTypeEnum
 import com.autoever.everp.domain.model.purchase.PurchaseOrderStatusEnum
-import com.autoever.everp.domain.model.supplier.SupplierCatetoryEnum
+import com.autoever.everp.domain.model.supplier.SupplierCategoryEnum
 import com.autoever.everp.domain.model.supplier.SupplierStatusEnum
 import com.autoever.everp.utils.serializer.LocalDateSerializer
-import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -98,7 +96,7 @@ data class SupplierInfoDto(
     @SerialName("supplierStatus")
     val supplierStatus: SupplierStatusEnum,
     @SerialName("category")
-    val category: SupplierCatetoryEnum,
+    val category: SupplierCategoryEnum,
     @SerialName("deliveryLeadTime")
     val deliveryLeadTime: Int,
 )
@@ -128,7 +126,7 @@ data class SupplierUpdateRequestDto(
     val supplierDetailAddress: String? = null,
     @Required
     @SerialName("category")
-    val category: SupplierCatetoryEnum = SupplierCatetoryEnum.MATERIAL,
+    val category: SupplierCategoryEnum = SupplierCategoryEnum.MATERIAL,
     @Required
     @SerialName("statusCode")
     val statusCode: SupplierStatusEnum = SupplierStatusEnum.ACTIVE,
