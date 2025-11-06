@@ -44,7 +44,6 @@ class FcmRepositoryImpl @Inject constructor(
             PageResponse(
                 content = InvoiceMapper.toDomainList(dtoPage.content),
                 page = dtoPage.page,
-                total = dtoPage.total,
             )
         }
     }
@@ -101,7 +100,6 @@ class FcmRepositoryImpl @Inject constructor(
             PageResponse(
                 content = InvoiceMapper.toDomainList(dtoPage.content),
                 page = dtoPage.page,
-                total = dtoPage.total,
             )
         }
     }

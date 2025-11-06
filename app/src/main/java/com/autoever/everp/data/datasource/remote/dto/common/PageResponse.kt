@@ -10,10 +10,8 @@ import kotlinx.serialization.Serializable
 data class PageResponse<T>(
     @SerialName("content")
     val content: List<T>,
-    @SerialName("pageInfo")
+    @SerialName("page")
     val page: PageDto,
-    @SerialName("total")
-    val total: Int,
 ) {
     companion object {
         fun <T> empty(): PageResponse<T> = PageResponse(
@@ -25,7 +23,6 @@ data class PageResponse<T>(
                 totalPages = 0,
                 hasNext = false,
             ),
-            total = 0,
         )
     }
 }
