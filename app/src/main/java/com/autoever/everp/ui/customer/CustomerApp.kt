@@ -28,20 +28,20 @@ fun CustomerApp(
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(CustomerNavigationItem.Home.route) {
-                CustomerHomeScreen() // 고객사 홈 화면
+                CustomerHomeScreen(navController = navController) // 고객사 홈 화면
             }
             composable(CustomerNavigationItem.Quotation.route) {
-                CustomerQuotationScreen() // 견적 화면
+                CustomerQuotationScreen(navController = navController) // 견적 화면
             }
             composable(CustomerNavigationItem.Order.route) {
-                CustomerOrderScreen() // 주문 화면
+                CustomerOrderScreen(navController = navController) // 주문 화면
             }
             composable(CustomerNavigationItem.Voucher.route) {
-                CustomerVoucherScreen() // 전표 화면
+                CustomerVoucherScreen(navController = navController) // 전표 화면
             }
             composable(CustomerNavigationItem.Profile.route) {
                 // 공통 프로필 화면을 호출할 수도 있음 (역할을 넘겨주거나 ViewModel 공유)
-                CustomerProfileScreen() // 고객사 프로필 화면
+                CustomerProfileScreen(navController = navController) // 고객사 프로필 화면
             }
         }
     }
