@@ -9,8 +9,10 @@ import com.autoever.everp.domain.model.notification.NotificationCount
 import com.autoever.everp.domain.model.notification.NotificationListParams
 import com.autoever.everp.domain.model.notification.NotificationStatusEnum
 import com.autoever.everp.domain.repository.AlarmRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -26,16 +28,16 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun refreshNotifications(
         params: NotificationListParams,
-    ): Result<Unit> {
-        return getNotificationList(params).map { page ->
+    ): Result<Unit> = withContext(Dispatchers.Default) {
+        getNotificationList(params).map { page ->
             alarmLocalDataSource.setNotifications(page)
         }
     }
 
     override suspend fun getNotificationList(
         params: NotificationListParams,
-    ): Result<PageResponse<Notification>> {
-        return alarmRemoteDataSource.getNotificationList(
+    ): Result<PageResponse<Notification>> = withContext(Dispatchers.Default) {
+        alarmRemoteDataSource.getNotificationList(
             sortBy = params.sortBy,
             order = params.order,
             source = params.source,
@@ -54,7 +56,7 @@ class AlarmRepositoryImpl @Inject constructor(
         alarmLocalDataSource.observeNotificationCount()
 
     override suspend fun refreshNotificationCount(
-        status: NotificationStatusEnum
+        status: NotificationStatusEnum,
     ): Result<Unit> {
         return getNotificationCount(status).map { count ->
             alarmLocalDataSource.setNotificationCount(count)
@@ -63,8 +65,8 @@ class AlarmRepositoryImpl @Inject constructor(
 
     override suspend fun getNotificationCount(
         status: NotificationStatusEnum
-    ): Result<NotificationCount> {
-        return alarmRemoteDataSource.getNotificationCount(status = status)
+    ): Result<NotificationCount> = withContext(Dispatchers.Default) {
+        alarmRemoteDataSource.getNotificationCount(status = status)
             .map { NotificationMapper.toDomain(it) }
     }
 
