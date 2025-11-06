@@ -6,6 +6,8 @@ import com.autoever.everp.data.datasource.remote.http.service.FcmApi
 import com.autoever.everp.data.datasource.remote.http.service.InvoiceDetailResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.InvoiceListItemDto
 import com.autoever.everp.data.datasource.remote.http.service.InvoiceUpdateRequestDto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
@@ -24,8 +26,8 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
         endDate: LocalDate?,
         page: Int,
         size: Int,
-    ): Result<PageResponse<InvoiceListItemDto>> {
-        return try {
+    ): Result<PageResponse<InvoiceListItemDto>> = withContext(Dispatchers.IO) {
+        try {
             val response = fcmApi.getApInvoiceList(
 //                company,
                 startDate = startDate,
@@ -44,8 +46,10 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getApInvoiceDetail(invoiceId: String): Result<InvoiceDetailResponseDto> {
-        return try {
+    override suspend fun getApInvoiceDetail(
+        invoiceId: String,
+    ): Result<InvoiceDetailResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val response = fcmApi.getApInvoiceDetail(invoiceId)
             if (response.success && response.data != null) {
                 Result.success(response.data)
@@ -66,8 +70,8 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
     override suspend fun updateApInvoice(
         invoiceId: String,
         request: InvoiceUpdateRequestDto,
-    ): Result<Unit> {
-        return try {
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
             val response = fcmApi.updateApInvoice(invoiceId)
             if (response.success) {
                 Result.success(Unit)
@@ -80,8 +84,10 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun requestReceivable(invoiceId: String): Result<Unit> {
-        return try {
+    override suspend fun requestReceivable(
+        invoiceId: String,
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
             val response = fcmApi.requestReceivable(invoiceId)
             if (response.success) {
                 Result.success(Unit)
@@ -101,8 +107,8 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
         endDate: LocalDate?,
         page: Int,
         size: Int,
-    ): Result<PageResponse<InvoiceListItemDto>> {
-        return try {
+    ): Result<PageResponse<InvoiceListItemDto>> = withContext(Dispatchers.IO) {
+        try {
             val response = fcmApi.getArInvoiceList(
 //                companyName,
                 startDate = startDate,
@@ -121,8 +127,10 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getArInvoiceDetail(invoiceId: String): Result<InvoiceDetailResponseDto> {
-        return try {
+    override suspend fun getArInvoiceDetail(
+        invoiceId: String
+    ): Result<InvoiceDetailResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val response = fcmApi.getArInvoiceDetail(invoiceId)
             if (response.success && response.data != null) {
                 Result.success(response.data)
@@ -143,8 +151,8 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
     override suspend fun updateArInvoice(
         invoiceId: String,
         request: InvoiceUpdateRequestDto,
-    ): Result<Unit> {
-        return try {
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
             val response = fcmApi.updateArInvoice(invoiceId)
             if (response.success) {
                 Result.success(Unit)

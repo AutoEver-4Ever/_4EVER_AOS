@@ -2,8 +2,9 @@ package com.autoever.everp.data.datasource.remote.http.impl
 
 import com.autoever.everp.data.datasource.remote.AuthRemoteDataSource
 import com.autoever.everp.data.datasource.remote.http.service.AuthApi
-import com.autoever.everp.data.datasource.remote.http.service.TokenResponseDto
 import com.autoever.everp.domain.model.auth.AccessToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -16,8 +17,8 @@ class AuthHttpRemoteDataSourceImpl @Inject constructor(
         redirectUri: String,
         code: String,
         codeVerifier: String,
-    ): Result<AccessToken> {
-        return try {
+    ): Result<AccessToken> = withContext(Dispatchers.IO) {
+        try {
             val dto = authApi.exchangeAuthCodeForToken(
                 clientId = clientId,
                 redirectUri = redirectUri,
@@ -37,8 +38,10 @@ class AuthHttpRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun logout(accessTokenWithBearer: String): Result<Unit> {
-        return try {
+    override suspend fun logout(
+        accessTokenWithBearer: String
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
             val res = authApi.logout(accessToken = accessTokenWithBearer)
             if (res.success) Result.success(Unit) else Result.failure(Exception("Logout failed"))
         } catch (e: Exception) {
