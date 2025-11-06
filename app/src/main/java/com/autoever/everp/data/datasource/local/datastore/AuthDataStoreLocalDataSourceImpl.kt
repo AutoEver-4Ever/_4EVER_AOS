@@ -10,9 +10,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.autoever.everp.data.datasource.local.AuthLocalDataSource
 import com.autoever.everp.domain.model.auth.AccessToken
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -29,22 +32,24 @@ class AuthDataStoreLocalDataSourceImpl @Inject constructor(
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = STORE_NAME)
 
-    override val accessTokenFlow: Flow<String?>
-        get() = appContext.dataStore.data
-            .catch { emit(emptyPreferences()) }
-            .map { prefs -> prefs[KEY_ACCESS_TOKEN] }
+    override val accessTokenFlow: Flow<String?> = appContext.dataStore.data
+        .catch { emit(emptyPreferences()) }
+        .map { prefs -> prefs[KEY_ACCESS_TOKEN] }
+        .flowOn(Dispatchers.IO)
+
 
     override suspend fun getAccessToken(): String? = accessTokenFlow.first()
 
     suspend fun getAccessTokenWithType(): String? {
-        val token = appContext.dataStore.data
+        // 1. dataStore에서 Preferences를 한 번만 읽어옵니다.
+        val prefs = appContext.dataStore.data
             .catch { emit(emptyPreferences()) }
-            .map { prefs -> prefs[KEY_ACCESS_TOKEN] }
             .first()
-        val type = appContext.dataStore.data
-            .catch { emit(emptyPreferences()) }
-            .map { prefs -> prefs[KEY_ACCESS_TOKEN_TYPE] }
-            .first()
+
+        // 2. 읽어온 Preferences 객체에서 필요한 값을 모두 꺼냅니다.
+        val token = prefs[KEY_ACCESS_TOKEN]
+        val type = prefs[KEY_ACCESS_TOKEN_TYPE]
+
         return if (token != null && type != null) {
             "$type $token"
         } else {
