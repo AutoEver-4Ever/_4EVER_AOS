@@ -6,6 +6,7 @@ import com.autoever.everp.domain.model.purchase.PurchaseOrderStatusEnum
 import com.autoever.everp.domain.model.supplier.SupplierCategoryEnum
 import com.autoever.everp.domain.model.supplier.SupplierStatusEnum
 import com.autoever.everp.utils.serializer.LocalDateSerializer
+import com.autoever.everp.utils.serializer.LocalDateTimeSerializer
 import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -15,6 +16,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.Path
 import retrofit2.http.Query
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  * 자재 관리(MM, Materials Management) API Service
@@ -155,14 +157,14 @@ data class PurchaseOrderListItemDto(
     val supplierName: String,
     @SerialName("itemsSummary")
     val itemsSummary: String,
-    @Serializable(with = LocalDateSerializer::class)
+    @Serializable(with = LocalDateTimeSerializer::class)
     @SerialName("orderDate")
-    val orderDate: LocalDate,
-    @Serializable(with = LocalDateSerializer::class)
+    val orderDate: LocalDateTime,
+    @Serializable(with = LocalDateTimeSerializer::class)
     @SerialName("dueDate")
-    val dueDate: LocalDate,
+    val dueDate: LocalDateTime,
     @SerialName("totalAmount")
-    val totalAmount: Long,
+    val totalAmount: Double,
     @SerialName("statusCode")
     val statusCode: PurchaseOrderStatusEnum = PurchaseOrderStatusEnum.UNKNOWN,
 )

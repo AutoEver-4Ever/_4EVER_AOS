@@ -20,9 +20,9 @@ object PurchaseOrderMapper {
             number = dto.purchaseOrderNumber,
             supplierName = dto.supplierName,
             itemsSummary = dto.itemsSummary,
-            orderDate = dto.orderDate,
-            dueDate = dto.dueDate,
-            totalAmount = dto.totalAmount,
+            orderDate = dto.orderDate.toLocalDate(),
+            dueDate = dto.dueDate.toLocalDate(),
+            totalAmount = dto.totalAmount.toLong(),
             status = dto.statusCode,
         )
     }
