@@ -53,6 +53,7 @@ class SdRepositoryImpl @Inject constructor(
                     SdMapper.quotationListItemToDomain(it)
                 }, // 이미 QuotationListItem
                 page = dtoPage.page,
+                total = dtoPage.total,
             )
         }
     }
@@ -116,6 +117,7 @@ class SdRepositoryImpl @Inject constructor(
             PageResponse(
                 content = SdMapper.salesOrderListToDomainList(dtoPage.content),
                 page = dtoPage.page,
+                total = dtoPage.total,
             )
         }
     }

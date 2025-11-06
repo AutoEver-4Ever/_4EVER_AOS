@@ -24,10 +24,7 @@ class MmLocalDataSourceImpl @Inject constructor() : MmLocalDataSource {
 
     // 구매 주문 목록 캐시
     private val purchaseOrderListFlow = MutableStateFlow(
-        PageResponse<PurchaseOrderListItem>(
-            content = emptyList(),
-            page = PageDto(0, 0, 0, 0, false),
-        ),
+        PageResponse.empty<PurchaseOrderListItem>(),
     )
 
     // 구매 주문 상세 캐시 (Map으로 관리)
@@ -72,10 +69,7 @@ class MmLocalDataSourceImpl @Inject constructor() : MmLocalDataSource {
 
     override suspend fun clearAll() {
         supplierDetailsFlow.value = emptyMap()
-        purchaseOrderListFlow.value = PageResponse(
-            content = emptyList(),
-            page = PageDto(0, 0, 0, 0, false),
-        )
+        purchaseOrderListFlow.value = PageResponse.empty()
         purchaseOrderDetailsFlow.value = emptyMap()
     }
 }

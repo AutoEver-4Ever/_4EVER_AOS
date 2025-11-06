@@ -23,10 +23,7 @@ class SdLocalDataSourceImpl @Inject constructor() : SdLocalDataSource {
 
     // 견적서 목록 캐시
     private val quotationListFlow = MutableStateFlow(
-        PageResponse<QuotationListItem>(
-            content = emptyList(),
-            page = PageDto(0, 0, 0, 0, false),
-        ),
+        PageResponse.empty<QuotationListItem>(),
     )
 
     // 견적서 상세 캐시
@@ -37,10 +34,7 @@ class SdLocalDataSourceImpl @Inject constructor() : SdLocalDataSource {
 
     // 주문서 목록 캐시
     private val salesOrderListFlow = MutableStateFlow(
-        PageResponse<SalesOrderListItem>(
-            content = emptyList(),
-            page = PageDto(0, 0, 0, 0, false),
-        ),
+        PageResponse.empty<SalesOrderListItem>(),
     )
 
     // 주문서 상세 캐시
@@ -92,10 +86,10 @@ class SdLocalDataSourceImpl @Inject constructor() : SdLocalDataSource {
 
     // ========== 캐시 관리 ==========
     override suspend fun clearAll() {
-        quotationListFlow.value = PageResponse(emptyList(), PageDto(0, 0, 0, 0, false))
+        quotationListFlow.value = PageResponse.empty()
         quotationDetailsFlow.value = emptyMap()
         customerDetailsFlow.value = emptyMap()
-        salesOrderListFlow.value = PageResponse(emptyList(), PageDto(0, 0, 0, 0, false))
+        salesOrderListFlow.value = PageResponse.empty()
         salesOrderDetailsFlow.value = emptyMap()
     }
 }

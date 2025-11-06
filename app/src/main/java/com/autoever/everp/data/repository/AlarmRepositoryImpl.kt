@@ -46,6 +46,7 @@ class AlarmRepositoryImpl @Inject constructor(
             PageResponse(
                 content = NotificationMapper.toDomainList(dtoPage.content),
                 page = dtoPage.page, // PageDto 그대로 전달
+                total = dtoPage.total
             )
         }
     }

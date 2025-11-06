@@ -76,6 +76,7 @@ class MmRepositoryImpl @Inject constructor(
             PageResponse(
                 content = PurchaseOrderMapper.toDomainList(dtoPage.content),
                 page = dtoPage.page,
+                total = dtoPage.total,
             )
         }
     }
