@@ -27,17 +27,17 @@ fun SupplierApp(
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(SupplierNavigationItem.Home.route) {
-                SupplierHomeScreen() // 공급업체 홈 화면
+                SupplierHomeScreen(navController = navController) // 공급업체 홈 화면
             }
             composable(SupplierNavigationItem.PurchaseOrder.route) {
-                SupplierOrderScreen() // 주문 화면
+                SupplierOrderScreen(navController = navController) // 발주 화면
             }
             composable(SupplierNavigationItem.Invoice.route) {
-                SupplierVoucherScreen() // 전표 화면
+                SupplierVoucherScreen(navController = navController) // 전표 화면
             }
             composable(SupplierNavigationItem.Profile.route) {
                 // 공통 프로필 화면을 호출할 수도 있음 (역할을 넘겨주거나 ViewModel 공유)
-                SupplierProfileScreen() // 공급업체 프로필 화면
+                SupplierProfileScreen(navController = navController) // 공급업체 프로필 화면
             }
         }
     }
