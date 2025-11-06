@@ -29,10 +29,10 @@ fun SupplierApp(
             composable(SupplierNavigationItem.Home.route) {
                 SupplierHomeScreen() // 공급업체 홈 화면
             }
-            composable(SupplierNavigationItem.Order.route) {
+            composable(SupplierNavigationItem.PurchaseOrder.route) {
                 SupplierOrderScreen() // 주문 화면
             }
-            composable(SupplierNavigationItem.Voucher.route) {
+            composable(SupplierNavigationItem.Invoice.route) {
                 SupplierVoucherScreen() // 전표 화면
             }
             composable(SupplierNavigationItem.Profile.route) {

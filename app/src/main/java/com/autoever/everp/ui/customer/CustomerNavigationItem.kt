@@ -25,13 +25,13 @@ sealed class CustomerNavigationItem(
     object Quotation :
         CustomerNavigationItem("customer_quotation", "견적", Icons.Outlined.RequestPage, Icons.Filled.RequestPage)
 
-    object Order : CustomerNavigationItem("customer_order", "주문", Icons.Outlined.ShoppingBag, Icons.Filled.ShoppingBag)
+    object SalesOrder : CustomerNavigationItem("customer_sales_order", "주문", Icons.Outlined.ShoppingBag, Icons.Filled.ShoppingBag)
 
-    object Voucher : CustomerNavigationItem("customer_voucher", "전표", Icons.Outlined.Receipt, Icons.Filled.Receipt)
+    object Invoice : CustomerNavigationItem("customer_invoice", "전표", Icons.Outlined.Receipt, Icons.Filled.Receipt)
 
     object Profile : CustomerNavigationItem("customer_profile", "프로필", Icons.Outlined.Person, Icons.Filled.Person)
 
     companion object {
-        val allDestinations = listOf(Home, Quotation, Order, Voucher, Profile)
+        val allDestinations = listOf(Home, Quotation, SalesOrder, Invoice, Profile)
     }
 }

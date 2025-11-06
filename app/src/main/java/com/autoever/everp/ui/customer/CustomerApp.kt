@@ -3,7 +3,6 @@ package com.autoever.everp.ui.customer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -33,10 +32,10 @@ fun CustomerApp(
             composable(CustomerNavigationItem.Quotation.route) {
                 CustomerQuotationScreen(navController = navController) // 견적 화면
             }
-            composable(CustomerNavigationItem.Order.route) {
+            composable(CustomerNavigationItem.SalesOrder.route) {
                 CustomerOrderScreen(navController = navController) // 주문 화면
             }
-            composable(CustomerNavigationItem.Voucher.route) {
+            composable(CustomerNavigationItem.Invoice.route) {
                 CustomerVoucherScreen(navController = navController) // 전표 화면
             }
             composable(CustomerNavigationItem.Profile.route) {

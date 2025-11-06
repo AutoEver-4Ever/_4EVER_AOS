@@ -18,15 +18,15 @@ sealed class SupplierNavigationItem(
     override val outlinedIcon: ImageVector,
     override val filledIcon: ImageVector,
 ) : NavigationItem {
-    object Home : SupplierNavigationItem("vendor_home", "홈", Icons.Outlined.Home, Icons.Filled.Home)
+    object Home : SupplierNavigationItem("supplier_home", "홈", Icons.Outlined.Home, Icons.Filled.Home)
 
-    object Order : SupplierNavigationItem("vendor_order", "주문", Icons.Outlined.ShoppingCart, Icons.Filled.ShoppingCart)
+    object PurchaseOrder : SupplierNavigationItem("supplier_purchase_order", "발주", Icons.Outlined.ShoppingCart, Icons.Filled.ShoppingCart)
 
-    object Voucher : SupplierNavigationItem("vendor_voucher", "전표", Icons.Outlined.Receipt, Icons.Filled.Receipt)
+    object Invoice : SupplierNavigationItem("supplier_invoice", "전표", Icons.Outlined.Receipt, Icons.Filled.Receipt)
 
-    object Profile : SupplierNavigationItem("vendor_profile", "프로필", Icons.Outlined.Person, Icons.Filled.Person)
+    object Profile : SupplierNavigationItem("supplier_profile", "프로필", Icons.Outlined.Person, Icons.Filled.Person)
 
     companion object {
-        val allDestinations = listOf(Home, Order, Voucher, Profile)
+        val allDestinations = listOf(Home, PurchaseOrder, Invoice, Profile)
     }
 }
