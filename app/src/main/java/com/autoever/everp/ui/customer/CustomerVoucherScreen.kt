@@ -147,6 +147,6 @@ fun CustomerVoucherScreen(
     }
 }
 
-private fun formatCurrency(amount: Long): String {
+fun formatCurrency(amount: Long): String {
     return NumberFormat.getNumberInstance(Locale.KOREA).format(amount)
 }
