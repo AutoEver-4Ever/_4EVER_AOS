@@ -2,6 +2,7 @@ package com.autoever.everp.data.datasource.remote.http.service
 
 import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
+import com.autoever.everp.data.datasource.remote.dto.common.ToggleResponseDto
 import com.autoever.everp.domain.model.purchase.PurchaseOrderStatusEnum
 import com.autoever.everp.domain.model.supplier.SupplierCategoryEnum
 import com.autoever.everp.domain.model.supplier.SupplierStatusEnum
@@ -66,6 +67,22 @@ interface MmApi {
     suspend fun getPurchaseOrderDetail(
         @Path("purchaseOrderId") purchaseOrderId: String,
     ): ApiResponse<PurchaseOrderDetailResponseDto>
+
+    /**
+     * 발주서 검색 타입 토글 조회
+     */
+    @GET("$BASE_URL/purchase-orders/search-type/toggle")
+    suspend fun getPurchaseOrderSearchTypeToggle(
+
+    ): ApiResponse<List<ToggleResponseDto>>
+
+    /**
+     * 발주서 상태 타입 토글 조회
+     */
+    @GET("$BASE_URL/purchase-orders/status/toggle")
+    suspend fun getPurchaseOrderStatusTypeToggle(
+
+    ): ApiResponse<List<ToggleResponseDto>>
 
     companion object {
         private const val BASE_URL = "scm-pp/mm"
@@ -154,7 +171,7 @@ data class PurchaseOrderListItemDto(
     @SerialName("purchaseOrderNumber")
     val purchaseOrderNumber: String,
     @SerialName("supplierName")
-    val supplierName: String,
+    val supplierName: String = "", // TODO 임시 필드, API 수정 필요
     @SerialName("itemsSummary")
     val itemsSummary: String,
     @Serializable(with = LocalDateTimeSerializer::class)
