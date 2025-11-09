@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.autoever.everp.domain.model.sale.SalesOrderSearchTypeEnum
 import com.autoever.everp.ui.common.components.ListCard
 import com.autoever.everp.ui.common.components.SearchBar
 import com.autoever.everp.ui.common.components.StatusBadge
@@ -28,8 +29,8 @@ fun CustomerOrderScreen(
     viewModel: CustomerOrderViewModel = hiltViewModel(),
 ) {
     val orderList by viewModel.orderList.collectAsState()
-    val searchQuery by viewModel.searchQuery.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    val searchParams by viewModel.searchParams.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -44,63 +45,91 @@ fun CustomerOrderScreen(
 
         // 검색 바
         SearchBar(
-            query = searchQuery,
-            onQueryChange = { viewModel.updateSearchQuery(it) },
+            query = searchParams.searchKeyword,
+            onQueryChange = { viewModel.updateSearchQuery(it, SalesOrderSearchTypeEnum.SALES_ORDER_NUMBER) },
             placeholder = "주문번호로 검색",
             onSearch = { viewModel.search() },
         )
 
         // 리스트
-        if (isLoading) {
-            Text(
-                text = "로딩 중...",
-                modifier = Modifier.padding(16.dp),
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                items(orderList.content) { order ->
-                    ListCard(
-                        id = order.salesOrderNumber,
-                        title = "${order.customerName} - ${order.managerName}",
-                        statusBadge = {
-                            StatusBadge(
-                                text = order.statusCode.displayName(),
-                                color = order.statusCode.toColor(),
-                            )
-                        },
-                        details = {
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                Text(
-                                    text = "납기일: ${order.dueDate}",
-                                    style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
-                                )
-                                Text(
-                                    text = "주문금액: ${formatCurrency(order.totalAmount)}원",
-                                    style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
-                                    color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
-                                )
-                            }
-                        },
-                        trailingContent = {
-                            Button(
-                                onClick = { /* TODO: 주문 상세 화면으로 이동 */ },
-                                modifier = Modifier.padding(top = 8.dp),
-                            ) {
-                                Text("상세보기")
-                            }
-                        },
-                        onClick = { /* TODO: 주문 상세 화면으로 이동 */ },
+        when (uiState) {
+            is com.autoever.everp.utils.state.UiResult.Loading -> {
+                Text(
+                    text = "로딩 중...",
+                    modifier = Modifier.padding(16.dp),
+                )
+            }
+
+            is com.autoever.everp.utils.state.UiResult.Error -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                ) {
+                    Text(
+                        text = "오류가 발생했습니다: ${(uiState as com.autoever.everp.utils.state.UiResult.Error).exception.message}",
+                        modifier = Modifier.padding(bottom = 8.dp),
                     )
+                    Button(onClick = { viewModel.retry() }) {
+                        Text("다시 시도")
+                    }
+                }
+            }
+
+            is com.autoever.everp.utils.state.UiResult.Success -> {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    items(orderList) { order ->
+                        ListCard(
+                            id = order.salesOrderNumber,
+                            title = "${order.customerName} - ${order.managerName}",
+                            statusBadge = {
+                                StatusBadge(
+                                    text = order.statusCode.displayName(),
+                                    color = order.statusCode.toColor(),
+                                )
+                            },
+                            details = {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    Text(
+                                        text = "납기일: ${order.dueDate}",
+                                        style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
+                                    )
+                                    Text(
+                                        text = "주문금액: ${formatCurrency(order.totalAmount)}원",
+                                        style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
+                                        color = androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                                    )
+                                }
+                            },
+                            trailingContent = {
+                                Button(
+                                    onClick = {
+                                        navController.navigate(
+                                            CustomerSubNavigationItem.SalesOrderDetailItem.createRoute(
+                                                order.salesOrderId
+                                            )
+                                        )
+                                    },
+                                    modifier = Modifier.padding(top = 8.dp),
+                                ) {
+                                    Text("상세보기")
+                                }
+                            },
+                            onClick = {
+                                navController.navigate(
+                                    CustomerSubNavigationItem.SalesOrderDetailItem.createRoute(
+                                        order.salesOrderId
+                                    )
+                                )
+                            },
+                        )
+                    }
                 }
             }
         }
     }
-}
-
-private fun formatCurrency(amount: Long): String {
-    return NumberFormat.getNumberInstance(Locale.KOREA).format(amount)
 }

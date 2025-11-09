@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -32,6 +33,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun CustomerProfileScreen(
+    loginNavController: NavController,
     navController: NavController,
     viewModel: CustomerProfileViewModel = hiltViewModel(),
 ) {
@@ -164,6 +166,19 @@ fun CustomerProfileScreen(
                 )
             }
         }
+
+        Button(
+            onClick = {
+                viewModel.logout {
+                    loginNavController.navigate("login") {
+                        popUpTo(0)
+                    }
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 24.dp),
+        ) { }
     }
 }
 

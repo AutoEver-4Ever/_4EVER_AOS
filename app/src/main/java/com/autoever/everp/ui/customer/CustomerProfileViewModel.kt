@@ -2,6 +2,7 @@ package com.autoever.everp.ui.customer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.autoever.everp.auth.session.SessionManager
 import com.autoever.everp.domain.model.customer.CustomerDetail
 import com.autoever.everp.domain.model.user.UserInfo
 import com.autoever.everp.domain.repository.SdRepository
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomerProfileViewModel @Inject constructor(
+    private val sessionManager: SessionManager,
     private val userRepository: UserRepository,
     private val sdRepository: SdRepository,
 ) : ViewModel() {
@@ -57,6 +59,19 @@ class CustomerProfileViewModel @Inject constructor(
 
     fun refresh() {
         loadUserInfo()
+    }
+
+    fun logout(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            sessionManager.signOut()
+            try {
+                userRepository.logout()
+                onSuccess()
+                Timber.i("로그아웃 성공")
+            } catch (e: Exception) {
+                Timber.e(e, "로그아웃 실패")
+            }
+        }
     }
 }
 

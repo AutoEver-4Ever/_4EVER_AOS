@@ -137,7 +137,13 @@ fun CustomerVoucherScreen(
                                     )
                                 }
                             },
-                            onClick = { /* TODO: 전표 상세 화면으로 이동 */ },
+                            onClick = {
+                                navController.navigate(
+                                    CustomerSubNavigationItem.InvoiceDetailItem.createRoute(
+                                        invoiceId = invoice.id
+                                    ),
+                                )
+                            },
                             modifier = Modifier.weight(1f),
                         )
                     }

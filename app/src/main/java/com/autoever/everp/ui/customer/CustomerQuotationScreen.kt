@@ -69,7 +69,7 @@ fun CustomerQuotationScreen(
                 fontWeight = FontWeight.Bold,
             )
             Button(
-                onClick = { /* TODO: 견적 요청 화면으로 이동 */ },
+                onClick = { navController.navigate(CustomerSubNavigationItem.QuotationCreateItem.route) },
                 modifier = Modifier.padding(top = 8.dp),
             ) {
                 Text("견적 요청")
@@ -148,7 +148,11 @@ fun CustomerQuotationScreen(
                                         )
                                     }
                                 },
-                                onClick = { /* 상세 화면 */ },
+                                onClick = {
+                                    navController.navigate(
+                                        CustomerSubNavigationItem.QuotationDetailItem.createRoute(quotationId = quotation.id)
+                                    )
+                                },
                             )
                         }
 

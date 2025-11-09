@@ -22,16 +22,20 @@ class CustomerVoucherViewModel @Inject constructor(
     private val _invoiceList = MutableStateFlow<PageResponse<InvoiceListItem>>(
         PageResponse.empty(),
     )
-    val invoiceList: StateFlow<PageResponse<InvoiceListItem>> = _invoiceList.asStateFlow()
+    val invoiceList: StateFlow<PageResponse<InvoiceListItem>>
+        get() = _invoiceList.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
-    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+    val searchQuery: StateFlow<String>
+        get() = _searchQuery.asStateFlow()
 
     private val _selectedInvoiceIds = MutableStateFlow<Set<String>>(emptySet())
-    val selectedInvoiceIds: StateFlow<Set<String>> = _selectedInvoiceIds.asStateFlow()
+    val selectedInvoiceIds: StateFlow<Set<String>>
+        get() = _selectedInvoiceIds.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    val isLoading: StateFlow<Boolean>
+        get() = _isLoading.asStateFlow()
 
     init {
         loadInvoices()
@@ -48,8 +52,15 @@ class CustomerVoucherViewModel @Inject constructor(
                         size = 20,
                     ),
                 ).onSuccess {
-                    fcmRepository.observeApInvoiceList().collect { pageResponse ->
+                    fcmRepository.getApInvoiceList(
+                        InvoiceListParams(
+                            page = 0,
+                            size = 20,
+                        ),
+                    ).onSuccess { pageResponse ->
                         _invoiceList.value = pageResponse
+                    }.onFailure { e ->
+                        Timber.e(e, "매입전표 목록 조회 실패")
                     }
                 }.onFailure { e ->
                     Timber.e(e, "매입전표 목록 로드 실패")

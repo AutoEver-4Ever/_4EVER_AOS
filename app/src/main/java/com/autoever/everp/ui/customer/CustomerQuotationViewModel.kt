@@ -66,18 +66,24 @@ class CustomerQuotationViewModel @Inject constructor(
 
             sdRepository.refreshQuotationList(searchParams.value)
                 .onSuccess {
-                    sdRepository.observeQuotationList().collect { pageResponse ->
-                        if (append) {
-                            // 페이지네이션: 기존 리스트에 추가
-                            _quotationList.value = _quotationList.value + pageResponse.content
-                        } else {
-                            // 새로운 검색: 리스트 교체
-                            _quotationList.value = pageResponse.content
+                    // refresh 후 get을 통해 최신 데이터 가져오기
+                    sdRepository.getQuotationList(searchParams.value)
+                        .onSuccess { pageResponse ->
+                            if (append) {
+                                // 페이지네이션: 기존 리스트에 추가
+                                _quotationList.value = _quotationList.value + pageResponse.content
+                            } else {
+                                // 새로운 검색: 리스트 교체
+                                _quotationList.value = pageResponse.content
+                            }
+                            _totalPages.value = pageResponse.page.totalPages
+                            _hasMore.value = !pageResponse.page.hasNext
+                            _uiState.value = UiResult.Success(Unit)
                         }
-                        _totalPages.value = pageResponse.page.totalPages
-                        _hasMore.value = !pageResponse.page.hasNext
-                        _uiState.value = UiResult.Success(Unit)
-                    }
+                        .onFailure { e ->
+                            Timber.e(e, "견적서 목록 조회 실패")
+                            _uiState.value = UiResult.Error(e as Exception)
+                        }
                 }
                 .onFailure { e ->
                     Timber.e(e, "견적서 목록 로드 실패")
