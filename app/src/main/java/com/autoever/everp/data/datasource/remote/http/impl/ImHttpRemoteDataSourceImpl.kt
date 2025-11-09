@@ -2,7 +2,6 @@ package com.autoever.everp.data.datasource.remote.http.impl
 
 import com.autoever.everp.data.datasource.remote.ImRemoteDataSource
 import com.autoever.everp.data.datasource.remote.http.service.ImApi
-import com.autoever.everp.data.datasource.remote.http.service.ItemToggleResponseDto
 import com.autoever.everp.domain.model.inventory.InventoryItemToggle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
