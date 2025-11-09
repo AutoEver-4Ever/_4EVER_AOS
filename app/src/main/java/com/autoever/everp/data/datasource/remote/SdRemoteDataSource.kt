@@ -3,6 +3,7 @@ package com.autoever.everp.data.datasource.remote
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
 import com.autoever.everp.data.datasource.remote.http.service.QuotationListItemDto
 import com.autoever.everp.data.datasource.remote.http.service.CustomerDetailResponseDto
+import com.autoever.everp.data.datasource.remote.http.service.CustomerUpdateRequestDto
 import com.autoever.everp.data.datasource.remote.http.service.QuotationCreateRequestDto
 import com.autoever.everp.data.datasource.remote.http.service.QuotationDetailResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.SalesOrderDetailResponseDto
@@ -41,6 +42,11 @@ interface SdRemoteDataSource {
     suspend fun getCustomerDetail(
         customerId: String,
     ): Result<CustomerDetailResponseDto>
+
+    suspend fun updateCustomer(
+        customerId: String,
+        request: CustomerUpdateRequestDto,
+    ): Result<Unit>
 
     // ========== 주문서 ==========
     suspend fun getSalesOrderList(

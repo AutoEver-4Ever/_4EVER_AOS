@@ -4,6 +4,7 @@ import com.autoever.everp.data.datasource.remote.SdRemoteDataSource
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
 import com.autoever.everp.data.datasource.remote.http.service.QuotationListItemDto
 import com.autoever.everp.data.datasource.remote.http.service.CustomerDetailResponseDto
+import com.autoever.everp.data.datasource.remote.http.service.CustomerUpdateRequestDto
 import com.autoever.everp.data.datasource.remote.http.service.QuotationCreateRequestDto
 import com.autoever.everp.data.datasource.remote.http.service.QuotationDetailResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.SalesOrderDetailResponseDto
@@ -104,6 +105,23 @@ class SdHttpRemoteDataSourceImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Timber.e(e, "고객사 상세 조회 실패")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateCustomer(
+        customerId: String,
+        request: CustomerUpdateRequestDto,
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val response = sdApi.updateCustomer(customerId = customerId, request = request)
+            if (response.success) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message ?: "고객사 수정 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "고객사 수정 실패")
             Result.failure(e)
         }
     }

@@ -95,6 +95,17 @@ class SdRepositoryImpl @Inject constructor(
             .map { SdMapper.customerDetailToDomain(it) }
     }
 
+    override suspend fun updateCustomer(
+        customerId: String,
+        request: com.autoever.everp.data.datasource.remote.http.service.CustomerUpdateRequestDto,
+    ): Result<Unit> {
+        return sdRemoteDataSource.updateCustomer(customerId, request)
+            .onSuccess {
+                // 수정 성공 시 로컬 캐시 갱신
+                refreshCustomerDetail(customerId)
+            }
+    }
+
     // ========== 주문서 ==========
     override fun observeSalesOrderList(): Flow<PageResponse<SalesOrderListItem>> =
         sdLocalDataSource.observeSalesOrderList()
