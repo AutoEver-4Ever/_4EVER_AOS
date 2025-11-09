@@ -140,9 +140,9 @@ fun CustomerQuotationScreen(
                                         )
                                         Text(
                                             text = "납기일: ${
-                                                quotation.dueDate.format(
+                                                quotation.dueDate?.format(
                                                     DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                                                )
+                                                ) ?: "미정"
                                             }",
                                             style = MaterialTheme.typography.bodyMedium,
                                         )

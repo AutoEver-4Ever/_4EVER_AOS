@@ -50,13 +50,19 @@ class QuotationCreateViewModel @Inject constructor(
         get() = _selected.value.values.sumOf { it.totalPrice }
 
     init {
-        loadItems()
-        // Flow에서 items 업데이트
+        // Flow에서 items 업데이트를 먼저 구독
         imRepository.observeItemToggleList()
             .onEach { itemList ->
-                _items.value = itemList ?: emptyList()
+                _items.value = itemList
+                // 데이터가 로드되면 UI 상태 업데이트
+                if (itemList.isNotEmpty() && _uiState.value is UiResult.Loading) {
+                    _uiState.value = UiResult.Success(Unit)
+                }
             }
             .launchIn(viewModelScope)
+        
+        // 초기 데이터 로드
+        loadItems()
     }
 
     fun loadItems() {
@@ -64,7 +70,22 @@ class QuotationCreateViewModel @Inject constructor(
             _uiState.value = UiResult.Loading
             imRepository.refreshItemToggleList()
                 .onSuccess {
-                    _uiState.value = UiResult.Success(Unit)
+                    // refresh 성공 후 observeItemToggleList()를 통해 자동으로 업데이트됨
+                    // 하지만 데이터가 없을 수도 있으므로 확인
+                    val currentItems = _items.value
+                    if (currentItems.isEmpty()) {
+                        // 직접 조회해서 확인
+                        imRepository.getItemToggleList()
+                            .onSuccess { items ->
+                                _items.value = items
+                                _uiState.value = UiResult.Success(Unit)
+                            }
+                            .onFailure { e ->
+                                _uiState.value = UiResult.Error(e as Exception)
+                            }
+                    } else {
+                        _uiState.value = UiResult.Success(Unit)
+                    }
                 }
                 .onFailure { e ->
                     _uiState.value = UiResult.Error(e as Exception)

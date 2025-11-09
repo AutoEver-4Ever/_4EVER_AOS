@@ -3,7 +3,6 @@ package com.autoever.everp.ui.customer
 import android.app.DatePickerDialog
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,21 +14,23 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,9 +45,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.autoever.everp.utils.state.UiResult
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuotationCreateScreen(
     navController: NavController,
@@ -61,6 +64,10 @@ fun QuotationCreateScreen(
 
     var showItemDropdown by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
+
+    LaunchedEffect(items) {
+        Timber.tag("QuotationCreateScreen").d("Loaded items: $items")
+    }
 
     Column(
         modifier = Modifier
@@ -145,35 +152,43 @@ fun QuotationCreateScreen(
                 style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 8.dp),
             )
-            Box {
+            ExposedDropdownMenuBox(
+                expanded = showItemDropdown,
+                onExpandedChange = { showItemDropdown = it },
+            ) {
                 OutlinedTextField(
                     value = "",
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("품목을 선택하세요") },
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = showItemDropdown)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { showItemDropdown = true },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = "품목 선택",
-                        )
-                    },
+                        .menuAnchor(),
                 )
-                DropdownMenu(
+                ExposedDropdownMenu(
                     expanded = showItemDropdown,
                     onDismissRequest = { showItemDropdown = false },
-                    modifier = Modifier.fillMaxWidth(),
                 ) {
-                    items.forEach { item ->
+                    if (items.isEmpty()) {
                         DropdownMenuItem(
-                            text = { Text("${item.itemName} (${item.uomName}) - ${formatCurrency(item.unitPrice)}") },
-                            onClick = {
-                                viewModel.addItem(item)
-                                showItemDropdown = false
-                            },
+                            text = { Text("품목이 없습니다") },
+                            onClick = { showItemDropdown = false },
                         )
+                    } else {
+                        items.forEach { item ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text("${item.itemName} (${item.uomName}) - ${formatCurrency(item.unitPrice)}원")
+                                },
+                                onClick = {
+                                    viewModel.addItem(item)
+                                    showItemDropdown = false
+                                },
+                            )
+                        }
                     }
                 }
             }
@@ -246,7 +261,12 @@ fun QuotationCreateScreen(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
                                     TextButton(
-                                        onClick = { viewModel.updateQuantity(selectedItem.item.itemId, selectedItem.quantity - 1) },
+                                        onClick = {
+                                            viewModel.updateQuantity(
+                                                selectedItem.item.itemId,
+                                                selectedItem.quantity - 1
+                                            )
+                                        },
                                         enabled = selectedItem.quantity > 1,
                                     ) {
                                         Text("-")
@@ -257,7 +277,12 @@ fun QuotationCreateScreen(
                                         modifier = Modifier.padding(horizontal = 16.dp),
                                     )
                                     TextButton(
-                                        onClick = { viewModel.updateQuantity(selectedItem.item.itemId, selectedItem.quantity + 1) },
+                                        onClick = {
+                                            viewModel.updateQuantity(
+                                                selectedItem.item.itemId,
+                                                selectedItem.quantity + 1
+                                            )
+                                        },
                                     ) {
                                         Text("+")
                                     }
