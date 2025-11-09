@@ -13,6 +13,7 @@ import com.autoever.everp.domain.model.quotation.QuotationDetail
 import com.autoever.everp.domain.model.quotation.QuotationListItem
 import com.autoever.everp.domain.model.sale.SalesOrderDetail
 import com.autoever.everp.domain.model.sale.SalesOrderListItem
+import java.time.LocalDate
 
 /**
  * SD(영업 관리) DTO to Domain Model Mapper
@@ -32,11 +33,11 @@ object SdMapper {
         )
 
         return QuotationListItem(
-            id = dto.quotationId.toString(),
+            id = dto.quotationId,
             number = dto.quotationNumber,
             customer = customer,
             status = dto.statusCode,
-            dueDate = dto.dueDate,
+            dueDate = parseLocalDateSafely(dto.dueDate),
             product = product,
         )
     }
@@ -152,6 +153,19 @@ object SdMapper {
 
     fun salesOrderListToDomainList(dtoList: List<SalesOrderListItemDto>): List<SalesOrderListItem> {
         return dtoList.map { salesOrderListToDomain(it) }
+    }
+
+    // ========== 안전한 날짜 파싱 ==========
+    private fun parseLocalDateSafely(dateString: String?): LocalDate? {
+        return try {
+            if (dateString.isNullOrBlank() || dateString == "-") {
+                null
+            } else {
+                LocalDate.parse(dateString)
+            }
+        } catch (e: Exception) {
+            null
+        }
     }
 }
 

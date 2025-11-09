@@ -110,14 +110,14 @@ interface SdApi {
 @Serializable
 data class QuotationListItemDto(
     @SerialName("quotationId")
-    val quotationId: Long,
+    val quotationId: String,
     @SerialName("quotationNumber")
     val quotationNumber: String,
     @SerialName("customerName")
     val customerName: String,
-    @Serializable(with = LocalDateSerializer::class)
+//    @Serializable(with = LocalDateSerializer::class)
     @SerialName("dueDate")
-    val dueDate: LocalDate,
+    val dueDate: String? = null,
     @SerialName("statusCode")
     val statusCode: QuotationStatusEnum = QuotationStatusEnum.UNKNOWN,
     @SerialName("productId")
@@ -172,7 +172,7 @@ data class QuotationItemDto(
 data class QuotationCreateRequestDto(
     @Serializable(with = LocalDateSerializer::class)
     @SerialName("dueDate")
-    val dueDate: LocalDate,
+    val dueDate: LocalDate? = null,
     @SerialName("items")
     val items: List<QuotationCreateRequestItemDto>,
     @SerialName("note")
