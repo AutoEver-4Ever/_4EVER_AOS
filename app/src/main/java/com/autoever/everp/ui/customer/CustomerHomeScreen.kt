@@ -18,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -36,8 +35,8 @@ fun CustomerHomeScreen(
     navController: NavController,
     viewModel: CustomerHomeViewModel = hiltViewModel(),
 ) {
-    val recentQuotations by viewModel.recentQuotations.collectAsStateWithLifecycle()
-    val recentOrders by viewModel.recentOrders.collectAsStateWithLifecycle()
+    val recentActivities by viewModel.recentActivities.collectAsStateWithLifecycle()
+    val categoryMap by viewModel.categoryMap.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     LazyColumn(
@@ -125,28 +124,17 @@ fun CustomerHomeScreen(
                 Text(text = "로딩 중...")
             }
         } else {
-            // 견적서 활동
-            recentQuotations.forEach { quotation ->
+            recentActivities.forEach { activity ->
                 item {
+                    val category = categoryMap[activity.id] ?: ""
                     RecentActivityCard(
-                        status = quotation.status.displayName(),
-                        statusColor = quotation.status.toColor(),
-                        title = "${quotation.number} - ${quotation.product.productId}",
-                        date = quotation.dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        onClick = { /* TODO: 견적 상세 화면으로 이동 */ },
-                    )
-                }
-            }
-
-            // 주문서 활동
-            recentOrders.forEach { order ->
-                item {
-                    RecentActivityCard(
-                        status = order.statusCode.displayName(),
-                        statusColor = order.statusCode.toColor(),
-                        title = "${order.salesOrderNumber} - ${order.customerName}",
-                        date = order.dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        onClick = { /* TODO: 주문 상세 화면으로 이동 */ },
+                        category = getCategoryDisplayName(category),
+                        status = activity.status,
+                        title = activity.description,
+                        date = activity.createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        onClick = {
+                            navigateToDetail(navController, category, activity.id)
+                        },
                     )
                 }
             }
@@ -156,8 +144,8 @@ fun CustomerHomeScreen(
 
 @Composable
 private fun RecentActivityCard(
+    category: String,
     status: String,
-    statusColor: androidx.compose.ui.graphics.Color,
     title: String,
     date: String,
     onClick: () -> Unit,
@@ -181,9 +169,15 @@ private fun RecentActivityCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
             ) {
+                // Category badge (파란색)
+                StatusBadge(
+                    text = category,
+                    color = androidx.compose.ui.graphics.Color(0xFF2196F3),
+                )
+                // Status badge (회색)
                 StatusBadge(
                     text = status,
-                    color = statusColor,
+                    color = androidx.compose.ui.graphics.Color(0xFF9E9E9E),
                 )
                 Column {
                     Text(
@@ -204,5 +198,43 @@ private fun RecentActivityCard(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
+    }
+}
+
+private fun getCategoryDisplayName(tabCode: String): String {
+    return when (tabCode.uppercase()) {
+        "QUOTATION", "견적" -> "견적"
+        "ORDER", "주문", "SALES_ORDER" -> "주문"
+        "INVOICE", "전표", "AP_INVOICE", "AR_INVOICE" -> "전표"
+        "PURCHASE_ORDER", "발주" -> "발주"
+        else -> tabCode
+    }
+}
+
+private fun navigateToDetail(
+    navController: NavController,
+    category: String,
+    workflowId: String,
+) {
+    when (category.uppercase()) {
+        "QUOTATION", "견적" -> {
+            navController.navigate(
+                CustomerSubNavigationItem.QuotationDetailItem.createRoute(quotationId = workflowId)
+            )
+        }
+        "ORDER", "주문", "SALES_ORDER" -> {
+            navController.navigate(
+                CustomerSubNavigationItem.SalesOrderDetailItem.createRoute(workflowId)
+            )
+        }
+        "INVOICE", "전표", "AP_INVOICE", "AR_INVOICE" -> {
+            navController.navigate(
+                CustomerSubNavigationItem.InvoiceDetailItem.createRoute(
+                    invoiceId = workflowId,
+                    isAp = category.contains("AP", ignoreCase = true),
+                ),
+            )
+        }
+        // Customer 화면에서는 발주 상세로 이동하지 않음
     }
 }

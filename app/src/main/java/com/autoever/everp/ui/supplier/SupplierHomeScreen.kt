@@ -18,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -36,8 +35,8 @@ fun SupplierHomeScreen(
     navController: NavController,
     viewModel: SupplierHomeViewModel = hiltViewModel(),
 ) {
-    val recentPurchaseOrders by viewModel.recentPurchaseOrders.collectAsStateWithLifecycle()
-    val recentInvoices by viewModel.recentInvoices.collectAsStateWithLifecycle()
+    val recentActivities by viewModel.recentActivities.collectAsStateWithLifecycle()
+    val categoryMap by viewModel.categoryMap.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     LazyColumn(
@@ -111,28 +110,17 @@ fun SupplierHomeScreen(
                 Text(text = "로딩 중...")
             }
         } else {
-            // 발주서 활동
-            recentPurchaseOrders.forEach { purchaseOrder ->
+            recentActivities.forEach { activity ->
                 item {
+                    val category = categoryMap[activity.id] ?: ""
                     RecentActivityCard(
-                        status = purchaseOrder.status.displayName(),
-                        statusColor = purchaseOrder.status.toColor(),
-                        title = "${purchaseOrder.number} - ${purchaseOrder.itemsSummary}",
-                        date = purchaseOrder.dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        onClick = { /* TODO: 발주 상세 화면으로 이동 */ },
-                    )
-                }
-            }
-
-            // 전표 활동
-            recentInvoices.forEach { invoice ->
-                item {
-                    RecentActivityCard(
-                        status = invoice.status.displayName(),
-                        statusColor = invoice.status.toColor(),
-                        title = "${invoice.number} - ${invoice.connection.name}",
-                        date = invoice.dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        onClick = { /* TODO: 전표 상세 화면으로 이동 */ },
+                        category = getCategoryDisplayName(category),
+                        status = activity.status,
+                        title = activity.description,
+                        date = activity.createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        onClick = {
+                            navigateToDetail(navController, category, activity.id)
+                        },
                     )
                 }
             }
@@ -142,8 +130,8 @@ fun SupplierHomeScreen(
 
 @Composable
 private fun RecentActivityCard(
+    category: String,
     status: String,
-    statusColor: androidx.compose.ui.graphics.Color,
     title: String,
     date: String,
     onClick: () -> Unit,
@@ -167,9 +155,15 @@ private fun RecentActivityCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
             ) {
+                // Category badge (파란색)
+                StatusBadge(
+                    text = category,
+                    color = androidx.compose.ui.graphics.Color(0xFF2196F3),
+                )
+                // Status badge (회색)
                 StatusBadge(
                     text = status,
-                    color = statusColor,
+                    color = androidx.compose.ui.graphics.Color(0xFF9E9E9E),
                 )
                 Column {
                     Text(
@@ -188,6 +182,38 @@ private fun RecentActivityCard(
                 imageVector = Icons.Default.ArrowForward,
                 contentDescription = "상세보기",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+private fun getCategoryDisplayName(tabCode: String): String {
+    return when (tabCode.uppercase()) {
+        "QUOTATION", "견적" -> "견적"
+        "ORDER", "주문", "SALES_ORDER" -> "주문"
+        "INVOICE", "전표", "AP_INVOICE", "AR_INVOICE" -> "전표"
+        "PURCHASE_ORDER", "발주" -> "발주"
+        else -> tabCode
+    }
+}
+
+private fun navigateToDetail(
+    navController: NavController,
+    category: String,
+    workflowId: String,
+) {
+    when (category.uppercase()) {
+        "PURCHASE_ORDER", "발주" -> {
+            navController.navigate(
+                SupplierSubNavigationItem.PurchaseOrderDetailItem.createRoute(workflowId)
+            )
+        }
+        "INVOICE", "전표", "AP_INVOICE", "AR_INVOICE" -> {
+            navController.navigate(
+                SupplierSubNavigationItem.InvoiceDetailItem.createRoute(
+                    invoiceId = workflowId,
+                    isAp = category.contains("AP", ignoreCase = true),
+                ),
             )
         }
     }

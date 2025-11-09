@@ -2,12 +2,9 @@ package com.autoever.everp.ui.supplier
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.autoever.everp.domain.model.purchase.PurchaseOrderListItem
-import com.autoever.everp.domain.model.purchase.PurchaseOrderListParams
-import com.autoever.everp.domain.model.invoice.InvoiceListItem
-import com.autoever.everp.domain.model.invoice.InvoiceListParams
-import com.autoever.everp.domain.repository.MmRepository
-import com.autoever.everp.domain.repository.FcmRepository
+import com.autoever.everp.domain.model.dashboard.DashboardWorkflows
+import com.autoever.everp.domain.repository.DashboardRepository
+import com.autoever.everp.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,21 +15,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SupplierHomeViewModel @Inject constructor(
-    private val mmRepository: MmRepository,
-    private val fcmRepository: FcmRepository,
+    private val dashboardRepository: DashboardRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
-    private val _recentPurchaseOrders = MutableStateFlow<List<PurchaseOrderListItem>>(emptyList())
-    val recentPurchaseOrders: StateFlow<List<PurchaseOrderListItem>>
-        get() = _recentPurchaseOrders.asStateFlow()
+    private val _recentActivities = MutableStateFlow<List<DashboardWorkflows.DashboardWorkflowItem>>(emptyList())
+    val recentActivities: StateFlow<List<DashboardWorkflows.DashboardWorkflowItem>>
+        get() = _recentActivities.asStateFlow()
 
-    private val _recentInvoices = MutableStateFlow<List<InvoiceListItem>>(emptyList())
-    val recentInvoices: StateFlow<List<InvoiceListItem>>
-        get() = _recentInvoices.asStateFlow()
+    private val _categoryMap = MutableStateFlow<Map<String, String>>(emptyMap())
+    val categoryMap: StateFlow<Map<String, String>>
+        get() = _categoryMap.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean>
-        get() = _isLoading.asStateFlow()
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     init {
         loadRecentActivities()
@@ -42,46 +38,28 @@ class SupplierHomeViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                // 최근 발주서 3개 로드
-                mmRepository.refreshPurchaseOrderList(
-                    PurchaseOrderListParams(
-                        page = 0,
-                        size = 3,
-                    ),
-                ).onSuccess {
-                    mmRepository.getPurchaseOrderList(
-                        PurchaseOrderListParams(
-                            page = 0,
-                            size = 3,
-                        ),
-                    ).onSuccess { pageResponse ->
-                        _recentPurchaseOrders.value = pageResponse.content
-                    }.onFailure { e ->
-                        Timber.e(e, "최근 발주서 로드 실패")
-                    }
-                }.onFailure { e ->
-                    Timber.e(e, "최근 발주서 갱신 실패")
-                }
+                userRepository.getUserInfo().onSuccess { userInfo ->
+                    val role = userInfo.userRole
+                    dashboardRepository.refreshWorkflows(role).onSuccess {
+                        dashboardRepository.getWorkflows(role).onSuccess { workflows ->
+                            // 모든 tabs의 items를 하나의 리스트로 합치고 날짜순으로 정렬
+                            val allItems = workflows.tabs.flatMap { tab ->
+                                tab.items.map { item ->
+                                    item to tab.tabCode
+                                }
+                            }.sortedByDescending { it.first.createdAt }
+                                .take(10) // 최근 10개만
 
-                // 최근 전표 3개 로드 (공급업체는 AR 인보이스 조회)
-                fcmRepository.refreshArInvoiceList(
-                    InvoiceListParams(
-                        page = 0,
-                        size = 3,
-                    ),
-                ).onSuccess {
-                    fcmRepository.getArInvoiceList(
-                        InvoiceListParams(
-                            page = 0,
-                            size = 3,
-                        ),
-                    ).onSuccess { pageResponse ->
-                        _recentInvoices.value = pageResponse.content
+                            _recentActivities.value = allItems.map { it.first }
+                            _categoryMap.value = allItems.associate { it.first.id to it.second }
+                        }.onFailure { e ->
+                            Timber.e(e, "워크플로우 조회 실패")
+                        }
                     }.onFailure { e ->
-                        Timber.e(e, "최근 전표 로드 실패")
+                        Timber.e(e, "워크플로우 갱신 실패")
                     }
                 }.onFailure { e ->
-                    Timber.e(e, "최근 전표 갱신 실패")
+                    Timber.e(e, "사용자 정보 조회 실패")
                 }
             } catch (e: Exception) {
                 Timber.e(e, "최근 활동 로드 실패")
@@ -95,4 +73,3 @@ class SupplierHomeViewModel @Inject constructor(
         loadRecentActivities()
     }
 }
-

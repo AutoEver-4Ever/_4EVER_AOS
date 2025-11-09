@@ -2,10 +2,9 @@ package com.autoever.everp.ui.customer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.autoever.everp.domain.repository.SdRepository
-import com.autoever.everp.domain.model.quotation.QuotationListItem
-import com.autoever.everp.domain.model.quotation.QuotationListParams
-import com.autoever.everp.domain.model.sale.SalesOrderListItem
+import com.autoever.everp.domain.model.dashboard.DashboardWorkflows
+import com.autoever.everp.domain.repository.DashboardRepository
+import com.autoever.everp.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,15 +15,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CustomerHomeViewModel @Inject constructor(
-    private val sdRepository: SdRepository,
+    private val dashboardRepository: DashboardRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
-    private val _recentQuotations = MutableStateFlow<List<QuotationListItem>>(emptyList())
-    val recentQuotations: StateFlow<List<QuotationListItem>>
-        get() = _recentQuotations.asStateFlow()
+    private val _recentActivities = MutableStateFlow<List<DashboardWorkflows.DashboardWorkflowItem>>(emptyList())
+    val recentActivities: StateFlow<List<DashboardWorkflows.DashboardWorkflowItem>>
+        get() = _recentActivities.asStateFlow()
 
-    private val _recentOrders = MutableStateFlow<List<SalesOrderListItem>>(emptyList())
-    val recentOrders: StateFlow<List<SalesOrderListItem>> = _recentOrders.asStateFlow()
+    private val _categoryMap = MutableStateFlow<Map<String, String>>(emptyMap())
+    val categoryMap: StateFlow<Map<String, String>>
+        get() = _categoryMap.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -37,7 +38,29 @@ class CustomerHomeViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
+                userRepository.getUserInfo().onSuccess { userInfo ->
+                    val role = userInfo.userRole
+                    dashboardRepository.refreshWorkflows(role).onSuccess {
+                        dashboardRepository.getWorkflows(role).onSuccess { workflows ->
+                            // 모든 tabs의 items를 하나의 리스트로 합치고 날짜순으로 정렬
+                            val allItems = workflows.tabs.flatMap { tab ->
+                                tab.items.map { item ->
+                                    item to tab.tabCode
+                                }
+                            }.sortedByDescending { it.first.createdAt }
+                                .take(10) // 최근 10개만
 
+                            _recentActivities.value = allItems.map { it.first }
+                            _categoryMap.value = allItems.associate { it.first.id to it.second }
+                        }.onFailure { e ->
+                            Timber.e(e, "워크플로우 조회 실패")
+                        }
+                    }.onFailure { e ->
+                        Timber.e(e, "워크플로우 갱신 실패")
+                    }
+                }.onFailure { e ->
+                    Timber.e(e, "사용자 정보 조회 실패")
+                }
             } catch (e: Exception) {
                 Timber.e(e, "최근 활동 로드 실패")
             } finally {
