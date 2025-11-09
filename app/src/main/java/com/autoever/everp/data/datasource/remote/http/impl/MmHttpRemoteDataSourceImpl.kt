@@ -2,6 +2,7 @@ package com.autoever.everp.data.datasource.remote.http.impl
 
 import com.autoever.everp.data.datasource.remote.MmRemoteDataSource
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
+import com.autoever.everp.data.datasource.remote.dto.common.ToggleResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.MmApi
 import com.autoever.everp.data.datasource.remote.http.service.PurchaseOrderDetailResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.PurchaseOrderListItemDto
@@ -99,6 +100,34 @@ class MmHttpRemoteDataSourceImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Timber.e(e, "구매 주문 상세 조회 실패")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getPurchaseOrderSearchTypeToggle(): Result<List<ToggleResponseDto>> = withContext(Dispatchers.IO) {
+        try {
+            val response = mmApi.getPurchaseOrderSearchTypeToggle()
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message ?: "발주서 검색 타입 토글 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "발주서 검색 타입 토글 조회 실패")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getPurchaseOrderStatusTypeToggle(): Result<List<ToggleResponseDto>> = withContext(Dispatchers.IO) {
+        try {
+            val response = mmApi.getPurchaseOrderStatusTypeToggle()
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message ?: "발주서 상태 타입 토글 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "발주서 상태 타입 토글 조회 실패")
             Result.failure(e)
         }
     }
