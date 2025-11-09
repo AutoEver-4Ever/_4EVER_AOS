@@ -15,19 +15,25 @@ class ImHttpRemoteDataSourceImpl @Inject constructor(
     override suspend fun getItemsToggle(
 
     ): Result<List<InventoryItemToggle>> = withContext(Dispatchers.IO) {
-        runCatching {
-            val data = imApi.getItemsToggle().data
-
-            data?.map { dto ->
-                InventoryItemToggle(
-                    itemId = dto.itemId,
-                    itemName = dto.itemName,
-                    uomName = dto.uomName,
-                    unitPrice = dto.unitPrice,
-//                    supplierCompanyId = dto.supplierCompanyId,
-//                    supplierCompanyName = dto.supplierCompanyName,
+        try {
+            val response = imApi.getItemsToggle()
+            if (response.success && response.data != null) {
+                val items = response.data.products.map { dto ->
+                    InventoryItemToggle(
+                        itemId = dto.itemId,
+                        itemName = dto.itemName,
+                        uomName = dto.uomName,
+                        unitPrice = dto.unitPrice.toLong(), // Double을 Long으로 변환
+                    )
+                }
+                Result.success(items)
+            } else {
+                Result.failure(
+                    Exception(response.message ?: "품목 목록 조회 실패")
                 )
-            } ?: emptyList()
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }

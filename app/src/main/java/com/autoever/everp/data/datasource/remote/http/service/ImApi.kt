@@ -11,10 +11,13 @@ import retrofit2.http.GET
  */
 interface ImApi {
 
+    /**
+     * 재고 아이템 토글 목록 조회
+     */
     @GET("scm-pp/product/item/toggle")
     suspend fun getItemsToggle(
 
-    ): ApiResponse<List<ItemToggleResponseDto>>
+    ): ApiResponse<ItemToggleListResponseDto>
 
     companion object {
         private const val BASE_URL = "scm-pp/iv"
@@ -22,7 +25,13 @@ interface ImApi {
 }
 
 @Serializable
-data class ItemToggleResponseDto(
+data class ItemToggleListResponseDto(
+    @SerialName("products")
+    val products: List<ItemToggleListItemDto>,
+)
+
+@Serializable
+data class ItemToggleListItemDto(
     @SerialName("itemId")
     val itemId: String,
     @SerialName("itemNumber")
@@ -32,7 +41,7 @@ data class ItemToggleResponseDto(
     @SerialName("uomName")
     val uomName: String,
     @SerialName("unitPrice")
-    val unitPrice: Long,
+    val unitPrice: Double,
 //    @SerialName("supplierCompanyId")
 //    val supplierCompanyId: String,
 //    @SerialName("supplierCompanyName")
