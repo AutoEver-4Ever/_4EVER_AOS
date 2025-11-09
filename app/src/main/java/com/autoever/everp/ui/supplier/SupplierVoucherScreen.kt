@@ -137,7 +137,14 @@ fun SupplierVoucherScreen(
                                     )
                                 }
                             },
-                            onClick = { /* TODO: 전표 상세 화면으로 이동 */ },
+                            onClick = {
+                                navController.navigate(
+                                    SupplierSubNavigationItem.InvoiceDetailItem.createRoute(
+                                        invoiceId = invoice.id,
+                                        isAp = true,
+                                    ),
+                                )
+                            },
                             modifier = Modifier.weight(1f),
                         )
                     }

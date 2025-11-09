@@ -107,13 +107,21 @@ fun SupplierOrderScreen(
                             },
                             trailingContent = {
                                 Button(
-                                    onClick = { /* TODO: 발주 상세 화면으로 이동 */ },
+                                    onClick = {
+                                        navController.navigate(
+                                            SupplierSubNavigationItem.PurchaseOrderDetailItem.createRoute(order.id)
+                                        )
+                                    },
                                     modifier = Modifier.padding(top = 8.dp),
                                 ) {
                                     Text("상세보기")
                                 }
                             },
-                            onClick = { /* TODO: 발주 상세 화면으로 이동 */ },
+                            onClick = {
+                                navController.navigate(
+                                    SupplierSubNavigationItem.PurchaseOrderDetailItem.createRoute(order.id)
+                                )
+                            },
                         )
                     }
                 }
