@@ -2,6 +2,7 @@ package com.autoever.everp.ui.supplier
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.autoever.everp.auth.session.SessionManager
 import com.autoever.everp.domain.model.supplier.SupplierDetail
 import com.autoever.everp.domain.model.user.UserInfo
 import com.autoever.everp.domain.repository.MmRepository
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class SupplierProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val mmRepository: MmRepository,
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
 
     private val _userInfo = MutableStateFlow<UserInfo?>(null)
@@ -57,6 +59,19 @@ class SupplierProfileViewModel @Inject constructor(
 
     fun refresh() {
         loadUserInfo()
+    }
+
+    fun logout(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            sessionManager.signOut()
+            try {
+                userRepository.logout()
+                onSuccess()
+                Timber.i("로그아웃 성공")
+            } catch (e: Exception) {
+                Timber.e(e, "로그아웃 실패")
+            }
+        }
     }
 }
 

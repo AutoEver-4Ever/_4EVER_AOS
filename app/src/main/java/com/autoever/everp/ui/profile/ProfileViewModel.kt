@@ -26,6 +26,7 @@ class ProfileViewModel @Inject constructor(
     private val sessionManager: SessionManager,
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
+    private val user: com.autoever.everp.domain.repository.UserRepository
 ) : ViewModel() {
 
     private val _ui = MutableStateFlow(ProfileUiState(isLoading = true))
@@ -63,6 +64,7 @@ class ProfileViewModel @Inject constructor(
                 }
             } finally {
                 sessionManager.signOut()
+                user.logout()
             }
         }
     }

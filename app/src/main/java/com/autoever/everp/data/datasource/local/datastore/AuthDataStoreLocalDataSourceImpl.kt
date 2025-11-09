@@ -7,20 +7,23 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.autoever.everp.common.annotation.ApplicationScope
 import com.autoever.everp.data.datasource.local.AuthLocalDataSource
 import com.autoever.everp.domain.model.auth.AccessToken
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 class AuthDataStoreLocalDataSourceImpl @Inject constructor(
     @ApplicationContext private val appContext: Context,
+    @ApplicationScope private val appScope: CoroutineScope,
 ) : AuthLocalDataSource {
 
     companion object {
@@ -70,6 +73,7 @@ class AuthDataStoreLocalDataSourceImpl @Inject constructor(
             prefs.remove(KEY_ACCESS_TOKEN)
             prefs.remove(KEY_ACCESS_TOKEN_TYPE)
             prefs.remove(KEY_ACCESS_TOKEN_EXPIRES_IN)
+            // prefs.clear()
         }
     }
 

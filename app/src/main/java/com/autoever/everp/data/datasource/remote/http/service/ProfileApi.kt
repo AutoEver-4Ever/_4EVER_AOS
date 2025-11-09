@@ -1,6 +1,8 @@
 package com.autoever.everp.data.datasource.remote.http.service
 
 import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import retrofit2.http.GET
 
 interface ProfileApi {
@@ -15,16 +17,16 @@ interface ProfileApi {
     }
 }
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class ProfileResponseDto(
-    @kotlinx.serialization.SerialName("businessName")
+    @SerialName("businessName")
     val businessName: String,
-    @kotlinx.serialization.SerialName("businessNumber")
+    @SerialName("businessNumber")
     val businessNumber: String,
-    @kotlinx.serialization.SerialName("ceoName")
+    @SerialName("ceoName")
     val ceoName: String,
-    @kotlinx.serialization.SerialName("address")
+    @SerialName("address")
     val address: String,
-    @kotlinx.serialization.SerialName("contactNumber")
+    @SerialName("contactNumber")
     val contactNumber: String,
 )

@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -29,9 +30,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.autoever.everp.ui.home.HomeViewModel
 
 @Composable
 fun SupplierProfileScreen(
+    loginNavController: NavController,
     navController: NavController,
     viewModel: SupplierProfileViewModel = hiltViewModel(),
 ) {
@@ -57,7 +60,9 @@ fun SupplierProfileScreen(
                 fontWeight = FontWeight.Bold,
             )
             androidx.compose.material3.TextButton(
-                onClick = { /* TODO: 편집 화면으로 이동 */ },
+                onClick = {
+                    navController.navigate(SupplierSubNavigationItem.ProfileEditItem.route)
+                },
             ) {
                 Text("편집")
             }
@@ -164,6 +169,19 @@ fun SupplierProfileScreen(
                 )
             }
         }
+
+        Button(
+            onClick = {
+                viewModel.logout {
+                    loginNavController.navigate("login") {
+                        popUpTo(0)
+                    }
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 24.dp),
+        ) { }
     }
 }
 
