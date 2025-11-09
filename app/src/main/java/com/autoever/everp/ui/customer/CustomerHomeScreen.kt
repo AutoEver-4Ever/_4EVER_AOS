@@ -85,28 +85,28 @@ fun CustomerHomeScreen(
                     QuickActionCard(
                         icon = QuickActionIcons.QuotationRequest,
                         label = "견적 요청",
-                        onClick = { /* TODO: 견적 요청 화면으로 이동 */ },
+                        onClick = { navController.navigate(CustomerSubNavigationItem.QuotationCreateItem.route) },
                     )
                 }
                 item {
                     QuickActionCard(
                         icon = QuickActionIcons.QuotationList,
                         label = "견적 목록",
-                        onClick = { navController.navigate("customer_quotation") },
+                        onClick = { navController.navigate(CustomerNavigationItem.Quotation.route) },
                     )
                 }
                 item {
                     QuickActionCard(
                         icon = QuickActionIcons.PurchaseOrderList,
                         label = "주문 관리",
-                        onClick = { navController.navigate("customer_order") },
+                        onClick = { navController.navigate(CustomerNavigationItem.SalesOrder.route) },
                     )
                 }
                 item {
                     QuickActionCard(
                         icon = QuickActionIcons.InvoiceList,
                         label = "매입전표",
-                        onClick = { navController.navigate("customer_voucher") },
+                        onClick = { navController.navigate(CustomerNavigationItem.Invoice.route) },
                     )
                 }
             }

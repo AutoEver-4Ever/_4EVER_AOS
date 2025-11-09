@@ -25,7 +25,8 @@ sealed class CustomerNavigationItem(
     object Quotation :
         CustomerNavigationItem("customer_quotation", "견적", Icons.Outlined.RequestPage, Icons.Filled.RequestPage)
 
-    object SalesOrder : CustomerNavigationItem("customer_sales_order", "주문", Icons.Outlined.ShoppingBag, Icons.Filled.ShoppingBag)
+    object SalesOrder :
+        CustomerNavigationItem("customer_sales_order", "주문", Icons.Outlined.ShoppingBag, Icons.Filled.ShoppingBag)
 
     object Invoice : CustomerNavigationItem("customer_invoice", "전표", Icons.Outlined.Receipt, Icons.Filled.Receipt)
 
@@ -34,4 +35,44 @@ sealed class CustomerNavigationItem(
     companion object {
         val allDestinations = listOf(Home, Quotation, SalesOrder, Invoice, Profile)
     }
+}
+
+sealed class CustomerSubNavigationItem(
+    val route: String,
+    val label: String,
+) {
+    object QuotationCreateItem : CustomerSubNavigationItem("customer_quotation_create", "견적서 생성")
+
+    object QuotationDetailItem :
+        CustomerSubNavigationItem("customer_quotation_detail/{quotationId}", "견적서 상세") {
+
+        const val ARG_ID = "quotationId"
+
+        fun createRoute(quotationId: String): String {
+            return "customer_quotation_detail/$quotationId"
+        }
+    }
+
+    object SalesOrderDetailItem :
+        CustomerSubNavigationItem("customer_order_detail/{salesOrderId}", "주문서 상세") {
+
+        const val ARG_ID = "salesOrderId"
+
+        fun createRoute(salesOrderId: String): String {
+            return "customer_order_detail/$salesOrderId"
+        }
+    }
+
+    object InvoiceDetailItem :
+        CustomerSubNavigationItem("customer_invoice_detail/{invoiceId}?isAp={isAp}", "전표 상세") {
+
+        const val ARG_ID = "invoiceId"
+        const val ARG_IS_AP = "isAp"
+
+        fun createRoute(invoiceId: String, isAp: Boolean = false): String {
+            return "customer_invoice_detail/$invoiceId?isAp=$isAp"
+        }
+    }
+
+    object ProfileEditItem : CustomerSubNavigationItem("customer_profile_edit", "프로필 수정")
 }
