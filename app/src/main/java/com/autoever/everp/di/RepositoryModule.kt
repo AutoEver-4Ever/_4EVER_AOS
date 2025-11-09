@@ -5,6 +5,7 @@ import com.autoever.everp.data.repository.AuthRepositoryImpl
 import com.autoever.everp.data.repository.DeviceInfoRepositoryImpl
 import com.autoever.everp.data.repository.FcmRepositoryImpl
 import com.autoever.everp.data.repository.MmRepositoryImpl
+import com.autoever.everp.data.repository.ImRepositoryImpl
 import com.autoever.everp.data.repository.PushNotificationRepositoryImpl
 import com.autoever.everp.data.repository.SdRepositoryImpl
 import com.autoever.everp.data.repository.UserRepositoryImpl
@@ -13,6 +14,7 @@ import com.autoever.everp.domain.repository.AuthRepository
 import com.autoever.everp.domain.repository.DeviceInfoRepository
 import com.autoever.everp.domain.repository.FcmRepository
 import com.autoever.everp.domain.repository.MmRepository
+import com.autoever.everp.domain.repository.ImRepository
 import com.autoever.everp.domain.repository.PushNotificationRepository
 import com.autoever.everp.domain.repository.SdRepository
 import com.autoever.everp.domain.repository.UserRepository
@@ -63,6 +65,12 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindsImRepository(
+        imRepositoryImpl: ImRepositoryImpl,
+    ): ImRepository
+
+    @Binds
+    @Singleton
     abstract fun bindsUserRepository(
         userRepositoryImpl: UserRepositoryImpl,
     ): UserRepository
@@ -72,4 +80,16 @@ abstract class RepositoryModule {
     abstract fun bindsAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsDashboardRepository(
+        dashboardRepositoryImpl: com.autoever.everp.data.repository.DashboardRepositoryImpl,
+    ): com.autoever.everp.domain.repository.DashboardRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsProfileRepository(
+        profileRepositoryImpl: com.autoever.everp.data.repository.ProfileRepositoryImpl,
+    ): com.autoever.everp.domain.repository.ProfileRepository
 }

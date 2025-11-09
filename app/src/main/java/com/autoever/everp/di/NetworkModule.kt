@@ -160,4 +160,14 @@ object NetworkModule {
     @Singleton
     fun provideUserAuthApiService(@AuthRetrofit retrofit: Retrofit): AuthApi =
         retrofit.create(AuthApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDashboardApiService(@NormalRetrofit retrofit: Retrofit): com.autoever.everp.data.datasource.remote.http.service.DashboardApi =
+        retrofit.create(com.autoever.everp.data.datasource.remote.http.service.DashboardApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideProfileApiService(@NormalRetrofit retrofit: Retrofit): com.autoever.everp.data.datasource.remote.http.service.ProfileApi =
+        retrofit.create(com.autoever.everp.data.datasource.remote.http.service.ProfileApi::class.java)
 }
