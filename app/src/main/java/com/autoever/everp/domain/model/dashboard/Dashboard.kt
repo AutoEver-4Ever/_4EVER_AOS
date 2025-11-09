@@ -3,7 +3,6 @@ package com.autoever.everp.domain.model.dashboard
 import java.time.LocalDate
 
 data class DashboardWorkflows(
-    val role: String,
     val tabs: List<DashboardWorkflowTab>,
 ) {
     data class DashboardWorkflowTab(
@@ -12,12 +11,12 @@ data class DashboardWorkflows(
     )
 
     data class DashboardWorkflowItem(
-        val workflowId: String,
-        val count: Int,
-        val workflowName: String,
-        val name: String,
-        val statusCode: String,
-        val date: LocalDate,
+        val id: String,
+        val number: String,
+        val description: String,
+        val createdBy: String,
+        val status: String,
+        val createdAt: LocalDate,
     )
 }
 

@@ -1,6 +1,7 @@
 package com.autoever.everp.data.datasource.remote.http.service
 
 
+import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
 import com.autoever.everp.domain.model.user.UserRoleEnum
 import com.autoever.everp.utils.serializer.LocalDateSerializer
 import kotlinx.serialization.SerialName
@@ -17,7 +18,7 @@ interface DashboardApi {
     @GET("$BASE_URL/workflows")
     suspend fun getDashboardWorkflows(
         @Query("role") role: UserRoleEnum,
-    ): DashboardWorkflowsResponseDto
+    ): ApiResponse<DashboardWorkflowsResponseDto>
 
     companion object {
         private const val BASE_URL = "dashboard"
@@ -26,8 +27,6 @@ interface DashboardApi {
 
 @Serializable
 data class DashboardWorkflowsResponseDto(
-    @SerialName("role")
-    val role: String,
     @SerialName("tabs")
     val tabs: List<DashboardWorkflowTabDto>,
 ) {
@@ -41,18 +40,18 @@ data class DashboardWorkflowsResponseDto(
         @Serializable
         data class DashboardWorkflowTabItemDto(
             @SerialName("itemId")
-            val workflowId: String,
+            val itemId: String,
             @SerialName("itemNumber")
-            val count: Int,
+            val itemNumber: String,
             @SerialName("itemTitle")
-            val workflowName: String,
+            val itemTitle: String, // workflow name
             @SerialName("name")
-            val name: String,
+            val name: String, // 고객명 or 공급사명
             @SerialName("statusCode")
             val statusCode: String,
-            @SerialName("data")
+            @SerialName("date")
             @Serializable(with = LocalDateSerializer::class)
-            val data: LocalDate,
+            val date: LocalDate,
         )
     }
 }
@@ -62,5 +61,5 @@ data class DashboardWorkflowsResponseDto(
 
 @GET("$BASE_URL/statistics")
     suspend fun getDashboardStatistics(): DashboardStatisticsResponseDto
-      
+
  */

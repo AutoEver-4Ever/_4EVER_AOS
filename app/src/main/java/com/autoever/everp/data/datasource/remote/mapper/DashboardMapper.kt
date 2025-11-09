@@ -6,18 +6,17 @@ import com.autoever.everp.domain.model.dashboard.DashboardWorkflows
 object DashboardMapper {
     fun toDomain(dto: DashboardWorkflowsResponseDto): DashboardWorkflows =
         DashboardWorkflows(
-            role = dto.role,
             tabs = dto.tabs.map { tab ->
                 DashboardWorkflows.DashboardWorkflowTab(
                     tabCode = tab.tabCode,
                     items = tab.items.map { item ->
                         DashboardWorkflows.DashboardWorkflowItem(
-                            workflowId = item.workflowId,
-                            count = item.count,
-                            workflowName = item.workflowName,
-                            name = item.name,
-                            statusCode = item.statusCode,
-                            date = item.data,
+                            id = item.itemId,
+                            number = item.itemNumber,
+                            description = item.itemTitle,
+                            createdBy = item.name,
+                            status = item.statusCode,
+                            createdAt = item.date,
                         )
                     },
                 )
