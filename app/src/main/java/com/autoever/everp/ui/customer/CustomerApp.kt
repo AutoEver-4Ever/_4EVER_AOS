@@ -106,6 +106,12 @@ fun CustomerApp(
             ) {
                 CustomerProfileEditScreen(navController = navController)
             }
+
+            composable(
+                route = CustomerSubNavigationItem.NotificationItem.route,
+            ) {
+                NotificationScreen(navController = navController)
+            }
         }
     }
 }

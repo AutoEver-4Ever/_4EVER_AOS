@@ -75,4 +75,6 @@ sealed class CustomerSubNavigationItem(
     }
 
     object ProfileEditItem : CustomerSubNavigationItem("customer_profile_edit", "프로필 수정")
+
+    object NotificationItem : CustomerSubNavigationItem("customer_notification", "알림 목록")
 }

@@ -2,13 +2,18 @@ package com.autoever.everp.ui.customer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.autoever.everp.domain.model.dashboard.DashboardTapEnum
 import com.autoever.everp.domain.model.dashboard.DashboardWorkflows
+import com.autoever.everp.domain.model.notification.NotificationStatusEnum
+import com.autoever.everp.domain.repository.AlarmRepository
 import com.autoever.everp.domain.repository.DashboardRepository
 import com.autoever.everp.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -17,21 +22,27 @@ import javax.inject.Inject
 class CustomerHomeViewModel @Inject constructor(
     private val dashboardRepository: DashboardRepository,
     private val userRepository: UserRepository,
+    private val alarmRepository: AlarmRepository,
 ) : ViewModel() {
 
     private val _recentActivities = MutableStateFlow<List<DashboardWorkflows.DashboardWorkflowItem>>(emptyList())
     val recentActivities: StateFlow<List<DashboardWorkflows.DashboardWorkflowItem>>
         get() = _recentActivities.asStateFlow()
 
-    private val _categoryMap = MutableStateFlow<Map<String, String>>(emptyMap())
-    val categoryMap: StateFlow<Map<String, String>>
+    private val _categoryMap = MutableStateFlow<Map<String, DashboardTapEnum>>(emptyMap())
+    val categoryMap: StateFlow<Map<String, DashboardTapEnum>>
         get() = _categoryMap.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    private val _hasUnreadNotifications = MutableStateFlow(false)
+    val hasUnreadNotifications: StateFlow<Boolean> = _hasUnreadNotifications.asStateFlow()
+
     init {
         loadRecentActivities()
+        observeNotificationCount()
+        refreshNotificationCount()
     }
 
     fun loadRecentActivities() {
@@ -71,6 +82,24 @@ class CustomerHomeViewModel @Inject constructor(
 
     fun refresh() {
         loadRecentActivities()
+        refreshNotificationCount()
+    }
+
+    private fun observeNotificationCount() {
+        alarmRepository.observeNotificationCount()
+            .onEach { count ->
+                _hasUnreadNotifications.value = count.unreadCount >= 1
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun refreshNotificationCount() {
+        viewModelScope.launch {
+            alarmRepository.refreshNotificationCount(NotificationStatusEnum.UNREAD)
+                .onFailure { e ->
+                    Timber.e(e, "알림 개수 갱신 실패")
+                }
+        }
     }
 }
 
