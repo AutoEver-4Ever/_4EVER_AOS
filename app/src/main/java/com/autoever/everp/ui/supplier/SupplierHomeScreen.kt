@@ -25,9 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.autoever.everp.domain.model.dashboard.DashboardTapEnum
+import com.autoever.everp.ui.common.RecentActivityCard
 import com.autoever.everp.ui.common.components.QuickActionCard
 import com.autoever.everp.ui.common.components.QuickActionIcons
 import com.autoever.everp.ui.common.components.StatusBadge
+import com.autoever.everp.ui.common.navigateToWorkflowDetail
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -112,109 +115,18 @@ fun SupplierHomeScreen(
         } else {
             recentActivities.forEach { activity ->
                 item {
-                    val category = categoryMap[activity.id] ?: ""
+                    val category = categoryMap[activity.id] ?: DashboardTapEnum.UNKNOWN
                     RecentActivityCard(
-                        category = getCategoryDisplayName(category),
+                        category = category.toKorean(),
                         status = activity.status,
                         title = activity.description,
                         date = activity.createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         onClick = {
-                            navigateToDetail(navController, category, activity.id)
+                            navigateToWorkflowDetail(navController, category, activity.id)
                         },
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun RecentActivityCard(
-    category: String,
-    status: String,
-    title: String,
-    date: String,
-    onClick: () -> Unit,
-) {
-    Card(
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
-            ) {
-                // Category badge (파란색)
-                StatusBadge(
-                    text = category,
-                    color = androidx.compose.ui.graphics.Color(0xFF2196F3),
-                )
-                // Status badge (회색)
-                StatusBadge(
-                    text = status,
-                    color = androidx.compose.ui.graphics.Color(0xFF9E9E9E),
-                )
-                Column {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Medium,
-                    )
-                    Text(
-                        text = date,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
-            Icon(
-                imageVector = Icons.Default.ArrowForward,
-                contentDescription = "상세보기",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-}
-
-private fun getCategoryDisplayName(tabCode: String): String {
-    return when (tabCode.uppercase()) {
-        "QUOTATION", "견적" -> "견적"
-        "ORDER", "주문", "SALES_ORDER" -> "주문"
-        "INVOICE", "전표", "AP_INVOICE", "AR_INVOICE" -> "전표"
-        "PURCHASE_ORDER", "발주" -> "발주"
-        else -> tabCode
-    }
-}
-
-private fun navigateToDetail(
-    navController: NavController,
-    category: String,
-    workflowId: String,
-) {
-    when (category.uppercase()) {
-        "PURCHASE_ORDER", "발주" -> {
-            navController.navigate(
-                SupplierSubNavigationItem.PurchaseOrderDetailItem.createRoute(workflowId)
-            )
-        }
-        "INVOICE", "전표", "AP_INVOICE", "AR_INVOICE" -> {
-            navController.navigate(
-                SupplierSubNavigationItem.InvoiceDetailItem.createRoute(
-                    invoiceId = workflowId,
-                    isAp = category.contains("AP", ignoreCase = true),
-                ),
-            )
         }
     }
 }

@@ -2,6 +2,7 @@ package com.autoever.everp.ui.supplier
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.autoever.everp.domain.model.dashboard.DashboardTapEnum
 import com.autoever.everp.domain.model.dashboard.DashboardWorkflows
 import com.autoever.everp.domain.repository.DashboardRepository
 import com.autoever.everp.domain.repository.UserRepository
@@ -23,8 +24,8 @@ class SupplierHomeViewModel @Inject constructor(
     val recentActivities: StateFlow<List<DashboardWorkflows.DashboardWorkflowItem>>
         get() = _recentActivities.asStateFlow()
 
-    private val _categoryMap = MutableStateFlow<Map<String, String>>(emptyMap())
-    val categoryMap: StateFlow<Map<String, String>>
+    private val _categoryMap = MutableStateFlow<Map<String, DashboardTapEnum>>(emptyMap())
+    val categoryMap: StateFlow<Map<String, DashboardTapEnum>>
         get() = _categoryMap.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
