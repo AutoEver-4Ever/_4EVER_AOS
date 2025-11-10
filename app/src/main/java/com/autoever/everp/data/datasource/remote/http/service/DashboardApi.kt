@@ -2,13 +2,16 @@ package com.autoever.everp.data.datasource.remote.http.service
 
 
 import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
+import com.autoever.everp.domain.model.dashboard.DashboardTapEnum
 import com.autoever.everp.domain.model.user.UserRoleEnum
 import com.autoever.everp.utils.serializer.LocalDateSerializer
+import com.autoever.everp.utils.serializer.LocalDateTimeSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 interface DashboardApi {
 
@@ -33,7 +36,7 @@ data class DashboardWorkflowsResponseDto(
     @Serializable
     data class DashboardWorkflowTabDto(
         @SerialName("tabCode")
-        val tabCode: String,
+        val tabCode: DashboardTapEnum,
         @SerialName("items")
         val items: List<DashboardWorkflowTabItemDto>,
     ) {
@@ -50,8 +53,9 @@ data class DashboardWorkflowsResponseDto(
             @SerialName("statusCode")
             val statusCode: String,
             @SerialName("date")
-            @Serializable(with = LocalDateSerializer::class)
-            val date: LocalDate,
+//            @Serializable(with = LocalDateSerializer::class)
+//            val date: LocalDate,
+            val date: String,
         )
     }
 }

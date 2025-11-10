@@ -115,11 +115,11 @@ data class InvoiceListItemDto(
 
 @Serializable
 data class InvoiceConnectionDto(
-    @SerialName("companyId")
+    @SerialName("connectionId")
     val connectionId: String,
-    @SerialName("companyCode")
+    @SerialName("connectionNumber")
     val connectionNumber: String,
-    @SerialName("companyName")
+    @SerialName("connectionName")
     val connectionName: String,
 )
 

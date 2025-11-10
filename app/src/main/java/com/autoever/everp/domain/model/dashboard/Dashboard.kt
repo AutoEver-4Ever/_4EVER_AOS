@@ -6,7 +6,7 @@ data class DashboardWorkflows(
     val tabs: List<DashboardWorkflowTab>,
 ) {
     data class DashboardWorkflowTab(
-        val tabCode: String,
+        val tabCode: DashboardTapEnum,
         val items: List<DashboardWorkflowItem>,
     )
 
@@ -16,7 +16,8 @@ data class DashboardWorkflows(
         val description: String,
         val createdBy: String,
         val status: String,
-        val createdAt: LocalDate,
+//        val createdAt: LocalDate,
+        val createdAt: String,
     )
 }
 
