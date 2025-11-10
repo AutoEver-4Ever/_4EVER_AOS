@@ -46,11 +46,11 @@ object PurchaseOrderMapper {
             id = dto.purchaseOrderId,
             number = dto.purchaseOrderNumber,
             status = dto.statusCode,
-            orderDate = dto.orderDate,
-            dueDate = dto.dueDate,
+            orderDate = dto.orderDate.toLocalDate(),
+            dueDate = dto.dueDate.toLocalDate(),
             supplier = supplier,
             items = dto.items.map { toItemDomain(it) },
-            totalAmount = dto.totalAmount,
+            totalAmount = dto.totalAmount.toLong(),
             note = dto.note ?: "",
         )
     }
@@ -62,10 +62,10 @@ object PurchaseOrderMapper {
         return PurchaseOrderDetail.PurchaseOrderDetailItem(
             id = dto.itemId,
             name = dto.itemName,
-            quantity = dto.quantity,
+            quantity = dto.quantity.toInt(),
             uomName = dto.uomName,
-            unitPrice = dto.unitPrice,
-            totalPrice = dto.totalPrice,
+            unitPrice = dto.unitPrice.toLong(),
+            totalPrice = dto.totalPrice.toLong(),
         )
     }
 

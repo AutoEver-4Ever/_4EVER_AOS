@@ -149,7 +149,7 @@ data class QuotationDetailResponseDto(
     @SerialName("items")
     val items: List<QuotationItemDto>,
     @SerialName("totalAmount")
-    val totalAmount: Long,
+    val totalAmount: Double,
 )
 
 @Serializable
@@ -163,9 +163,9 @@ data class QuotationItemDto(
     @SerialName("uomName")
     val uomName: String,
     @SerialName("unitPrice")
-    val unitPrice: Long,
-    @SerialName("totalPrice")
-    val totalPrice: Long,
+    val unitPrice: Double,
+    @SerialName("amount")
+    val totalPrice: Double,
 )
 
 @Serializable
@@ -228,7 +228,7 @@ data class CustomerDetailResponseDto(
     val totalOrders: Long,
     // 총 거래 금액
     @SerialName("totalTransactionAmount")
-    val totalTransactionAmount: Long,
+    val totalTransactionAmount: Double,
     @SerialName("note")
     val note: String? = null,
 )
@@ -286,7 +286,7 @@ data class SalesOrderListItemDto(
     @SerialName("dueDate")
     val dueDate: LocalDate,
     @SerialName("totalAmount")
-    val totalAmount: Long,
+    val totalAmount: Double,
     @SerialName("statusCode")
     val statusCode: SalesOrderStatusEnum,
 )

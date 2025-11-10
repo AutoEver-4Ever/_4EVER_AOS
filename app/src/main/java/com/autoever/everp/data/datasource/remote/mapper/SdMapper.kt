@@ -54,8 +54,8 @@ object SdMapper {
                 name = it.itemName,
                 quantity = it.quantity,
                 uomName = it.uomName,
-                unitPrice = it.unitPrice,
-                totalPrice = it.totalPrice,
+                unitPrice = it.unitPrice.toLong(),
+                totalPrice = it.totalPrice.toLong(),
             )
         }
 
@@ -65,7 +65,7 @@ object SdMapper {
             issueDate = dto.quotationDate,
             dueDate = dto.dueDate,
             status = dto.statusCode,
-            totalAmount = dto.totalAmount,
+            totalAmount = dto.totalAmount.toLong(),
             customer = customer,
             items = items,
         )
@@ -102,7 +102,7 @@ object SdMapper {
             managerPhone = dto.manager.managerPhone,
             managerEmail = dto.manager.managerEmail,
             totalOrders = dto.totalOrders,
-            totalTransactionAmount = dto.totalTransactionAmount,
+            totalTransactionAmount = dto.totalTransactionAmount.toLong(),
             note = dto.note,
         )
     }
@@ -118,7 +118,7 @@ object SdMapper {
             managerEmail = dto.customerManager.managerEmail,
             orderDate = dto.orderDate,
             dueDate = dto.dueDate,
-            totalAmount = dto.totalAmount,
+            totalAmount = dto.totalAmount.toLong(),
             statusCode = dto.statusCode,
         )
     }

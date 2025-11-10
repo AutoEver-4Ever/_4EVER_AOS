@@ -4,6 +4,9 @@ import androidx.compose.ui.graphics.Color
 
 enum class SalesOrderStatusEnum {
     UNKNOWN,                // 알 수 없음, 기본값
+    PENDING,              // 대기
+    CONFIRMED,            // 확정
+    CANCELLED,             // 취소
     MATERIAL_PREPARATION,   // 자재준비
     IN_PRODUCTION,          // 생산중
     READY_FOR_SHIPMENT,     // 출하준비
@@ -17,6 +20,9 @@ enum class SalesOrderStatusEnum {
     fun toKorean(): String =
         when (this) {
             UNKNOWN -> "알 수 없음"
+            PENDING -> "대기"
+            CONFIRMED -> "확정"
+            CANCELLED -> "취소"
             MATERIAL_PREPARATION -> "자재준비"
             IN_PRODUCTION -> "생산중"
             READY_FOR_SHIPMENT -> "출하준비"
@@ -40,6 +46,9 @@ enum class SalesOrderStatusEnum {
     fun description(): String =
         when (this) {
             UNKNOWN -> "알 수 없는 상태"
+            PENDING -> "주문 접수 대기 중"
+            CONFIRMED -> "주문이 확정된 상태"
+            CANCELLED -> "주문이 취소된 상태"
             MATERIAL_PREPARATION -> "주문 자재를 준비하는 단계"
             IN_PRODUCTION -> "제품을 생산하는 단계"
             READY_FOR_SHIPMENT -> "출하를 준비하는 단계"
@@ -54,6 +63,9 @@ enum class SalesOrderStatusEnum {
     fun toColor(): Color =
         when (this) {
             UNKNOWN -> Color(0xFF9E9E9E) // Grey
+            PENDING -> Color(0xFFFFC107) // Amber
+            CONFIRMED -> Color(0xFF8BC34A) // Light Green
+            CANCELLED -> Color(0xFFF44336) // Red
             MATERIAL_PREPARATION -> Color(0xFFFF9800) // Orange
             IN_PRODUCTION -> Color(0xFF2196F3) // Blue
             READY_FOR_SHIPMENT -> Color(0xFF00BCD4) // Cyan
@@ -65,6 +77,21 @@ enum class SalesOrderStatusEnum {
      * 상태 코드 값
      */
     val code: String get() = this.name
+
+    /**
+     * 대기 상태인지 확인
+     */
+    fun isPending(): Boolean = this == PENDING
+
+    /**
+     * 확정 상태인지 확인
+     */
+    fun isConfirmed(): Boolean = this == CONFIRMED
+
+    /**
+     * 취소 상태인지 확인
+     */
+    fun isCancelled(): Boolean = this == CANCELLED
 
     /**
      * 자재준비 상태인지 확인
@@ -103,29 +130,42 @@ enum class SalesOrderStatusEnum {
         this == READY_FOR_SHIPMENT || this == DELIVERING || this == DELIVERED
 
     /**
-     * 진행 중인 상태인지 확인 (완료 제외)
+     * 진행 중인 상태인지 확인 (완료, 취소 제외)
      */
-    fun isInProgress(): Boolean = this != DELIVERED && this != UNKNOWN
+    fun isInProgress(): Boolean = this != DELIVERED && this != CANCELLED && this != UNKNOWN
 
     /**
-     * 취소 가능한 상태인지 확인 (배송 전)
+     * 취소 가능한 상태인지 확인 (출하준비 전)
      */
     fun isCancellable(): Boolean =
-        this == MATERIAL_PREPARATION || this == IN_PRODUCTION
+        this == PENDING || this == CONFIRMED || this == MATERIAL_PREPARATION || this == IN_PRODUCTION
+
+    /**
+     * 유효한 상태인지 확인 (UNKNOWN 제외)
+     */
+    fun isValid(): Boolean = this != UNKNOWN
+
+    /**
+     * 완료 상태인지 확인 (배송완료 또는 취소)
+     */
+    fun isCompleted(): Boolean = this == DELIVERED || this == CANCELLED
 
     /**
      * 알림이 필요한 상태인지 확인
      */
-    fun needsAlert(): Boolean = this == READY_FOR_SHIPMENT || this == DELIVERED
+    fun needsAlert(): Boolean = this == CONFIRMED || this == READY_FOR_SHIPMENT || this == DELIVERED || this == CANCELLED
 
     /**
      * 다음 가능한 상태 목록 반환
      */
     fun getNextPossibleStatuses(): List<SalesOrderStatusEnum> =
         when (this) {
-            UNKNOWN -> listOf(MATERIAL_PREPARATION)
-            MATERIAL_PREPARATION -> listOf(IN_PRODUCTION)
-            IN_PRODUCTION -> listOf(READY_FOR_SHIPMENT)
+            UNKNOWN -> listOf(PENDING)
+            PENDING -> listOf(CONFIRMED, CANCELLED)
+            CONFIRMED -> listOf(MATERIAL_PREPARATION, CANCELLED)
+            CANCELLED -> emptyList()
+            MATERIAL_PREPARATION -> listOf(IN_PRODUCTION, CANCELLED)
+            IN_PRODUCTION -> listOf(READY_FOR_SHIPMENT, CANCELLED)
             READY_FOR_SHIPMENT -> listOf(DELIVERING)
             DELIVERING -> listOf(DELIVERED)
             DELIVERED -> emptyList()
@@ -137,10 +177,13 @@ enum class SalesOrderStatusEnum {
     fun getProgress(): Int =
         when (this) {
             UNKNOWN -> 0
-            MATERIAL_PREPARATION -> 20
-            IN_PRODUCTION -> 40
-            READY_FOR_SHIPMENT -> 60
-            DELIVERING -> 80
+            PENDING -> 10
+            CONFIRMED -> 15
+            CANCELLED -> 0
+            MATERIAL_PREPARATION -> 30
+            IN_PRODUCTION -> 50
+            READY_FOR_SHIPMENT -> 70
+            DELIVERING -> 85
             DELIVERED -> 100
         }
 
@@ -211,5 +254,17 @@ enum class SalesOrderStatusEnum {
          */
         fun getDeliveryStatuses(): List<SalesOrderStatusEnum> =
             listOf(READY_FOR_SHIPMENT, DELIVERING, DELIVERED)
+
+        /**
+         * 완료 상태 목록 (승인, 반려)
+         */
+        fun getCompletedStatuses(): List<SalesOrderStatusEnum> =
+            listOf(DELIVERED, CANCELLED)
+
+        /**
+         * 대기/확정 상태 목록
+         */
+        fun getPendingStatuses(): List<SalesOrderStatusEnum> =
+            listOf(PENDING, CONFIRMED)
     }
 }

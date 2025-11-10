@@ -29,7 +29,7 @@ object InvoiceMapper {
             id = dto.invoiceId,
             number = dto.invoiceNumber,
             connection = connection,
-            totalAmount = dto.totalAmount,
+            totalAmount = dto.totalAmount.toLong(),
             dueDate = dto.dueDate,
             status = dto.statusCode,
             reference = reference,
@@ -44,8 +44,8 @@ object InvoiceMapper {
                 name = it.itemName,
                 quantity = it.quantity,
                 unitOfMaterialName = it.unitOfMaterialName,
-                unitPrice = it.unitPrice,
-                totalPrice = it.totalPrice,
+                unitPrice = it.unitPrice.toLong(),
+                totalPrice = it.totalPrice.toLong(),
             )
         }
 
@@ -58,7 +58,7 @@ object InvoiceMapper {
             dueDate = dto.dueDate,
             connectionName = dto.connectionName,
             referenceNumber = dto.referenceNumber,
-            totalAmount = dto.totalAmount,
+            totalAmount = dto.totalAmount.toLong(),
             note = dto.note,
             items = items,
         )

@@ -6,7 +6,7 @@ enum class QuotationStatusEnum {
     UNKNOWN, // 알 수 없음, 기본값
     PENDING, // 대기
     REVIEW, // 검토
-    APPROVED, // 승인
+    APPROVAL, // 승인
     REJECTED, // 반려
     ;
 
@@ -18,7 +18,7 @@ enum class QuotationStatusEnum {
             UNKNOWN -> "알 수 없음"
             PENDING -> "대기"
             REVIEW -> "검토"
-            APPROVED -> "승인"
+            APPROVAL -> "승인"
             REJECTED -> "반려"
         }
 
@@ -40,7 +40,7 @@ enum class QuotationStatusEnum {
             UNKNOWN -> "알 수 없는 상태"
             PENDING -> "견적서 작성 완료, 검토 대기 중"
             REVIEW -> "견적서 검토 진행 중"
-            APPROVED -> "견적서가 승인되어 주문 전환 가능"
+            APPROVAL -> "견적서가 승인되어 주문 전환 가능"
             REJECTED -> "견적서가 반려됨"
         }
 
@@ -53,7 +53,7 @@ enum class QuotationStatusEnum {
             UNKNOWN -> Color(0xFF9E9E9E) // Grey
             PENDING -> Color(0xFFFF9800) // Orange
             REVIEW -> Color(0xFF2196F3) // Blue
-            APPROVED -> Color(0xFF4CAF50) // Green
+            APPROVAL -> Color(0xFF4CAF50) // Green
             REJECTED -> Color(0xFFF44336) // Red
         }
 
@@ -75,7 +75,7 @@ enum class QuotationStatusEnum {
     /**
      * 승인된 상태인지 확인
      */
-    fun isApproved(): Boolean = this == APPROVED
+    fun isApproved(): Boolean = this == APPROVAL
 
     /**
      * 반려된 상태인지 확인
@@ -100,7 +100,7 @@ enum class QuotationStatusEnum {
     /**
      * 알림이 필요한 상태인지 확인
      */
-    fun needsAlert(): Boolean = this == APPROVED || this == REJECTED
+    fun needsAlert(): Boolean = this == APPROVAL || this == REJECTED
 
     /**
      * 다음 가능한 상태 목록 반환
@@ -109,8 +109,8 @@ enum class QuotationStatusEnum {
         when (this) {
             UNKNOWN -> listOf(PENDING)
             PENDING -> listOf(REVIEW)
-            REVIEW -> listOf(APPROVED, REJECTED)
-            APPROVED -> emptyList()
+            REVIEW -> listOf(APPROVAL, REJECTED)
+            APPROVAL -> emptyList()
             REJECTED -> listOf(PENDING)
         }
 
@@ -122,7 +122,7 @@ enum class QuotationStatusEnum {
             UNKNOWN -> 0
             PENDING -> 25
             REVIEW -> 50
-            APPROVED -> 100
+            APPROVAL -> 100
             REJECTED -> 0
         }
 
@@ -187,6 +187,6 @@ enum class QuotationStatusEnum {
          * 완료 상태 목록 (승인, 반려)
          */
         fun getCompletedStatuses(): List<QuotationStatusEnum> =
-            listOf(APPROVED, REJECTED)
+            listOf(APPROVAL, REJECTED)
     }
 }

@@ -4,9 +4,9 @@ import androidx.compose.ui.graphics.Color
 
 enum class InvoiceStatusEnum {
     UNKNOWN, // 알 수 없음, 기본값
-    UNPAID, // 미지급
-    PENDING, // 지급 대기
-    PAID, // 지급 완료
+    PENDING, // 미지급
+    RESPONSE_PENDING, // 지급 대기
+    COMPLETED, // 지급 완료
     ;
 
     /**
@@ -15,9 +15,9 @@ enum class InvoiceStatusEnum {
     fun toKorean(): String =
         when (this) {
             UNKNOWN -> "알 수 없음"
-            UNPAID -> "미지급"
-            PENDING -> "지급 대기"
-            PAID -> "지급 완료"
+            PENDING -> "미지급"
+            RESPONSE_PENDING -> "지급 대기"
+            COMPLETED -> "지급 완료"
         }
 
     /**
@@ -36,9 +36,9 @@ enum class InvoiceStatusEnum {
     fun description(): String =
         when (this) {
             UNKNOWN -> "알 수 없는 상태"
-            UNPAID -> "아직 지급되지 않은 청구서"
-            PENDING -> "지급 처리 중인 청구서"
-            PAID -> "지급이 완료된 청구서"
+            PENDING -> "아직 지급되지 않은 청구서"
+            RESPONSE_PENDING -> "지급 처리 중인 청구서"
+            COMPLETED -> "지급이 완료된 청구서"
         }
 
     /**
@@ -48,9 +48,9 @@ enum class InvoiceStatusEnum {
     fun toColor(): Color =
         when (this) {
             UNKNOWN -> Color(0xFF9E9E9E) // Grey
-            UNPAID -> Color(0xFFF44336) // Red
-            PENDING -> Color(0xFFFF9800) // Orange
-            PAID -> Color(0xFF4CAF50) // Green
+            PENDING -> Color(0xFFF44336) // Red
+            RESPONSE_PENDING -> Color(0xFFFF9800) // Orange
+            COMPLETED -> Color(0xFF4CAF50) // Green
         }
 
     /**
@@ -61,17 +61,17 @@ enum class InvoiceStatusEnum {
     /**
      * 지급 완료 여부
      */
-    fun isPaid(): Boolean = this == PAID
+    fun isPaid(): Boolean = this == COMPLETED
 
     /**
      * 처리 가능 여부 (미지급 또는 대기 상태)
      */
-    fun isProcessable(): Boolean = this == UNPAID || this == PENDING
+    fun isProcessable(): Boolean = this == PENDING || this == RESPONSE_PENDING
 
     /**
      * 알림이 필요한 상태인지 확인
      */
-    fun needsAlert(): Boolean = this == UNPAID || this == PENDING
+    fun needsAlert(): Boolean = this == PENDING || this == RESPONSE_PENDING
 
     companion object {
         /**
