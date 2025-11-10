@@ -130,7 +130,7 @@ object SdMapper {
             orderDate = dto.order.orderDate,
             dueDate = dto.order.dueDate,
             statusCode = dto.order.statusCode,
-            totalAmount = dto.order.totalAmount,
+            totalAmount = dto.order.totalAmount.toLong(),
             customerId = dto.customer.customerId,
             customerName = dto.customer.customerName,
             baseAddress = dto.customer.baseAddress,
@@ -143,6 +143,7 @@ object SdMapper {
                     itemId = it.itemId,
                     itemName = it.itemName,
                     quantity = it.quantity,
+                    uomName = it.uomName,
                     unitPrice = it.unitPrice,
                     totalPrice = it.totalPrice,
                 )

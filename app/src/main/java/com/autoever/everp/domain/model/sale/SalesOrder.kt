@@ -76,6 +76,7 @@ data class SalesOrderItem(
     val itemId: String,
     val itemName: String,
     val quantity: Int,
+    val uomName: String, // 단위명
     val unitPrice: Long,
     val totalPrice: Long,
 ) {
