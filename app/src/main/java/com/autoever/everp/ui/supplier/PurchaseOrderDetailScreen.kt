@@ -216,12 +216,6 @@ fun PurchaseOrderDetailScreen(
                                         modifier = Modifier.weight(2f),
                                     )
                                     Text(
-                                        text = "규격",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.weight(1.5f),
-                                    )
-                                    Text(
                                         text = "수량",
                                         style = MaterialTheme.typography.bodySmall,
                                         fontWeight = FontWeight.Bold,
@@ -266,11 +260,6 @@ fun PurchaseOrderDetailScreen(
                                             text = item.name,
                                             style = MaterialTheme.typography.bodyMedium,
                                             modifier = Modifier.weight(2f),
-                                        )
-                                        Text(
-                                            text = item.uomName, // 규격은 uomName으로 대체
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            modifier = Modifier.weight(1.5f),
                                         )
                                         Text(
                                             text = "${item.quantity}",
@@ -323,37 +312,25 @@ fun PurchaseOrderDetailScreen(
                         Spacer(modifier = Modifier.height(16.dp))
 
                         // 배송 및 메모 정보 카드
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                            ),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
+                        if (detail.note.isNotEmpty()) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface,
+                                ),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
                             ) {
-                                Text(
-                                    text = "배송 및 메모",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 12.dp),
-                                )
-                                DetailRow(
-                                    label = "배송 창고",
-                                    value = "본사 창고", // TODO: 실제 데이터에서 가져오기
-                                )
-                                DetailRow(
-                                    label = "요청 배송일",
-                                    value = detail.dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                                )
-                                DetailRow(
-                                    label = "특별 지시사항",
-                                    value = "오전 배송 요청", // TODO: 실제 데이터에서 가져오기
-                                )
-                                if (detail.note.isNotEmpty()) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                ) {
+                                    Text(
+                                        text = "배송 및 메모",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(bottom = 12.dp),
+                                    )
                                     DetailRow(
                                         label = "메모",
                                         value = detail.note,

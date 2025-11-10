@@ -148,7 +148,7 @@ fun QuotationDetailScreen(
                                     value = detail.issueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                                 )
                                 DetailRow(
-                                    label = "유효기간",
+                                    label = "납기일자",
                                     value = detail.dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                                 )
                                 DetailRow(
@@ -186,40 +186,6 @@ fun QuotationDetailScreen(
                                 DetailRow(
                                     label = "담당자",
                                     value = detail.customer.ceoName,
-                                )
-                            }
-                        }
-
-                        // 견적 조건 카드
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surface,
-                            ),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                            ) {
-                                Text(
-                                    text = "견적 조건",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(bottom = 12.dp),
-                                )
-                                DetailRow(
-                                    label = "결제조건",
-                                    value = "외상 30일", // TODO: 실제 데이터에서 가져오기
-                                )
-                                DetailRow(
-                                    label = "납품조건",
-                                    value = "배송", // TODO: 실제 데이터에서 가져오기
-                                )
-                                DetailRow(
-                                    label = "보증기간",
-                                    value = "1년", // TODO: 실제 데이터에서 가져오기
                                 )
                             }
                         }
