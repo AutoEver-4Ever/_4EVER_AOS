@@ -8,9 +8,15 @@ import retrofit2.http.GET
 interface ProfileApi {
 
     @GET(BASE_URL)
-    suspend fun getProfile(
+    suspend fun getCustomerProfile(
 
-    ): ApiResponse<ProfileResponseDto>
+    ): ApiResponse<CustomerProfileResponseDto>
+
+    @GET(BASE_URL)
+    suspend fun getSupplierProfile(
+
+    ): ApiResponse<SupplierProfileResponseDto>
+
 
     companion object {
         private const val BASE_URL = "business/profile"
@@ -18,15 +24,41 @@ interface ProfileApi {
 }
 
 @Serializable
-data class ProfileResponseDto(
-    @SerialName("businessName")
-    val businessName: String,
+data class CustomerProfileResponseDto(
+    @SerialName("customerName")
+    val customerName: String,
+    @SerialName("email")
+    val email: String,
+    @SerialName("phoneNumber")
+    val phoneNumber: String,
+    @SerialName("companyName")
+    val companyName: String,
     @SerialName("businessNumber")
     val businessNumber: String,
-    @SerialName("ceoName")
-    val ceoName: String,
-    @SerialName("address")
-    val address: String,
-    @SerialName("contactNumber")
-    val contactNumber: String,
+    @SerialName("baseAddress")
+    val baseAddress: String,
+    @SerialName("detailAddress")
+    val detailAddress: String,
+    @SerialName("officePhone")
+    val officePhone: String,
+)
+
+@Serializable
+data class SupplierProfileResponseDto(
+    @SerialName("supplierUserName")
+    val supplierUserName: String,
+    @SerialName("supplierUserEmail")
+    val supplierUserEmail: String,
+    @SerialName("supplierUserPhoneNumber")
+    val supplierUserPhoneNumber: String,
+    @SerialName("companyName")
+    val companyName: String,
+    @SerialName("businessNumber")
+    val businessNumber: String,
+    @SerialName("baseAddress")
+    val baseAddress: String,
+    @SerialName("detailAddress")
+    val detailAddress: String,
+    @SerialName("officePhone")
+    val officePhone: String,
 )
