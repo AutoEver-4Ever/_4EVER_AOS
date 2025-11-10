@@ -2,7 +2,6 @@ package com.autoever.everp.ui.customer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.autoever.everp.auth.session.SessionManager
 import com.autoever.everp.domain.model.profile.Profile
 import com.autoever.everp.domain.model.user.UserInfo
 import com.autoever.everp.domain.repository.ProfileRepository
@@ -18,8 +17,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class CustomerProfileViewModel @Inject constructor(
-    private val sessionManager: SessionManager,
+class CustomerProfileEditViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val profileRepository: ProfileRepository,
 ) : ViewModel() {
@@ -30,8 +28,8 @@ class CustomerProfileViewModel @Inject constructor(
     private val _profile = MutableStateFlow<Profile?>(null)
     val profile: StateFlow<Profile?> = _profile.asStateFlow()
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    private val _isSaving = MutableStateFlow(false)
+    val isSaving: StateFlow<Boolean> = _isSaving.asStateFlow()
 
     init {
         // Flow에서 profile 업데이트 구독
@@ -41,45 +39,45 @@ class CustomerProfileViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
 
-        loadUserInfo()
+        loadData()
     }
 
-    fun loadUserInfo() {
+    private fun loadData() {
         viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                // 사용자 정보 로드
-                userRepository.getUserInfo().onSuccess { userInfo ->
-                    _userInfo.value = userInfo
-                    // 프로필 정보 로드
-                    profileRepository.refreshProfile(userInfo.userType)
-                        .onFailure { e ->
-                            Timber.e(e, "프로필 정보 로드 실패")
-                        }
-                }.onFailure { e ->
-                    Timber.e(e, "사용자 정보 로드 실패")
-                }
-            } catch (e: Exception) {
-                Timber.e(e, "정보 로드 실패")
-            } finally {
-                _isLoading.value = false
+            userRepository.getUserInfo().onSuccess { user ->
+                _userInfo.value = user
+                // 프로필 정보 로드
+                profileRepository.refreshProfile(user.userType)
+                    .onFailure { e ->
+                        Timber.e(e, "프로필 정보 로드 실패")
+                    }
+            }.onFailure { e ->
+                Timber.e(e, "사용자 정보 로드 실패")
             }
         }
     }
 
-    fun refresh() {
-        loadUserInfo()
-    }
-
-    fun logout(onSuccess: () -> Unit) {
+    fun saveProfile(
+        companyName: String,
+        businessNumber: String,
+        baseAddress: String,
+        detailAddress: String,
+        officePhone: String,
+        userPhoneNumber: String,
+        onSuccess: () -> Unit,
+    ) {
         viewModelScope.launch {
-            sessionManager.signOut()
+            _isSaving.value = true
             try {
-                userRepository.logout()
+                // TODO: ProfileRepository에 updateProfile 메서드가 추가되면 구현
+                // 현재는 Profile 정보만 표시하고, 업데이트 기능은 나중에 추가 예정
+                Timber.w("프로필 업데이트 기능은 아직 구현되지 않았습니다.")
+                // 임시로 성공 처리
                 onSuccess()
-                Timber.i("로그아웃 성공")
             } catch (e: Exception) {
-                Timber.e(e, "로그아웃 실패")
+                Timber.e(e, "프로필 저장 실패")
+            } finally {
+                _isSaving.value = false
             }
         }
     }

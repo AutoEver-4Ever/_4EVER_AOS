@@ -38,7 +38,7 @@ fun CustomerProfileScreen(
     viewModel: CustomerProfileViewModel = hiltViewModel(),
 ) {
     val userInfo by viewModel.userInfo.collectAsState()
-    val customerDetail by viewModel.customerDetail.collectAsState()
+    val profile by viewModel.profile.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
@@ -59,7 +59,9 @@ fun CustomerProfileScreen(
                 fontWeight = FontWeight.Bold,
             )
             androidx.compose.material3.TextButton(
-                onClick = { /* TODO: 편집 화면으로 이동 */ },
+                onClick = {
+                    navController.navigate(CustomerSubNavigationItem.ProfileEditItem.route)
+                },
             ) {
                 Text("편집")
             }
@@ -116,19 +118,19 @@ fun CustomerProfileScreen(
             ) {
                 ProfileField(
                     label = "회사명 *",
-                    value = customerDetail?.customerName ?: "",
-                )
-                ProfileField(
-                    label = "회사 주소",
-                    value = customerDetail?.fullAddress ?: "",
-                )
-                ProfileField(
-                    label = "회사 전화번호",
-                    value = customerDetail?.contactPhone ?: "",
+                    value = profile?.companyName ?: "",
                 )
                 ProfileField(
                     label = "사업자등록번호",
-                    value = customerDetail?.businessNumber ?: "",
+                    value = profile?.businessNumber ?: "",
+                )
+                ProfileField(
+                    label = "회사 주소",
+                    value = profile?.fullAddress ?: "",
+                )
+                ProfileField(
+                    label = "회사 전화번호",
+                    value = profile?.officePhone ?: "",
                 )
             }
         }
@@ -154,15 +156,15 @@ fun CustomerProfileScreen(
             ) {
                 ProfileField(
                     label = "이름 *",
-                    value = userInfo?.userName ?: "",
+                    value = profile?.userName ?: userInfo?.userName ?: "",
                 )
                 ProfileField(
                     label = "이메일 *",
-                    value = userInfo?.email ?: "",
+                    value = profile?.userEmail ?: userInfo?.email ?: "",
                 )
                 ProfileField(
                     label = "휴대폰 번호",
-                    value = customerDetail?.managerPhone ?: "",
+                    value = profile?.userPhoneNumber ?: "",
                 )
             }
         }
