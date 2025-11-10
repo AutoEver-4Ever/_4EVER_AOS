@@ -118,64 +118,49 @@ fun InvoiceDetailScreen(
                                     .fillMaxWidth()
                                     .padding(16.dp),
                             ) {
-                                // 좌우 2열 레이아웃
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                ) {
-                                    // 왼쪽 열
-                                    Column(modifier = Modifier.weight(1f)) {
-                                        DetailRow(
-                                            label = "전표번호",
-                                            value = detail.number,
-                                        )
-                                        DetailRow(
-                                            label = "전표유형",
-                                            value = detail.type.displayName(),
-                                        )
-                                        DetailRow(
-                                            label = "거래처",
-                                            value = detail.connectionName,
-                                        )
-                                        DetailRow(
-                                            label = "적요",
-                                            value = detail.note.ifBlank { "-" },
-                                        )
-                                    }
 
-                                    // 오른쪽 열
-                                    Column(modifier = Modifier.weight(1f)) {
-                                        DetailRow(
-                                            label = "전표 발생일",
-                                            value = detail.issueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                                        )
-                                        DetailRow(
-                                            label = "만기일",
-                                            value = detail.dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                                        )
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(vertical = 8.dp),
-                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                            verticalAlignment = Alignment.CenterVertically,
-                                        ) {
-                                            Text(
-                                                text = "상태",
-                                                style = MaterialTheme.typography.bodyLarge,
-                                                fontWeight = FontWeight.Medium,
-                                            )
-                                            StatusBadge(
-                                                text = detail.status.displayName(),
-                                                color = detail.status.toColor(),
-                                            )
-                                        }
-                                        DetailRow(
-                                            label = "메모",
-                                            value = detail.note.ifBlank { "-" },
-                                        )
-                                    }
+                                DetailRow(
+                                    label = "전표번호",
+                                    value = detail.number,
+                                )
+                                DetailRow(
+                                    label = "전표유형",
+                                    value = detail.type.displayName(),
+                                )
+                                DetailRow(
+                                    label = "거래처",
+                                    value = detail.connectionName,
+                                )
+                                DetailRow(
+                                    label = "전표 발생일",
+                                    value = detail.issueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                                )
+                                DetailRow(
+                                    label = "만기일",
+                                    value = detail.dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                                )
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 8.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = "상태",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Medium,
+                                    )
+                                    StatusBadge(
+                                        text = detail.status.displayName(),
+                                        color = detail.status.toColor(),
+                                    )
                                 }
+                                DetailRow(
+                                    label = "메모",
+                                    value = detail.note.ifBlank { "-" },
+                                )
                             }
                         }
 
@@ -211,12 +196,6 @@ fun InvoiceDetailScreen(
                                         style = MaterialTheme.typography.bodySmall,
                                         fontWeight = FontWeight.Bold,
                                         modifier = Modifier.weight(2f),
-                                    )
-                                    Text(
-                                        text = "규격",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.weight(1.5f),
                                     )
                                     Text(
                                         text = "수량",
@@ -258,11 +237,6 @@ fun InvoiceDetailScreen(
                                             text = item.name,
                                             style = MaterialTheme.typography.bodyMedium,
                                             modifier = Modifier.weight(2f),
-                                        )
-                                        Text(
-                                            text = item.unitOfMaterialName,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            modifier = Modifier.weight(1.5f),
                                         )
                                         Text(
                                             text = "${item.quantity}",
