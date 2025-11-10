@@ -39,23 +39,25 @@ fun SupplierProfileEditScreen(
     navController: NavController,
     viewModel: SupplierProfileEditViewModel = hiltViewModel(),
 ) {
-    val supplierDetail by viewModel.supplierDetail.collectAsState()
+    val profile by viewModel.profile.collectAsState()
     val userInfo by viewModel.userInfo.collectAsState()
     val isSaving by viewModel.isSaving.collectAsState()
 
     var companyName by remember { mutableStateOf("") }
-    var companyAddress by remember { mutableStateOf("") }
-    var companyPhone by remember { mutableStateOf("") }
-    var companyEmail by remember { mutableStateOf("") }
-    var managerPhone by remember { mutableStateOf("") }
+    var businessNumber by remember { mutableStateOf("") }
+    var baseAddress by remember { mutableStateOf("") }
+    var detailAddress by remember { mutableStateOf("") }
+    var officePhone by remember { mutableStateOf("") }
+    var userPhoneNumber by remember { mutableStateOf("") }
 
-    LaunchedEffect(supplierDetail) {
-        supplierDetail?.let { detail ->
-            companyName = detail.name
-            companyAddress = detail.fullAddress
-            companyPhone = detail.phone
-            companyEmail = detail.email
-            managerPhone = detail.manager?.phone ?: ""
+    LaunchedEffect(profile) {
+        profile?.let { p ->
+            companyName = p.companyName
+            businessNumber = p.businessNumber
+            baseAddress = p.baseAddress
+            detailAddress = p.detailAddress
+            officePhone = p.officePhone
+            userPhoneNumber = p.userPhoneNumber
         }
     }
 
@@ -78,9 +80,9 @@ fun SupplierProfileEditScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
         ) {
-            // 공급업체 정보 섹션
+            // 사업자 정보 섹션
             Text(
-                text = "공급업체 정보",
+                text = "사업자 정보",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp),
@@ -104,25 +106,33 @@ fun SupplierProfileEditScreen(
                             .padding(vertical = 4.dp),
                     )
                     OutlinedTextField(
-                        value = companyAddress,
-                        onValueChange = { companyAddress = it },
-                        label = { Text("회사 주소") },
+                        value = businessNumber,
+                        onValueChange = { businessNumber = it },
+                        label = { Text("사업자등록번호") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
                     )
                     OutlinedTextField(
-                        value = companyPhone,
-                        onValueChange = { companyPhone = it },
+                        value = baseAddress,
+                        onValueChange = { baseAddress = it },
+                        label = { Text("기본 주소") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                    )
+                    OutlinedTextField(
+                        value = detailAddress,
+                        onValueChange = { detailAddress = it },
+                        label = { Text("상세 주소") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                    )
+                    OutlinedTextField(
+                        value = officePhone,
+                        onValueChange = { officePhone = it },
                         label = { Text("회사 전화번호") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                    )
-                    OutlinedTextField(
-                        value = companyEmail,
-                        onValueChange = { companyEmail = it },
-                        label = { Text("회사 이메일") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp),
@@ -159,7 +169,7 @@ fun SupplierProfileEditScreen(
                             .padding(vertical = 4.dp),
                     )
                     OutlinedTextField(
-                        value = userInfo?.email ?: "",
+                        value = profile?.userEmail ?: userInfo?.email ?: "",
                         onValueChange = { /* 이메일은 수정 불가 */ },
                         label = { Text("이메일 *") },
                         enabled = false,
@@ -168,8 +178,8 @@ fun SupplierProfileEditScreen(
                             .padding(vertical = 4.dp),
                     )
                     OutlinedTextField(
-                        value = managerPhone,
-                        onValueChange = { managerPhone = it },
+                        value = userPhoneNumber,
+                        onValueChange = { userPhoneNumber = it },
                         label = { Text("휴대폰 번호") },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -185,10 +195,11 @@ fun SupplierProfileEditScreen(
                 onClick = {
                     viewModel.saveProfile(
                         companyName = companyName,
-                        companyAddress = companyAddress,
-                        companyPhone = companyPhone,
-                        companyEmail = companyEmail,
-                        managerPhone = managerPhone,
+                        businessNumber = businessNumber,
+                        baseAddress = baseAddress,
+                        detailAddress = detailAddress,
+                        officePhone = officePhone,
+                        userPhoneNumber = userPhoneNumber,
                         onSuccess = {
                             navController.popBackStack()
                         },

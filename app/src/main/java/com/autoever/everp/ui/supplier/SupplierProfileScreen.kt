@@ -39,7 +39,7 @@ fun SupplierProfileScreen(
     viewModel: SupplierProfileViewModel = hiltViewModel(),
 ) {
     val userInfo by viewModel.userInfo.collectAsState()
-    val supplierDetail by viewModel.supplierDetail.collectAsState()
+    val profile by viewModel.profile.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
@@ -100,9 +100,9 @@ fun SupplierProfileScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 공급업체 정보 섹션
+        // 사업자 정보 섹션
         Text(
-            text = "공급업체 정보",
+            text = "사업자 정보",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp),
@@ -119,19 +119,19 @@ fun SupplierProfileScreen(
             ) {
                 ProfileField(
                     label = "회사명 *",
-                    value = supplierDetail?.name ?: "",
+                    value = profile?.companyName ?: "",
                 )
                 ProfileField(
-                    label = "회사 주소",
-                    value = supplierDetail?.fullAddress ?: "",
+                    label = "사업자등록번호",
+                    value = profile?.businessNumber ?: "",
+                )
+                ProfileField(
+                    label = "주소",
+                    value = profile?.fullAddress ?: "",
                 )
                 ProfileField(
                     label = "회사 전화번호",
-                    value = supplierDetail?.phone ?: "",
-                )
-                ProfileField(
-                    label = "회사 이메일",
-                    value = supplierDetail?.email ?: "",
+                    value = profile?.officePhone ?: "",
                 )
             }
         }
@@ -157,15 +157,15 @@ fun SupplierProfileScreen(
             ) {
                 ProfileField(
                     label = "이름 *",
-                    value = userInfo?.userName ?: "",
+                    value = profile?.userName ?: userInfo?.userName ?: "",
                 )
                 ProfileField(
                     label = "이메일 *",
-                    value = userInfo?.email ?: "",
+                    value = profile?.userEmail ?: userInfo?.email ?: "",
                 )
                 ProfileField(
                     label = "휴대폰 번호",
-                    value = supplierDetail?.manager?.phone ?: "",
+                    value = profile?.userPhoneNumber ?: "",
                 )
             }
         }
