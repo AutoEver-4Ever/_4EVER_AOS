@@ -292,8 +292,8 @@ fun InvoiceDetailScreen(
                         }
 
                         // 납부 확인 버튼 (PENDING 상태일 때만 표시)
-                        if (detail.status == InvoiceStatusEnum.PENDING) {
-//                            if (!isAp && detail.status == InvoiceStatusEnum.PENDING) {
+//                        if (detail.status == InvoiceStatusEnum.PENDING) {
+                        if (isAp && detail.status == InvoiceStatusEnum.PENDING) {
                             Spacer(modifier = Modifier.height(16.dp))
                             Button(
                                 onClick = { viewModel.updateSupplierInvoiceStatus() },

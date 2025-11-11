@@ -259,8 +259,8 @@ fun InvoiceDetailScreen(
                         }
 
                         // 납부 확인 요청 버튼 (UNPAID 상태일 때만 표시)
-                        if (detail.status == InvoiceStatusEnum.UNPAID) {
-//                            if (isAp && detail.status == InvoiceStatusEnum.UNPAID) {
+//                        if (detail.status == InvoiceStatusEnum.UNPAID) {
+                        if (!isAp && detail.status == InvoiceStatusEnum.UNPAID) {
                             Spacer(modifier = Modifier.height(16.dp))
                             Button(
                                 onClick = { viewModel.updateCustomerInvoiceStatus(invoiceId) },
