@@ -125,7 +125,7 @@ fun NotificationScreen(
                             notification = notification,
                             onClick = {
                                 // 알림 클릭 시 읽음 처리 및 상세 화면 이동
-                                viewModel.markAsRead(notification.id)
+                                if (!notification.isRead) viewModel.markAsRead(notification.id)
                                 if (notification.linkType.isCustomerRelated()) {
                                     navigateToDetail(navController, notification)
                                 }
