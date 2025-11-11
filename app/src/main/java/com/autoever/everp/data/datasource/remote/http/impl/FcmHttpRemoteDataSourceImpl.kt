@@ -63,16 +63,14 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
     }
 
     /**
-     * 공급사(Supplier)
-     * 매입 전표 상태 수정
-     * 확인 요청 -> 완납
+     * 매입 전표 수정
      */
     override suspend fun updateApInvoice(
         invoiceId: String,
         request: InvoiceUpdateRequestDto,
     ): Result<Unit> = withContext(Dispatchers.IO) {
         try {
-            val response = fcmApi.updateApInvoice(invoiceId)
+            val response = fcmApi.updateApInvoice(invoiceId, request)
             if (response.success) {
                 Result.success(Unit)
             } else {
@@ -80,22 +78,6 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Timber.e(e, "AP 인보이스 수정 실패")
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun requestReceivable(
-        invoiceId: String,
-    ): Result<Unit> = withContext(Dispatchers.IO) {
-        try {
-            val response = fcmApi.requestReceivable(invoiceId)
-            if (response.success) {
-                Result.success(Unit)
-            } else {
-                Result.failure(Exception(response.message ?: "수취 요청 실패"))
-            }
-        } catch (e: Exception) {
-            Timber.e(e, "수취 요청 실패")
             Result.failure(e)
         }
     }
@@ -143,10 +125,9 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
         }
     }
 
+
     /**
-     * 고객사(Customer)
-     * 매출 전표 상태 수정
-     * 미납 -> 확인 요청
+     * 매출 전표 수정
      */
     override suspend fun updateArInvoice(
         invoiceId: String,
@@ -165,9 +146,37 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun completeReceivable(invoiceId: String): Result<Unit> {
+    // ========== 인보이스 상태 수정 ==========
+
+    /**
+     * 고객사(Customer)
+     * 매출 전표 상태 수정
+     * 미납 -> 확인 요청
+     */
+    override suspend fun updateCustomerInvoiceStatus(
+        invoiceId: String,
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val response = fcmApi.updateCustomerInvoiceStatus(invoiceId)
+            if (response.success) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "수취 요청 실패")
+            Result.failure(e)
+        }
+    }
+
+    /**
+     * 공급사(Supplier)
+     * 매입 전표 상태 수정
+     * 확인 요청 -> 완납
+     */
+    override suspend fun updateSupplierInvoiceStatus(invoiceId: String): Result<Unit> {
         return try {
-            val response = fcmApi.completeReceivable(invoiceId)
+            val response = fcmApi.updateSupplierInvoiceStatus(invoiceId)
             if (response.success) {
                 Result.success(Unit)
             } else {

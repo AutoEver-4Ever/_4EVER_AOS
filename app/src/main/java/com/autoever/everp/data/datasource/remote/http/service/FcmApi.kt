@@ -37,14 +37,12 @@ interface FcmApi {
     ): ApiResponse<InvoiceDetailResponseDto>
 
     /**
-     * 공급사(Supplier)
-     * 매입 전표 상태 수정
-     * 확인 요청 -> 완납
+     *
      */
     @PATCH("$BASE_URL/invoice/ap/{invoiceId}")
     suspend fun updateApInvoice(
         @Path("invoiceId") invoiceId: String,
-//        @Body request: InvoiceUpdateRequestDto,
+        @Body request: InvoiceUpdateRequestDto,
     ): ApiResponse<Any>
 
     /**
@@ -85,6 +83,24 @@ interface FcmApi {
     suspend fun completeReceivable(
         @Path("invoiceId") invoiceId: String,
     ): ApiResponse<Any>
+
+    /**
+     * 공급사(Supplier)
+     * 매출 전표 상태 수정(확인 요청 -> 완료)
+     */
+    @POST("$BASE_URL/invoice/ap/{invoiceId}/payable/complete")
+    suspend fun updateSupplierInvoiceStatus(
+        @Path("invoiceId") invoiceId: String,
+    ): ApiResponse<Unit>
+
+    /**
+     * 고객사(Customer)
+     * 매입 전표 상태 수정(미납 -> 확인 요청)
+     */
+    @POST("$BASE_URL/invoice/ap/receivable/request")
+    suspend fun updateCustomerInvoiceStatus(
+        @Query("invoiceId") invoiceId: String,
+    ): ApiResponse<Unit>
 
     companion object {
         private const val BASE_URL = "business/fcm"
