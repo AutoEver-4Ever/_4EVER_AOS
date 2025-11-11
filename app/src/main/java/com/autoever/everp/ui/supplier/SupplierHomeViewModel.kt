@@ -55,7 +55,7 @@ class SupplierHomeViewModel @Inject constructor(
                         dashboardRepository.getWorkflows(role).onSuccess { workflows ->
                             // tabs를 날짜순으로 정렬
                             val sortedTabs = workflows.tabs.sortedByDescending { it.createdAt }
-                                .take(10) // 최근 10개만
+                                .take(5) // 최근 5개만
 
                             _recentActivities.value = sortedTabs
                             _categoryMap.value = sortedTabs.associate { it.id to it.tabCode }
