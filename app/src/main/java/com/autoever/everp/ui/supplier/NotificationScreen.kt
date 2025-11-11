@@ -1,6 +1,5 @@
-package com.autoever.everp.ui.customer
+package com.autoever.everp.ui.supplier
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +34,6 @@ import androidx.navigation.NavController
 import com.autoever.everp.domain.model.notification.Notification
 import com.autoever.everp.domain.model.notification.NotificationLinkEnum
 import com.autoever.everp.ui.common.components.StatusBadge
-import com.autoever.everp.ui.supplier.SupplierSubNavigationItem
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -77,7 +75,6 @@ fun NotificationScreen(
                     CircularProgressIndicator()
                 }
             }
-
             error != null -> {
                 Box(
                     modifier = Modifier
@@ -96,7 +93,6 @@ fun NotificationScreen(
                     }
                 }
             }
-
             notifications.content.isEmpty() -> {
                 Box(
                     modifier = Modifier
@@ -111,7 +107,6 @@ fun NotificationScreen(
                     )
                 }
             }
-
             else -> {
                 LazyColumn(
                     modifier = Modifier
@@ -126,9 +121,7 @@ fun NotificationScreen(
                             onClick = {
                                 // 알림 클릭 시 읽음 처리 및 상세 화면 이동
                                 viewModel.markAsRead(notification.id)
-                                if (notification.linkType.isCustomerRelated()) {
-                                    navigateToDetail(navController, notification)
-                                }
+                                navigateToDetail(navController, notification)
                             },
                         )
                     }
@@ -161,35 +154,49 @@ private fun NotificationItem(
                 .padding(16.dp),
         ) {
             Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top,
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text(
+                        text = notification.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = if (notification.isRead) FontWeight.Normal else FontWeight.Bold,
+                    )
+                    Text(
+                        text = notification.message,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 4.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                if (!notification.isRead) {
+                    StatusBadge(
+                        text = "읽지 않음",
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
+            }
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = notification.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = if (notification.isRead) FontWeight.Normal else FontWeight.Bold,
+                    text = formatRelativeTime(notification.createdAt),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-
                 StatusBadge(
                     text = notification.source.toKorean(),
-                    color = notification.source.toColor(),
+                    color = MaterialTheme.colorScheme.secondary,
                 )
             }
-
-            Text(
-                text = notification.message,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 4.dp),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-
-            Text(
-                text = formatRelativeTime(notification.createdAt),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
         }
     }
 }
@@ -203,44 +210,21 @@ private fun navigateToDetail(
     }
 
     when (notification.linkType) {
-        NotificationLinkEnum.QUOTATION -> {
-            navController.navigate(
-                CustomerSubNavigationItem.QuotationDetailItem.createRoute(notification.linkId),
-            )
-        }
-
-        NotificationLinkEnum.SALES_ORDER -> {
-            navController.navigate(
-                CustomerSubNavigationItem.SalesOrderDetailItem.createRoute(notification.linkId),
-            )
-        }
-
-        NotificationLinkEnum.SALES_INVOICE -> {
-            navController.navigate(
-                CustomerSubNavigationItem.InvoiceDetailItem.createRoute(
-                    invoiceId = notification.linkId,
-                    isAp = true,
-                ),
-            )
-        }
-
-        NotificationLinkEnum.PURCHASE_INVOICE -> {
-            navController.navigate(
-                SupplierSubNavigationItem.InvoiceDetailItem.createRoute(
-                    invoiceId = notification.linkId,
-                    isAp = false,
-                ),
-            )
-        }
-
         NotificationLinkEnum.PURCHASE_ORDER -> {
             navController.navigate(
                 SupplierSubNavigationItem.PurchaseOrderDetailItem.createRoute(notification.linkId),
             )
         }
-
+        NotificationLinkEnum.PURCHASE_INVOICE -> {
+            navController.navigate(
+                SupplierSubNavigationItem.InvoiceDetailItem.createRoute(
+                    invoiceId = notification.linkId,
+                    isAp = true,
+                ),
+            )
+        }
         else -> {
-            // 기타 알림은 화면 이동 없음
+            // Supplier 화면에서는 발주와 매입 전표만 이동
         }
     }
 }
@@ -253,23 +237,18 @@ private fun formatRelativeTime(createdAt: LocalDateTime): String {
         duration.toSeconds() < 60 -> {
             "${duration.toSeconds()}초 전"
         }
-
         duration.toMinutes() < 60 -> {
             "${duration.toMinutes()}분 전"
         }
-
         duration.toHours() < 24 -> {
             "${duration.toHours()}시간 전"
         }
-
         duration.toDays() < 30 -> {
             "${duration.toDays()}일 전"
         }
-
         ChronoUnit.MONTHS.between(createdAt, now) < 12 -> {
             "${ChronoUnit.MONTHS.between(createdAt, now)}개월 전"
         }
-
         else -> {
             "${ChronoUnit.YEARS.between(createdAt, now)}년 전"
         }
