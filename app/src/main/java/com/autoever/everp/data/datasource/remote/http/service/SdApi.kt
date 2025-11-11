@@ -139,7 +139,7 @@ data class QuotationDetailResponseDto(
     val quotationDate: LocalDate,
     @Serializable(with = LocalDateSerializer::class)
     @SerialName("dueDate")
-    val dueDate: LocalDate,
+    val dueDate: LocalDate? = null,
     @SerialName("statusCode")
     val statusCode: QuotationStatusEnum,
     @SerialName("customerName")
