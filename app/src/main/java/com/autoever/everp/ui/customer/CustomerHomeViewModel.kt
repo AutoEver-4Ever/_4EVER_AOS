@@ -25,8 +25,8 @@ class CustomerHomeViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository,
 ) : ViewModel() {
 
-    private val _recentActivities = MutableStateFlow<List<DashboardWorkflows.DashboardWorkflowItem>>(emptyList())
-    val recentActivities: StateFlow<List<DashboardWorkflows.DashboardWorkflowItem>>
+    private val _recentActivities = MutableStateFlow<List<DashboardWorkflows.DashboardWorkflowTab>>(emptyList())
+    val recentActivities: StateFlow<List<DashboardWorkflows.DashboardWorkflowTab>>
         get() = _recentActivities.asStateFlow()
 
     private val _categoryMap = MutableStateFlow<Map<String, DashboardTapEnum>>(emptyMap())
@@ -53,16 +53,11 @@ class CustomerHomeViewModel @Inject constructor(
                     val role = userInfo.userRole
                     dashboardRepository.refreshWorkflows(role).onSuccess {
                         dashboardRepository.getWorkflows(role).onSuccess { workflows ->
-                            // 모든 tabs의 items를 하나의 리스트로 합치고 날짜순으로 정렬
-                            val allItems = workflows.tabs.flatMap { tab ->
-                                tab.items.map { item ->
-                                    item to tab.tabCode
-                                }
-                            }.sortedByDescending { it.first.createdAt }
+                            // tabs를 날짜순으로 정렬
+                            val sortedTabs = workflows.tabs.sortedByDescending { it.createdAt }
                                 .take(10) // 최근 10개만
-
-                            _recentActivities.value = allItems.map { it.first }
-                            _categoryMap.value = allItems.associate { it.first.id to it.second }
+                            _recentActivities.value = sortedTabs
+                            _categoryMap.value = sortedTabs.associate { it.id to it.tabCode }
                         }.onFailure { e ->
                             Timber.e(e, "워크플로우 조회 실패")
                         }

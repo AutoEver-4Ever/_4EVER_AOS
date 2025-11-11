@@ -155,6 +155,14 @@ enum class DashboardTapEnum {
             else -> null
         }
 
+    fun isCustomerRelated(): Boolean {
+        return this == AR || this == SO || this == QT
+    }
+
+    fun isSupplierRelated(): Boolean {
+        return this == AP || this == PO
+    }
+
     companion object {
         /**
          * 문자열을 DashboardTapEnum으로 변환
