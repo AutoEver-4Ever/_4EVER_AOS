@@ -59,4 +59,6 @@ sealed class SupplierSubNavigationItem(
     }
 
     object ProfileEditItem : SupplierSubNavigationItem("supplier_profile_edit", "프로필 수정")
+
+    object NotificationItem : SupplierSubNavigationItem("supplier_notification", "알림 목록")
 }

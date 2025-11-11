@@ -72,6 +72,11 @@ fun SupplierApp(
             ) {
                 SupplierProfileEditScreen(navController = navController)
             }
+            composable(
+                route = SupplierSubNavigationItem.NotificationItem.route,
+            ) {
+                NotificationScreen(navController = navController)
+            }
         }
     }
 }
