@@ -27,8 +27,8 @@ class SupplierVoucherViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    private val _selectedInvoiceIds = MutableStateFlow<Set<String>>(emptySet())
-    val selectedInvoiceIds: StateFlow<Set<String>> = _selectedInvoiceIds.asStateFlow()
+//    private val _selectedInvoiceIds = MutableStateFlow<Set<String>>(emptySet())
+//    val selectedInvoiceIds: StateFlow<Set<String>> = _selectedInvoiceIds.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -77,20 +77,20 @@ class SupplierVoucherViewModel @Inject constructor(
         loadInvoices()
     }
 
-    fun toggleInvoiceSelection(invoiceId: String) {
-        _selectedInvoiceIds.value = if (_selectedInvoiceIds.value.contains(invoiceId)) {
-            _selectedInvoiceIds.value - invoiceId
-        } else {
-            _selectedInvoiceIds.value + invoiceId
-        }
-    }
-
-    fun selectAll() {
-        _selectedInvoiceIds.value = _invoiceList.value.content.map { it.id }.toSet()
-    }
-
-    fun clearSelection() {
-        _selectedInvoiceIds.value = emptySet()
-    }
+//    fun toggleInvoiceSelection(invoiceId: String) {
+//        _selectedInvoiceIds.value = if (_selectedInvoiceIds.value.contains(invoiceId)) {
+//            _selectedInvoiceIds.value - invoiceId
+//        } else {
+//            _selectedInvoiceIds.value + invoiceId
+//        }
+//    }
+//
+//    fun selectAll() {
+//        _selectedInvoiceIds.value = _invoiceList.value.content.map { it.id }.toSet()
+//    }
+//
+//    fun clearSelection() {
+//        _selectedInvoiceIds.value = emptySet()
+//    }
 }
 

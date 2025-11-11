@@ -31,7 +31,7 @@ fun CustomerVoucherScreen(
 ) {
     val invoiceList by viewModel.invoiceList.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
-    val selectedInvoiceIds by viewModel.selectedInvoiceIds.collectAsState()
+//    val selectedInvoiceIds by viewModel.selectedInvoiceIds.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
     Column(
@@ -53,29 +53,29 @@ fun CustomerVoucherScreen(
             onSearch = { viewModel.search() },
         )
 
-        // 전체 선택 체크박스
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Checkbox(
-                checked = selectedInvoiceIds.size == invoiceList.content.size && invoiceList.content.isNotEmpty(),
-                onCheckedChange = {
-                    if (it) {
-                        viewModel.selectAll()
-                    } else {
-                        viewModel.clearSelection()
-                    }
-                },
-            )
-            Text(
-                text = "전체 선택",
-                style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(start = 8.dp),
-            )
-        }
+//        // 전체 선택 체크박스
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 16.dp, vertical = 8.dp),
+//            verticalAlignment = Alignment.CenterVertically,
+//        ) {
+//            Checkbox(
+//                checked = selectedInvoiceIds.size == invoiceList.content.size && invoiceList.content.isNotEmpty(),
+//                onCheckedChange = {
+//                    if (it) {
+//                        viewModel.selectAll()
+//                    } else {
+//                        viewModel.clearSelection()
+//                    }
+//                },
+//            )
+//            Text(
+//                text = "전체 선택",
+//                style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
+//                modifier = Modifier.padding(start = 8.dp),
+//            )
+//        }
 
         // 리스트
         if (isLoading) {
@@ -92,11 +92,11 @@ fun CustomerVoucherScreen(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Checkbox(
-                            checked = selectedInvoiceIds.contains(invoice.id),
-                            onCheckedChange = { viewModel.toggleInvoiceSelection(invoice.id) },
-                            modifier = Modifier.padding(start = 8.dp),
-                        )
+//                        Checkbox(
+//                            checked = selectedInvoiceIds.contains(invoice.id),
+//                            onCheckedChange = { viewModel.toggleInvoiceSelection(invoice.id) },
+//                            modifier = Modifier.padding(start = 8.dp),
+//                        )
                         ListCard(
                             id = invoice.number,
                             title = invoice.connection.name,
