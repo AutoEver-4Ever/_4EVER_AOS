@@ -143,6 +143,7 @@ class AlarmHttpRemoteDataSourceImpl @Inject constructor(
             )
             val response = alarmTokenApi.registerFcmToken(request)
             if (response.success) {
+                Timber.d("FCM 토큰 등록 성공: ${response.data}")
                 Result.success(Unit)
             } else {
                 Result.failure(
