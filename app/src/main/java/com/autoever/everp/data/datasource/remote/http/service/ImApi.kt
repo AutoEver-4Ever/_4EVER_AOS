@@ -1,15 +1,52 @@
 package com.autoever.everp.data.datasource.remote.http.service
 
+import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import retrofit2.http.GET
+
 /**
  * 재고 관리(IM, Inventory Management) API Service
  * Base URL: /scm-pp/iv
  */
 interface ImApi {
 
+    /**
+     * 재고 아이템 토글 목록 조회
+     */
+    @GET("scm-pp/product/item/toggle")
+    suspend fun getItemsToggle(
+
+    ): ApiResponse<ItemToggleListResponseDto>
+
     companion object {
         private const val BASE_URL = "scm-pp/iv"
     }
 }
+
+@Serializable
+data class ItemToggleListResponseDto(
+    @SerialName("products")
+    val products: List<ItemToggleListItemDto>,
+)
+
+@Serializable
+data class ItemToggleListItemDto(
+    @SerialName("itemId")
+    val itemId: String,
+    @SerialName("itemNumber")
+    val itemNumber: String,
+    @SerialName("itemName")
+    val itemName: String,
+    @SerialName("uomName")
+    val uomName: String,
+    @SerialName("unitPrice")
+    val unitPrice: Double,
+//    @SerialName("supplierCompanyId")
+//    val supplierCompanyId: String,
+//    @SerialName("supplierCompanyName")
+//    val supplierCompanyName: String,
+)
 
 /*
 // ========== 재고 아이템 관리 ==========
@@ -133,9 +170,6 @@ suspend fun getStatistics(): ApiResponse<Any>
 
 @GET("$BASE_URL/warehouses/statistic")
 suspend fun getWarehouseStatistics(): ApiResponse<Any>
-
-@GET("$BASE_URL/items/toggle")
-suspend fun getItemsToggle(): ApiResponse<Any>
 
 =========== 재고 관리 ==========
 @Serializable

@@ -2,10 +2,12 @@ package com.autoever.everp.data.datasource.remote.http.service
 
 import com.autoever.everp.data.datasource.remote.dto.common.ApiResponse
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
+import com.autoever.everp.data.datasource.remote.dto.common.ToggleResponseDto
 import com.autoever.everp.domain.model.purchase.PurchaseOrderStatusEnum
 import com.autoever.everp.domain.model.supplier.SupplierCategoryEnum
 import com.autoever.everp.domain.model.supplier.SupplierStatusEnum
 import com.autoever.everp.utils.serializer.LocalDateSerializer
+import com.autoever.everp.utils.serializer.LocalDateTimeSerializer
 import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -15,6 +17,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.Path
 import retrofit2.http.Query
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  * 자재 관리(MM, Materials Management) API Service
@@ -64,6 +67,22 @@ interface MmApi {
     suspend fun getPurchaseOrderDetail(
         @Path("purchaseOrderId") purchaseOrderId: String,
     ): ApiResponse<PurchaseOrderDetailResponseDto>
+
+    /**
+     * 발주서 검색 타입 토글 조회
+     */
+    @GET("$BASE_URL/purchase-orders/search-type/toggle")
+    suspend fun getPurchaseOrderSearchTypeToggle(
+
+    ): ApiResponse<List<ToggleResponseDto>>
+
+    /**
+     * 발주서 상태 타입 토글 조회
+     */
+    @GET("$BASE_URL/purchase-orders/status/toggle")
+    suspend fun getPurchaseOrderStatusTypeToggle(
+
+    ): ApiResponse<List<ToggleResponseDto>>
 
     companion object {
         private const val BASE_URL = "scm-pp/mm"
@@ -152,17 +171,17 @@ data class PurchaseOrderListItemDto(
     @SerialName("purchaseOrderNumber")
     val purchaseOrderNumber: String,
     @SerialName("supplierName")
-    val supplierName: String,
+    val supplierName: String = "", // TODO 임시 필드, API 수정 필요
     @SerialName("itemsSummary")
     val itemsSummary: String,
-    @Serializable(with = LocalDateSerializer::class)
+    @Serializable(with = LocalDateTimeSerializer::class)
     @SerialName("orderDate")
-    val orderDate: LocalDate,
-    @Serializable(with = LocalDateSerializer::class)
+    val orderDate: LocalDateTime,
+    @Serializable(with = LocalDateTimeSerializer::class)
     @SerialName("dueDate")
-    val dueDate: LocalDate,
+    val dueDate: LocalDateTime,
     @SerialName("totalAmount")
-    val totalAmount: Long,
+    val totalAmount: Double,
     @SerialName("statusCode")
     val statusCode: PurchaseOrderStatusEnum = PurchaseOrderStatusEnum.UNKNOWN,
 )
@@ -175,12 +194,12 @@ data class PurchaseOrderDetailResponseDto(
     val purchaseOrderNumber: String,
     @SerialName("statusCode")
     val statusCode: PurchaseOrderStatusEnum = PurchaseOrderStatusEnum.UNKNOWN,
-    @Serializable(with = LocalDateSerializer::class)
+    @Serializable(with = LocalDateTimeSerializer::class)
     @SerialName("orderDate")
-    val orderDate: LocalDate,
-    @Serializable(with = LocalDateSerializer::class)
+    val orderDate: LocalDateTime,
+    @Serializable(with = LocalDateTimeSerializer::class)
     @SerialName("dueDate")
-    val dueDate: LocalDate,
+    val dueDate: LocalDateTime,
     @SerialName("supplierId")
     val supplierId: String,
     @SerialName("supplierNumber")
@@ -194,7 +213,7 @@ data class PurchaseOrderDetailResponseDto(
     @SerialName("items")
     val items: List<PurchaseOrderDetailItemDto>,
     @SerialName("totalAmount")
-    val totalAmount: Long,
+    val totalAmount: Double,
     @SerialName("note")
     val note: String? = null,
 )
@@ -206,11 +225,11 @@ data class PurchaseOrderDetailItemDto(
     @SerialName("itemName")
     val itemName: String,
     @SerialName("quantity")
-    val quantity: Int,
+    val quantity: Double,
     @SerialName("uomName")
     val uomName: String,
     @SerialName("unitPrice")
-    val unitPrice: Long,
+    val unitPrice: Double,
     @SerialName("totalPrice")
-    val totalPrice: Long,
+    val totalPrice: Double,
 )

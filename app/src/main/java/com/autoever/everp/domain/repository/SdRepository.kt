@@ -31,6 +31,11 @@ interface SdRepository {
     suspend fun refreshCustomerDetail(customerId: String): Result<Unit>
     suspend fun getCustomerDetail(customerId: String): Result<CustomerDetail>
 
+    suspend fun updateCustomer(
+        customerId: String,
+        request: com.autoever.everp.data.datasource.remote.http.service.CustomerUpdateRequestDto,
+    ): Result<Unit>
+
     // ========== 주문서 ==========
     fun observeSalesOrderList(): Flow<PageResponse<SalesOrderListItem>>
     suspend fun refreshSalesOrderList(params: SalesOrderListParams): Result<Unit>

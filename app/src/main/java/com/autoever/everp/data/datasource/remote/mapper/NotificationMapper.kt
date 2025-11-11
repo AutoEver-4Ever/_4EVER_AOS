@@ -20,7 +20,7 @@ object NotificationMapper {
         val source = NotificationSourceEnum.fromStringOrNull(dto.source)
             ?: NotificationSourceEnum.UNKNOWN
 
-        val status = NotificationStatusEnum.fromStringOrDefault(dto.status)
+        val status = dto.isRead.let { if (it) NotificationStatusEnum.READ else NotificationStatusEnum.UNREAD }
 
         // createdAt 파싱 (ISO 8601 형식 가정)
         val createdAt = try {

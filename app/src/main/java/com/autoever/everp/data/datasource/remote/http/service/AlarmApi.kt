@@ -75,15 +75,15 @@ data class NotificationListItemDto(
     @SerialName("notificationMessage")
     val message: String,
     @SerialName("linkType")
-    val linkType: NotificationLinkEnum,
+    val linkType: NotificationLinkEnum = NotificationLinkEnum.UNKNOWN,
     @SerialName("linkId")
     val linkId: String,
     @SerialName("source")
     val source: String,
-    @SerialName("status")
-    val status: String,
     @SerialName("createdAt")
     val createdAt: String,
+    @SerialName("isRead")
+    val isRead: Boolean,
 )
 
 @Serializable

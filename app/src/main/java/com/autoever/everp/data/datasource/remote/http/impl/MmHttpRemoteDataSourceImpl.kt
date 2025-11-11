@@ -2,6 +2,7 @@ package com.autoever.everp.data.datasource.remote.http.impl
 
 import com.autoever.everp.data.datasource.remote.MmRemoteDataSource
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
+import com.autoever.everp.data.datasource.remote.dto.common.ToggleResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.MmApi
 import com.autoever.everp.data.datasource.remote.http.service.PurchaseOrderDetailResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.PurchaseOrderListItemDto
@@ -9,6 +10,8 @@ import com.autoever.everp.data.datasource.remote.http.service.SupplierDetailResp
 import com.autoever.everp.data.datasource.remote.http.service.SupplierUpdateRequestDto
 import com.autoever.everp.domain.model.purchase.PurchaseOrderSearchTypeEnum
 import com.autoever.everp.domain.model.purchase.PurchaseOrderStatusEnum
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
@@ -23,8 +26,8 @@ class MmHttpRemoteDataSourceImpl @Inject constructor(
     // ========== 공급업체 ==========
     override suspend fun getSupplierDetail(
         supplierId: String,
-    ): Result<SupplierDetailResponseDto> {
-        return try {
+    ): Result<SupplierDetailResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val response = mmApi.getSupplierDetail(supplierId = supplierId)
             if (response.success && response.data != null) {
                 Result.success(response.data)
@@ -40,8 +43,8 @@ class MmHttpRemoteDataSourceImpl @Inject constructor(
     override suspend fun updateSupplier(
         supplierId: String,
         request: SupplierUpdateRequestDto,
-    ): Result<Unit> {
-        return try {
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
             val response = mmApi.updateSupplier(supplierId = supplierId, request = request)
             if (response.success) {
                 Result.success(Unit)
@@ -63,8 +66,8 @@ class MmHttpRemoteDataSourceImpl @Inject constructor(
         endDate: LocalDate?,
         page: Int,
         size: Int,
-    ): Result<PageResponse<PurchaseOrderListItemDto>> {
-        return try {
+    ): Result<PageResponse<PurchaseOrderListItemDto>> = withContext(Dispatchers.IO) {
+        try {
             val response = mmApi.getPurchaseOrderList(
                 statusCode = statusCode.toApiString(),
                 type = type.toApiString(),
@@ -87,8 +90,8 @@ class MmHttpRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getPurchaseOrderDetail(
         purchaseOrderId: String,
-    ): Result<PurchaseOrderDetailResponseDto> {
-        return try {
+    ): Result<PurchaseOrderDetailResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val response = mmApi.getPurchaseOrderDetail(purchaseOrderId = purchaseOrderId)
             if (response.success && response.data != null) {
                 Result.success(response.data)
@@ -97,6 +100,34 @@ class MmHttpRemoteDataSourceImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Timber.e(e, "구매 주문 상세 조회 실패")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getPurchaseOrderSearchTypeToggle(): Result<List<ToggleResponseDto>> = withContext(Dispatchers.IO) {
+        try {
+            val response = mmApi.getPurchaseOrderSearchTypeToggle()
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message ?: "발주서 검색 타입 토글 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "발주서 검색 타입 토글 조회 실패")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getPurchaseOrderStatusTypeToggle(): Result<List<ToggleResponseDto>> = withContext(Dispatchers.IO) {
+        try {
+            val response = mmApi.getPurchaseOrderStatusTypeToggle()
+            if (response.success && response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message ?: "발주서 상태 타입 토글 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "발주서 상태 타입 토글 조회 실패")
             Result.failure(e)
         }
     }

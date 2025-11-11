@@ -180,6 +180,21 @@ enum class NotificationLinkEnum {
      */
     val code: String get() = this.name
 
+    fun isCustomerRelated(): Boolean =
+        when (this) {
+            QUOTATION,
+            SALES_ORDER,
+            SALES_INVOICE -> true
+            else -> false
+        }
+
+    fun isSupplierRelated(): Boolean =
+        when (this) {
+            PURCHASE_ORDER,
+            PURCHASE_INVOICE -> true
+            else -> false
+        }
+
     companion object {
         /**
          * 문자열을 NotificationLinkEnum으로 변환

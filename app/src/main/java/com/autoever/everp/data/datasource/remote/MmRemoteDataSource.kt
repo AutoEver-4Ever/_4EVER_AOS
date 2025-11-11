@@ -1,6 +1,7 @@
 package com.autoever.everp.data.datasource.remote
 
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
+import com.autoever.everp.data.datasource.remote.dto.common.ToggleResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.PurchaseOrderDetailResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.PurchaseOrderListItemDto
 import com.autoever.everp.data.datasource.remote.http.service.SupplierDetailResponseDto
@@ -50,4 +51,14 @@ interface MmRemoteDataSource {
     suspend fun getPurchaseOrderDetail(
         purchaseOrderId: String,
     ): Result<PurchaseOrderDetailResponseDto>
+
+    /**
+     * 발주서 검색 타입 토글 조회
+     */
+    suspend fun getPurchaseOrderSearchTypeToggle(): Result<List<ToggleResponseDto>>
+
+    /**
+     * 발주서 상태 타입 토글 조회
+     */
+    suspend fun getPurchaseOrderStatusTypeToggle(): Result<List<ToggleResponseDto>>
 }

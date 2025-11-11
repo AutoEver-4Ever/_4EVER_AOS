@@ -38,17 +38,15 @@ interface AlarmRepository {
 
     /**
      * 원격에서 개수 조회 후 로컬 갱신
+     * 전체 개수와 읽지 않은 개수를 모두 조회하여 NotificationCount를 구성합니다.
      */
-    suspend fun refreshNotificationCount(
-        status: NotificationStatusEnum = NotificationStatusEnum.UNKNOWN
-    ): Result<Unit>
+    suspend fun refreshNotificationCount(): Result<Unit>
 
     /**
      * 알림 개수 조회
+     * 전체 개수와 읽지 않은 개수를 모두 조회하여 NotificationCount를 반환합니다.
      */
-    suspend fun getNotificationCount(
-        status: NotificationStatusEnum = NotificationStatusEnum.UNKNOWN
-    ): Result<NotificationCount>
+    suspend fun getNotificationCount(): Result<NotificationCount>
 
     /**
      * 알림 목록 읽음 처리

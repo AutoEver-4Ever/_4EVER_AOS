@@ -11,6 +11,9 @@ import com.autoever.everp.data.datasource.remote.http.service.NotificationMarkRe
 import com.autoever.everp.data.datasource.remote.http.service.NotificationReadResponseDto
 import com.autoever.everp.domain.model.notification.NotificationSourceEnum
 import com.autoever.everp.domain.model.notification.NotificationStatusEnum
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -28,8 +31,8 @@ class AlarmHttpRemoteDataSourceImpl @Inject constructor(
         source: NotificationSourceEnum,
         page: Int,
         size: Int,
-    ): Result<PageResponse<NotificationListItemDto>> {
-        return try {
+    ): Result<PageResponse<NotificationListItemDto>> = withContext(Dispatchers.IO) {
+        try {
             val response = alarmApi.getNotificationList(
                 sortBy = sortBy.ifBlank { null },
                 order = order.ifBlank { null },
@@ -52,8 +55,8 @@ class AlarmHttpRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getNotificationCount(
         status: NotificationStatusEnum,
-    ): Result<NotificationCountResponseDto> {
-        return try {
+    ): Result<NotificationCountResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val response = alarmApi.getNotificationCount(
                 status = status.toApiString(),
             )
@@ -72,8 +75,8 @@ class AlarmHttpRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun markNotificationsAsRead(
         notificationIds: List<String>,
-    ): Result<NotificationReadResponseDto> {
-        return try {
+    ): Result<NotificationReadResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val request = NotificationMarkReadRequestDto(notificationIds = notificationIds)
             val response = alarmApi.markNotificationsAsRead(
                 request,
@@ -91,8 +94,10 @@ class AlarmHttpRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun markAllNotificationsAsRead(): Result<NotificationReadResponseDto> {
-        return try {
+    override suspend fun markAllNotificationsAsRead(
+
+    ): Result<NotificationReadResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val response = alarmApi.markAllNotificationsAsRead()
             if (response.success && response.data != null) {
                 Result.success(response.data)
@@ -109,8 +114,8 @@ class AlarmHttpRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun markNotificationAsRead(
         notificationId: String,
-    ): Result<Unit> {
-        return try {
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
             val response = alarmApi.markNotificationAsRead(notificationId = notificationId)
             if (response.success) {
                 Result.success(Unit)
@@ -129,8 +134,8 @@ class AlarmHttpRemoteDataSourceImpl @Inject constructor(
         token: String,
         deviceId: String,
         deviceType: String,
-    ): Result<Unit> {
-        return try {
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
             val request = FcmTokenRegisterRequestDto(
                 token = token,
                 deviceId = deviceId,
@@ -138,6 +143,7 @@ class AlarmHttpRemoteDataSourceImpl @Inject constructor(
             )
             val response = alarmTokenApi.registerFcmToken(request)
             if (response.success) {
+                Timber.d("FCM 토큰 등록 성공: ${response.data}")
                 Result.success(Unit)
             } else {
                 Result.failure(

@@ -13,6 +13,7 @@ import com.autoever.everp.auth.flow.AuthFlowMemory
 import com.autoever.everp.auth.repository.AuthRepository
 import com.autoever.everp.auth.session.SessionManager
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * OAuth2 리다이렉트를 수신하는 투명 액티비티.
@@ -37,7 +38,7 @@ class RedirectReceiverActivity : ComponentActivity() {
         val expectedState = AuthFlowMemory.state
 
         if (config == null || pkce == null || expectedState.isNullOrEmpty()) {
-            Log.e(TAG, "[ERROR] 인가 플로우 컨텍스트가 없어 토큰 교환을 진행할 수 없습니다.")
+            Timber.tag(TAG).e("[ERROR] 인가 플로우 컨텍스트가 없어 토큰 교환을 진행할 수 없습니다.")
             finishToMain()
             return
         }
@@ -53,7 +54,7 @@ class RedirectReceiverActivity : ComponentActivity() {
         val code = data.getQueryParameter("code")
         val state = data.getQueryParameter("state")
         if (code.isNullOrEmpty() || state.isNullOrEmpty() || state != expectedState) {
-            Log.e(TAG, "[ERROR] 리다이렉트 파라미터 검증 실패 (code/state)")
+            Timber.tag(TAG).e("[ERROR] 리다이렉트 파라미터 검증 실패 (code/state)")
             finishToMain()
             return
         }
@@ -66,9 +67,9 @@ class RedirectReceiverActivity : ComponentActivity() {
                     config = config,
                 )
                 sessionManager.setAuthenticated(token.accessToken)
-                Log.i(TAG, "[INFO] 토큰 교환 및 세션 반영 성공")
+                Timber.tag(TAG).i("[INFO] 토큰 교환 및 세션 반영 성공")
             } catch (e: Exception) {
-                Log.e(TAG, "[ERROR] 토큰 교환 처리 실패: ${e.message}")
+                Timber.tag(TAG).e("[ERROR] 토큰 교환 처리 실패: ${e.message}")
             } finally {
                 AuthFlowMemory.clear()
                 finishToMain()

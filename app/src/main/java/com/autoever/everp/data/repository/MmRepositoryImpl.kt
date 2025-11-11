@@ -11,7 +11,9 @@ import com.autoever.everp.domain.model.purchase.PurchaseOrderListItem
 import com.autoever.everp.domain.model.purchase.PurchaseOrderListParams
 import com.autoever.everp.domain.model.supplier.SupplierDetail
 import com.autoever.everp.domain.repository.MmRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -55,16 +57,16 @@ class MmRepositoryImpl @Inject constructor(
 
     override suspend fun refreshPurchaseOrderList(
         params: PurchaseOrderListParams,
-    ): Result<Unit> {
-        return getPurchaseOrderList(params).map { page ->
+    ): Result<Unit> = withContext(Dispatchers.Default) {
+        getPurchaseOrderList(params).map { page ->
             mmLocalDataSource.setPurchaseOrderList(page)
         }
     }
 
     override suspend fun getPurchaseOrderList(
         params: PurchaseOrderListParams,
-    ): Result<PageResponse<PurchaseOrderListItem>> {
-        return mmRemoteDataSource.getPurchaseOrderList(
+    ): Result<PageResponse<PurchaseOrderListItem>> = withContext(Dispatchers.Default) {
+        mmRemoteDataSource.getPurchaseOrderList(
             statusCode = params.statusCode,
             type = params.type,
             keyword = params.keyword,

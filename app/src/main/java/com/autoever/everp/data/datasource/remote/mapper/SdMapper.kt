@@ -13,6 +13,7 @@ import com.autoever.everp.domain.model.quotation.QuotationDetail
 import com.autoever.everp.domain.model.quotation.QuotationListItem
 import com.autoever.everp.domain.model.sale.SalesOrderDetail
 import com.autoever.everp.domain.model.sale.SalesOrderListItem
+import java.time.LocalDate
 
 /**
  * SD(영업 관리) DTO to Domain Model Mapper
@@ -32,11 +33,11 @@ object SdMapper {
         )
 
         return QuotationListItem(
-            id = dto.quotationId.toString(),
+            id = dto.quotationId,
             number = dto.quotationNumber,
             customer = customer,
             status = dto.statusCode,
-            dueDate = dto.dueDate,
+            dueDate = parseLocalDateSafely(dto.dueDate),
             product = product,
         )
     }
@@ -53,8 +54,8 @@ object SdMapper {
                 name = it.itemName,
                 quantity = it.quantity,
                 uomName = it.uomName,
-                unitPrice = it.unitPrice,
-                totalPrice = it.totalPrice,
+                unitPrice = it.unitPrice.toLong(),
+                totalPrice = it.totalPrice.toLong(),
             )
         }
 
@@ -64,7 +65,7 @@ object SdMapper {
             issueDate = dto.quotationDate,
             dueDate = dto.dueDate,
             status = dto.statusCode,
-            totalAmount = dto.totalAmount,
+            totalAmount = dto.totalAmount.toLong(),
             customer = customer,
             items = items,
         )
@@ -101,7 +102,7 @@ object SdMapper {
             managerPhone = dto.manager.managerPhone,
             managerEmail = dto.manager.managerEmail,
             totalOrders = dto.totalOrders,
-            totalTransactionAmount = dto.totalTransactionAmount,
+            totalTransactionAmount = dto.totalTransactionAmount.toLong(),
             note = dto.note,
         )
     }
@@ -117,7 +118,7 @@ object SdMapper {
             managerEmail = dto.customerManager.managerEmail,
             orderDate = dto.orderDate,
             dueDate = dto.dueDate,
-            totalAmount = dto.totalAmount,
+            totalAmount = dto.totalAmount.toLong(),
             statusCode = dto.statusCode,
         )
     }
@@ -129,7 +130,7 @@ object SdMapper {
             orderDate = dto.order.orderDate,
             dueDate = dto.order.dueDate,
             statusCode = dto.order.statusCode,
-            totalAmount = dto.order.totalAmount,
+            totalAmount = dto.order.totalAmount.toLong(),
             customerId = dto.customer.customerId,
             customerName = dto.customer.customerName,
             baseAddress = dto.customer.baseAddress,
@@ -142,6 +143,7 @@ object SdMapper {
                     itemId = it.itemId,
                     itemName = it.itemName,
                     quantity = it.quantity,
+                    uomName = it.uomName,
                     unitPrice = it.unitPrice,
                     totalPrice = it.totalPrice,
                 )
@@ -152,6 +154,19 @@ object SdMapper {
 
     fun salesOrderListToDomainList(dtoList: List<SalesOrderListItemDto>): List<SalesOrderListItem> {
         return dtoList.map { salesOrderListToDomain(it) }
+    }
+
+    // ========== 안전한 날짜 파싱 ==========
+    private fun parseLocalDateSafely(dateString: String?): LocalDate? {
+        return try {
+            if (dateString.isNullOrBlank() || dateString == "-") {
+                null
+            } else {
+                LocalDate.parse(dateString)
+            }
+        } catch (e: Exception) {
+            null
+        }
     }
 }
 
