@@ -50,8 +50,8 @@ interface FcmRemoteDataSource {
         request: InvoiceUpdateRequestDto,
     ): Result<Unit>
 
-//    suspend fun completeReceivable(
-//        invoiceId: String,
-//    ): Result<Unit>
+    suspend fun completeReceivable(
+        invoiceId: String,
+    ): Result<Unit>
 }
 

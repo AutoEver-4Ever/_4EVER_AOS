@@ -165,18 +165,18 @@ class FcmHttpRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-//    override suspend fun completeReceivable(invoiceId: String): Result<Unit> {
-//        return try {
-//            val response = fcmApi.completeReceivable(invoiceId)
-//            if (response.success) {
-//                Result.success(Unit)
-//            } else {
-//                Result.failure(Exception(response.message ?: "수취 완료 실패"))
-//            }
-//        } catch (e: Exception) {
-//            Timber.e(e, "수취 완료 실패")
-//            Result.failure(e)
-//        }
-//    }
+    override suspend fun completeReceivable(invoiceId: String): Result<Unit> {
+        return try {
+            val response = fcmApi.completeReceivable(invoiceId)
+            if (response.success) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message ?: "수취 완료 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "수취 완료 실패")
+            Result.failure(e)
+        }
+    }
 }
 

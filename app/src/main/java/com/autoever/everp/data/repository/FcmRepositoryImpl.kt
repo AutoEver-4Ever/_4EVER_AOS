@@ -135,12 +135,12 @@ class FcmRepositoryImpl @Inject constructor(
             }
     }
 
-//    override suspend fun completeReceivable(invoiceId: String): Result<Unit> {
-//        return fcmFinanceRemoteDataSource.completeReceivable(invoiceId)
-//            .onSuccess {
-//                // 완료 성공 시 로컬 캐시 갱신
-//                refreshArInvoiceDetail(invoiceId)
-//            }
-//    }
+    override suspend fun completeReceivable(invoiceId: String): Result<Unit> {
+        return fcmFinanceRemoteDataSource.completeReceivable(invoiceId)
+            .onSuccess {
+                // 완료 성공 시 로컬 캐시 갱신
+                refreshArInvoiceDetail(invoiceId)
+            }
+    }
 }
 

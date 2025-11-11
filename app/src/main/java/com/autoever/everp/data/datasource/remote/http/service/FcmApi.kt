@@ -81,10 +81,10 @@ interface FcmApi {
 //        @Body request: InvoiceUpdateRequestDto,
     ): ApiResponse<Any>
 
-//    @POST("$BASE_URL/invoice/ar/{invoiceId}/receivable/complete")
-//    suspend fun completeReceivable(
-//        @Path("invoiceId") invoiceId: String,
-//    ): ApiResponse<Any>
+    @POST("$BASE_URL/invoice/ar/{invoiceId}/receivable/complete")
+    suspend fun completeReceivable(
+        @Path("invoiceId") invoiceId: String,
+    ): ApiResponse<Any>
 
     companion object {
         private const val BASE_URL = "business/fcm"
