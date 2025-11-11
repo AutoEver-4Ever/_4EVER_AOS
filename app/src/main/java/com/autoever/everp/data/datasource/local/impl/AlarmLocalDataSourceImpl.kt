@@ -15,10 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class AlarmLocalDataSourceImpl @Inject constructor() : AlarmLocalDataSource {
     private val notificationsFlow = MutableStateFlow(
-        value = PageResponse<Notification>(
-            content = emptyList(),
-            page = PageDto(0, 0, 0, 0, false)
-        ),
+        value = PageResponse.empty<Notification>()
     )
 
     private val countFlow = MutableStateFlow(

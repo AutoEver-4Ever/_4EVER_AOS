@@ -20,19 +20,13 @@ class FcmLocalDataSourceImpl @Inject constructor() : FcmLocalDataSource {
 
     // AP 인보이스 캐시
     private val apInvoiceListFlow = MutableStateFlow(
-        PageResponse<InvoiceListItem>(
-            content = emptyList(),
-            page = PageDto(0, 0, 0, 0, false),
-        ),
+        PageResponse.empty<InvoiceListItem>(),
     )
     private val apInvoiceDetailsFlow = MutableStateFlow<Map<String, InvoiceDetail>>(emptyMap())
 
     // AR 인보이스 캐시
     private val arInvoiceListFlow = MutableStateFlow(
-        PageResponse<InvoiceListItem>(
-            content = emptyList(),
-            page = PageDto(0, 0, 0, 0, false),
-        ),
+        PageResponse.empty<InvoiceListItem>(),
     )
     private val arInvoiceDetailsFlow = MutableStateFlow<Map<String, InvoiceDetail>>(emptyMap())
 
@@ -72,9 +66,9 @@ class FcmLocalDataSourceImpl @Inject constructor() : FcmLocalDataSource {
 
     // ========== 캐시 관리 ==========
     override suspend fun clearAll() {
-        apInvoiceListFlow.value = PageResponse(emptyList(), PageDto(0, 0, 0, 0, false))
+        apInvoiceListFlow.value = PageResponse.empty()
         apInvoiceDetailsFlow.value = emptyMap()
-        arInvoiceListFlow.value = PageResponse(emptyList(), PageDto(0, 0, 0, 0, false))
+        arInvoiceListFlow.value = PageResponse.empty()
         arInvoiceDetailsFlow.value = emptyMap()
     }
 }

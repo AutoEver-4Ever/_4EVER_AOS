@@ -3,6 +3,8 @@ package com.autoever.everp.data.datasource.remote.http.impl
 import com.autoever.everp.data.datasource.remote.UserRemoteDataSource
 import com.autoever.everp.data.datasource.remote.http.service.UserApi
 import com.autoever.everp.data.datasource.remote.http.service.UserInfoResponseDto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -13,8 +15,10 @@ class UserHttpRemoteDataSourceImpl @Inject constructor(
     private val userApi: UserApi,
 ) : UserRemoteDataSource {
 
-    override suspend fun getUserInfo(): Result<UserInfoResponseDto> {
-        return try {
+    override suspend fun getUserInfo(
+
+    ): Result<UserInfoResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val response = userApi.getUserInfo()
             if (response.success && response.data != null) {
                 Result.success(response.data)

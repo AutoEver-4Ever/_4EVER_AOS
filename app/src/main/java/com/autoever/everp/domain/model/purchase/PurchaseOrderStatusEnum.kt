@@ -7,8 +7,8 @@ enum class PurchaseOrderStatusEnum {
     APPROVAL, // 승인
     PENDING,  // 대기
     REJECTED, // 반려
-    DELIVERING, // 배송중
-    DELIVERED,  // 배송완료
+    DELIVERING, // 배송중 -> 사용 안 함
+    DELIVERED,  // 배송완료 -> 사용 안 함
     ;
 
     /**

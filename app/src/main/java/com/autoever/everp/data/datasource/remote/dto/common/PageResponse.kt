@@ -8,11 +8,24 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class PageResponse<T>(
-    @SerialName("items")
+    @SerialName("content")
     val content: List<T>,
     @SerialName("page")
     val page: PageDto,
-)
+) {
+    companion object {
+        fun <T> empty(): PageResponse<T> = PageResponse(
+            content = emptyList(),
+            page = PageDto(
+                number = 0,
+                size = 0,
+                totalElements = 0,
+                totalPages = 0,
+                hasNext = false,
+            ),
+        )
+    }
+}
 
 @Serializable
 data class PageDto(

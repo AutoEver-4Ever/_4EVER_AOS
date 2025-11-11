@@ -110,14 +110,14 @@ interface SdApi {
 @Serializable
 data class QuotationListItemDto(
     @SerialName("quotationId")
-    val quotationId: Long,
+    val quotationId: String,
     @SerialName("quotationNumber")
     val quotationNumber: String,
     @SerialName("customerName")
     val customerName: String,
-    @Serializable(with = LocalDateSerializer::class)
+//    @Serializable(with = LocalDateSerializer::class)
     @SerialName("dueDate")
-    val dueDate: LocalDate,
+    val dueDate: String? = null,
     @SerialName("statusCode")
     val statusCode: QuotationStatusEnum = QuotationStatusEnum.UNKNOWN,
     @SerialName("productId")
@@ -149,7 +149,7 @@ data class QuotationDetailResponseDto(
     @SerialName("items")
     val items: List<QuotationItemDto>,
     @SerialName("totalAmount")
-    val totalAmount: Long,
+    val totalAmount: Double,
 )
 
 @Serializable
@@ -163,16 +163,16 @@ data class QuotationItemDto(
     @SerialName("uomName")
     val uomName: String,
     @SerialName("unitPrice")
-    val unitPrice: Long,
-    @SerialName("totalPrice")
-    val totalPrice: Long,
+    val unitPrice: Double,
+    @SerialName("amount")
+    val totalPrice: Double,
 )
 
 @Serializable
 data class QuotationCreateRequestDto(
     @Serializable(with = LocalDateSerializer::class)
     @SerialName("dueDate")
-    val dueDate: LocalDate,
+    val dueDate: LocalDate? = null,
     @SerialName("items")
     val items: List<QuotationCreateRequestItemDto>,
     @SerialName("note")
@@ -228,7 +228,7 @@ data class CustomerDetailResponseDto(
     val totalOrders: Long,
     // 총 거래 금액
     @SerialName("totalTransactionAmount")
-    val totalTransactionAmount: Long,
+    val totalTransactionAmount: Double,
     @SerialName("note")
     val note: String? = null,
 )
@@ -286,7 +286,7 @@ data class SalesOrderListItemDto(
     @SerialName("dueDate")
     val dueDate: LocalDate,
     @SerialName("totalAmount")
-    val totalAmount: Long,
+    val totalAmount: Double,
     @SerialName("statusCode")
     val statusCode: SalesOrderStatusEnum,
 )
@@ -309,9 +309,9 @@ data class SalesOrderCustomerDto(
     val customerId: String,
     @SerialName("customerName")
     val customerName: String,
-    @SerialName("baseAddress")
+    @SerialName("customerBaseAddress")
     val baseAddress: String,
-    @SerialName("detailAddress")
+    @SerialName("customerDetailAddress")
     val detailAddress: String,
     @SerialName("manager")
     val manager: CustomerManagerDto,
@@ -332,7 +332,7 @@ data class SalesOrderDetailDto(
     @SerialName("statusCode")
     val statusCode: SalesOrderStatusEnum,
     @SerialName("totalAmount")
-    val totalAmount: Long,
+    val totalAmount: Double,
 )
 
 @Serializable
@@ -343,9 +343,11 @@ data class SalesOrderItemDto(
     val itemName: String,
     @SerialName("quantity")
     val quantity: Int,
+    @SerialName("uonName")
+    val uomName: String,
     @SerialName("unitPrice")
     val unitPrice: Long,
-    @SerialName("totalPrice")
+    @SerialName("amount")
     val totalPrice: Long,
 )
 

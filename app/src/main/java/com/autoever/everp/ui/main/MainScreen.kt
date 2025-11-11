@@ -31,9 +31,14 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import kotlinx.coroutines.launch
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.autoever.everp.ui.home.HomeViewModel
 import com.autoever.everp.auth.session.AuthState
+import com.autoever.everp.domain.model.user.UserTypeEnum
+import com.autoever.everp.ui.customer.CustomerApp
+import com.autoever.everp.ui.login.LoginScreen
 import com.autoever.everp.ui.navigation.Routes
+import com.autoever.everp.ui.supplier.SupplierApp
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.collect
 
@@ -49,11 +54,13 @@ data class BottomNavItem(val route: String, val label: String)
 
 @Composable
 fun MainScreen(
-    appNavController: NavController,
+    appNavController: NavHostController,
 ) {
     // Auth guard: if unauthenticated, navigate to LOGIN
     val homeVm: HomeViewModel = hiltViewModel()
     val authStateFlow = homeVm.authState
+    val userInfo by homeVm.user.collectAsStateWithLifecycle()
+
     LaunchedEffect(Unit) {
         authStateFlow
             .onEach { st ->
@@ -66,47 +73,62 @@ fun MainScreen(
             }
             .collect()
     }
-    val tabs = listOf(
-        BottomNavItem(TabRoutes.HOME, "홈"),
-        BottomNavItem(TabRoutes.ORDERS, "주문서"),
-        BottomNavItem(TabRoutes.QUOTES, "견적서"),
-        BottomNavItem(TabRoutes.VOUCHERS, "전표"),
-        BottomNavItem(TabRoutes.PROFILE, "프로필"),
-    )
-    val tabNavController: NavHostController = rememberNavController()
-    var selectedRoute by rememberSaveable { mutableStateOf(tabs.first().route) }
 
-    Scaffold(
-        bottomBar = {
-            NavigationBar {
-                tabs.forEach { item ->
-                    val selected = selectedRoute == item.route
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = {
-                            selectedRoute = item.route
-                            if (tabNavController.currentDestination?.route != item.route) {
-                                tabNavController.navigate(item.route) {
-                                    popUpTo(tabNavController.graph.startDestinationId) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
+
+    when (UserTypeEnum.fromStringOrDefault(userInfo?.userType ?: "")) {
+        UserTypeEnum.CUSTOMER -> CustomerApp(appNavController)
+        UserTypeEnum.SUPPLIER -> SupplierApp(appNavController)
+        else -> CustomerApp(appNavController) // TODO 임시로 고객사 앱으로 연결 나중에는 연결 안되게 처리
+    }
+    /*
+    // TODO
+        val tabs = listOf(
+            BottomNavItem(TabRoutes.HOME, "홈"),
+            BottomNavItem(TabRoutes.ORDERS, "주문서"),
+            BottomNavItem(TabRoutes.QUOTES, "견적서"),
+            BottomNavItem(TabRoutes.VOUCHERS, "전표"),
+            BottomNavItem(TabRoutes.PROFILE, "프로필"),
+        )
+        val tabNavController: NavHostController = rememberNavController()
+        var selectedRoute by rememberSaveable { mutableStateOf(tabs.first().route) }
+
+        Scaffold(
+            bottomBar = {
+                NavigationBar {
+                    tabs.forEach { item ->
+                        val selected = selectedRoute == item.route
+                        NavigationBarItem(
+                            selected = selected,
+                            onClick = {
+                                selectedRoute = item.route
+                                if (tabNavController.currentDestination?.route != item.route) {
+                                    tabNavController.navigate(item.route) {
+                                        popUpTo(tabNavController.graph.startDestinationId) { saveState = true }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
                                 }
-                            }
-                        },
-                        icon = { Text(item.label.take(1)) },
-                        label = { Text(item.label) },
-                        alwaysShowLabel = true,
-                    )
+                            },
+                            icon = { Text(item.label.take(1)) },
+                            label = { Text(item.label) },
+                            alwaysShowLabel = true,
+                        )
+                    }
                 }
             }
+        ) { padding ->
+            TabNavHost(navController = tabNavController, appNavController = appNavController, modifier = Modifier.padding(padding))
         }
-    ) { padding ->
-        TabNavHost(navController = tabNavController, appNavController = appNavController, modifier = Modifier.padding(padding))
-    }
+    */
+
 }
 
 @Composable
-private fun TabNavHost(navController: NavHostController, appNavController: NavController, modifier: Modifier = Modifier) {
+private fun TabNavHost(
+    navController: NavHostController,
+    appNavController: NavController,
+    modifier: Modifier = Modifier
+) {
     NavHost(
         navController = navController,
         startDestination = TabRoutes.HOME,
@@ -121,7 +143,8 @@ private fun TabNavHost(navController: NavHostController, appNavController: NavCo
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Composable private fun OrdersRootScreen() {
+@Composable
+private fun OrdersRootScreen() {
     val tabs = listOf("전체", "진행중", "완료")
     TopTabsPager(tabs = tabs) { page ->
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -131,7 +154,8 @@ private fun TabNavHost(navController: NavHostController, appNavController: NavCo
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Composable private fun QuotesRootScreen() {
+@Composable
+private fun QuotesRootScreen() {
     val tabs = listOf("전체", "요청", "승인")
     TopTabsPager(tabs = tabs) { page ->
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -141,7 +165,8 @@ private fun TabNavHost(navController: NavHostController, appNavController: NavCo
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-@Composable private fun VouchersRootScreen() {
+@Composable
+private fun VouchersRootScreen() {
     val tabs = listOf("매입", "매출", "일반분개")
     TopTabsPager(tabs = tabs) { page ->
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -150,11 +175,13 @@ private fun TabNavHost(navController: NavHostController, appNavController: NavCo
     }
 }
 
-@Composable private fun ProfileRootScreen() {
+@Composable
+private fun ProfileRootScreen() {
     com.autoever.everp.ui.profile.ProfileScreen()
 }
 
-@Composable private fun HomeRootScreen(appNavController: NavController) {
+@Composable
+private fun HomeRootScreen(appNavController: NavController) {
     com.autoever.everp.ui.home.HomeScreen(navController = appNavController)
 }
 

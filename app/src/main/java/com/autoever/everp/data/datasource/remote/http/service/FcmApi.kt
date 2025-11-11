@@ -81,10 +81,10 @@ interface FcmApi {
 //        @Body request: InvoiceUpdateRequestDto,
     ): ApiResponse<Any>
 
-//    @POST("$BASE_URL/invoice/ar/{invoiceId}/receivable/complete")
-//    suspend fun completeReceivable(
-//        @Path("invoiceId") invoiceId: String,
-//    ): ApiResponse<Any>
+    @POST("$BASE_URL/invoice/ar/{invoiceId}/receivable/complete")
+    suspend fun completeReceivable(
+        @Path("invoiceId") invoiceId: String,
+    ): ApiResponse<Any>
 
     companion object {
         private const val BASE_URL = "business/fcm"
@@ -100,14 +100,14 @@ data class InvoiceListItemDto(
     @SerialName("connection")
     val connection: InvoiceConnectionDto,
     @SerialName("totalAmount")
-    val totalAmount: Long,
+    val totalAmount: Double,
     @SerialName("issueDate")
     @Serializable(with = LocalDateSerializer::class)
     val issueDate: LocalDate,
     @SerialName("dueDate")
     @Serializable(with = LocalDateSerializer::class)
     val dueDate: LocalDate,
-    @SerialName("status")
+    @SerialName("statusCode")
     val statusCode: InvoiceStatusEnum, // PENDING, PAID, UNPAID
     @SerialName("reference")
     val reference: InvoiceReferenceDto,
@@ -152,7 +152,7 @@ data class InvoiceDetailResponseDto(
     @SerialName("referenceNumber")
     val referenceNumber: String,
     @SerialName("totalAmount")
-    val totalAmount: Long,
+    val totalAmount: Double,
     @SerialName("note")
     val note: String,
     @SerialName("items")
@@ -170,9 +170,9 @@ data class InvoiceDetailItemDto(
     @SerialName("unitOfMaterialName")
     val unitOfMaterialName: String,
     @SerialName("unitPrice")
-    val unitPrice: Long,
+    val unitPrice: Double,
     @SerialName("totalPrice")
-    val totalPrice: Long,
+    val totalPrice: Double,
 )
 
 // TODO 전표 업데이트시 필요한지 확인 필요 - 기본값이 있는 경우 값이 전달되지 않음

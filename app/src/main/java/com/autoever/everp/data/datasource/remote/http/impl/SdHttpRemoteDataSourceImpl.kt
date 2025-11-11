@@ -4,6 +4,7 @@ import com.autoever.everp.data.datasource.remote.SdRemoteDataSource
 import com.autoever.everp.data.datasource.remote.dto.common.PageResponse
 import com.autoever.everp.data.datasource.remote.http.service.QuotationListItemDto
 import com.autoever.everp.data.datasource.remote.http.service.CustomerDetailResponseDto
+import com.autoever.everp.data.datasource.remote.http.service.CustomerUpdateRequestDto
 import com.autoever.everp.data.datasource.remote.http.service.QuotationCreateRequestDto
 import com.autoever.everp.data.datasource.remote.http.service.QuotationDetailResponseDto
 import com.autoever.everp.data.datasource.remote.http.service.SalesOrderDetailResponseDto
@@ -13,6 +14,8 @@ import com.autoever.everp.domain.model.quotation.QuotationSearchTypeEnum
 import com.autoever.everp.domain.model.quotation.QuotationStatusEnum
 import com.autoever.everp.domain.model.sale.SalesOrderSearchTypeEnum
 import com.autoever.everp.domain.model.sale.SalesOrderStatusEnum
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
@@ -34,8 +37,8 @@ class SdHttpRemoteDataSourceImpl @Inject constructor(
         sort: String, // Busintess/sd Quotation Enity의 sort와 동일
         page: Int,
         size: Int,
-    ): Result<PageResponse<QuotationListItemDto>> {
-        return try {
+    ): Result<PageResponse<QuotationListItemDto>> = withContext(Dispatchers.IO) {
+        try {
             val response = sdApi.getQuotationList(
                 startDate = startDate,
                 endDate = endDate,
@@ -59,8 +62,8 @@ class SdHttpRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getQuotationDetail(
         quotationId: String,
-    ): Result<QuotationDetailResponseDto> {
-        return try {
+    ): Result<QuotationDetailResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val response = sdApi.getQuotationDetail(quotationId = quotationId)
             if (response.success && response.data != null) {
                 Result.success(response.data)
@@ -75,8 +78,8 @@ class SdHttpRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun createQuotation(
         request: QuotationCreateRequestDto,
-    ): Result<String> {
-        return try {
+    ): Result<String> = withContext(Dispatchers.IO) {
+        try {
             val response = sdApi.createQuotation(request = request)
             if (response.success && response.data != null) {
                 Result.success(response.data.quotationId)
@@ -92,8 +95,8 @@ class SdHttpRemoteDataSourceImpl @Inject constructor(
     // ========== 고객사 ==========
     override suspend fun getCustomerDetail(
         customerId: String,
-    ): Result<CustomerDetailResponseDto> {
-        return try {
+    ): Result<CustomerDetailResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val response = sdApi.getCustomerDetail(customerId = customerId)
             if (response.success && response.data != null) {
                 Result.success(response.data)
@@ -102,6 +105,23 @@ class SdHttpRemoteDataSourceImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Timber.e(e, "고객사 상세 조회 실패")
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateCustomer(
+        customerId: String,
+        request: CustomerUpdateRequestDto,
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val response = sdApi.updateCustomer(customerId = customerId, request = request)
+            if (response.success) {
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message ?: "고객사 수정 실패"))
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "고객사 수정 실패")
             Result.failure(e)
         }
     }
@@ -115,8 +135,8 @@ class SdHttpRemoteDataSourceImpl @Inject constructor(
         status: SalesOrderStatusEnum,
         page: Int,
         size: Int,
-    ): Result<PageResponse<SalesOrderListItemDto>> {
-        return try {
+    ): Result<PageResponse<SalesOrderListItemDto>> = withContext(Dispatchers.IO) {
+        try {
             val response = sdApi.getSalesOrderList(
                 startDate = startDate,
                 endDate = endDate,
@@ -139,8 +159,8 @@ class SdHttpRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getSalesOrderDetail(
         salesOrderId: String,
-    ): Result<SalesOrderDetailResponseDto> {
-        return try {
+    ): Result<SalesOrderDetailResponseDto> = withContext(Dispatchers.IO) {
+        try {
             val response = sdApi.getSalesOrderDetail(salesOrderId = salesOrderId)
             if (response.success && response.data != null) {
                 Result.success(response.data)

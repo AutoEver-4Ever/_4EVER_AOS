@@ -13,7 +13,9 @@ import com.autoever.everp.domain.model.sale.SalesOrderDetail
 import com.autoever.everp.domain.model.sale.SalesOrderListItem
 import com.autoever.everp.domain.model.sale.SalesOrderListParams
 import com.autoever.everp.domain.repository.SdRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -29,16 +31,18 @@ class SdRepositoryImpl @Inject constructor(
     override fun observeQuotationList(): Flow<PageResponse<QuotationListItem>> =
         sdLocalDataSource.observeQuotationList()
 
-    override suspend fun refreshQuotationList(params: QuotationListParams): Result<Unit> {
-        return getQuotationList(params).map { page ->
+    override suspend fun refreshQuotationList(
+        params: QuotationListParams,
+    ): Result<Unit> = withContext(Dispatchers.Default) {
+        getQuotationList(params).map { page ->
             sdLocalDataSource.setQuotationList(page)
         }
     }
 
     override suspend fun getQuotationList(
         params: QuotationListParams,
-    ): Result<PageResponse<QuotationListItem>> {
-        return sdRemoteDataSource.getQuotationList(
+    ): Result<PageResponse<QuotationListItem>> = withContext(Dispatchers.Default) {
+        sdRemoteDataSource.getQuotationList(
             startDate = params.startDate,
             endDate = params.endDate,
             status = params.status,
@@ -91,20 +95,33 @@ class SdRepositoryImpl @Inject constructor(
             .map { SdMapper.customerDetailToDomain(it) }
     }
 
+    override suspend fun updateCustomer(
+        customerId: String,
+        request: com.autoever.everp.data.datasource.remote.http.service.CustomerUpdateRequestDto,
+    ): Result<Unit> {
+        return sdRemoteDataSource.updateCustomer(customerId, request)
+            .onSuccess {
+                // 수정 성공 시 로컬 캐시 갱신
+                refreshCustomerDetail(customerId)
+            }
+    }
+
     // ========== 주문서 ==========
     override fun observeSalesOrderList(): Flow<PageResponse<SalesOrderListItem>> =
         sdLocalDataSource.observeSalesOrderList()
 
-    override suspend fun refreshSalesOrderList(params: SalesOrderListParams): Result<Unit> {
-        return getSalesOrderList(params).map { page ->
+    override suspend fun refreshSalesOrderList(
+        params: SalesOrderListParams
+    ): Result<Unit> = withContext(Dispatchers.Default) {
+        getSalesOrderList(params).map { page ->
             sdLocalDataSource.setSalesOrderList(page)
         }
     }
 
     override suspend fun getSalesOrderList(
         params: SalesOrderListParams,
-    ): Result<PageResponse<SalesOrderListItem>> {
-        return sdRemoteDataSource.getSalesOrderList(
+    ): Result<PageResponse<SalesOrderListItem>> = withContext(Dispatchers.Default) {
+        sdRemoteDataSource.getSalesOrderList(
             startDate = params.startDate,
             endDate = params.endDate,
             search = params.searchKeyword,

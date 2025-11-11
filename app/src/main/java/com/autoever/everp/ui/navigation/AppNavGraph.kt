@@ -43,21 +43,20 @@ fun AppNavGraph(
             val homeVm: HomeViewModel = hiltViewModel()
             val stateFlow = homeVm.authState
             LaunchedEffect(Unit) {
-                stateFlow
-                    .onEach { st ->
-                        if (st is AuthState.Authenticated) {
-                            navController.navigate(Routes.HOME) {
-                                popUpTo(Routes.LOGIN) { inclusive = true }
-                                launchSingleTop = true
-                            }
+                stateFlow.onEach { st ->
+                    if (st is AuthState.Authenticated) {
+                        navController.navigate(Routes.HOME) {
+                            popUpTo(Routes.LOGIN) { inclusive = true }
+                            launchSingleTop = true
                         }
                     }
+                }
                     .collect()
             }
             LoginScreen(
                 onLoginClick = {
                     Timber.tag("AuthFlow").i("[INFO] 로그인 버튼 클릭")
-                    AuthCct.start(ctx)
+                    AuthCct.start(ctx) // TODO 1
                 }
             )
         }

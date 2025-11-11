@@ -9,7 +9,9 @@ import com.autoever.everp.domain.model.invoice.InvoiceDetail
 import com.autoever.everp.domain.model.invoice.InvoiceListItem
 import com.autoever.everp.domain.model.invoice.InvoiceListParams
 import com.autoever.everp.domain.repository.FcmRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -25,16 +27,18 @@ class FcmRepositoryImpl @Inject constructor(
     override fun observeApInvoiceList(): Flow<PageResponse<InvoiceListItem>> =
         fcmFinanceLocalDataSource.observeApInvoiceList()
 
-    override suspend fun refreshApInvoiceList(params: InvoiceListParams): Result<Unit> {
-        return getApInvoiceList(params).map { page ->
+    override suspend fun refreshApInvoiceList(
+        params: InvoiceListParams,
+    ): Result<Unit> = withContext(Dispatchers.Default) {
+        getApInvoiceList(params).map { page ->
             fcmFinanceLocalDataSource.setApInvoiceList(page)
         }
     }
 
     override suspend fun getApInvoiceList(
         params: InvoiceListParams,
-    ): Result<PageResponse<InvoiceListItem>> {
-        return fcmFinanceRemoteDataSource.getApInvoiceList(
+    ): Result<PageResponse<InvoiceListItem>> = withContext(Dispatchers.Default) {
+        fcmFinanceRemoteDataSource.getApInvoiceList(
 //            company = params.company,
             startDate = params.startDate,
             endDate = params.endDate,
@@ -81,16 +85,18 @@ class FcmRepositoryImpl @Inject constructor(
     override fun observeArInvoiceList(): Flow<PageResponse<InvoiceListItem>> =
         fcmFinanceLocalDataSource.observeArInvoiceList()
 
-    override suspend fun refreshArInvoiceList(params: InvoiceListParams): Result<Unit> {
-        return getArInvoiceList(params).map { page ->
+    override suspend fun refreshArInvoiceList(
+        params: InvoiceListParams,
+    ): Result<Unit> = withContext(Dispatchers.Default) {
+        getArInvoiceList(params).map { page ->
             fcmFinanceLocalDataSource.setArInvoiceList(page)
         }
     }
 
     override suspend fun getArInvoiceList(
         params: InvoiceListParams,
-    ): Result<PageResponse<InvoiceListItem>> {
-        return fcmFinanceRemoteDataSource.getArInvoiceList(
+    ): Result<PageResponse<InvoiceListItem>> = withContext(Dispatchers.Default) {
+        fcmFinanceRemoteDataSource.getArInvoiceList(
 //            companyName = params.company,
             startDate = params.startDate,
             endDate = params.endDate,
@@ -129,12 +135,12 @@ class FcmRepositoryImpl @Inject constructor(
             }
     }
 
-//    override suspend fun completeReceivable(invoiceId: String): Result<Unit> {
-//        return fcmFinanceRemoteDataSource.completeReceivable(invoiceId)
-//            .onSuccess {
-//                // 완료 성공 시 로컬 캐시 갱신
-//                refreshArInvoiceDetail(invoiceId)
-//            }
-//    }
+    override suspend fun completeReceivable(invoiceId: String): Result<Unit> {
+        return fcmFinanceRemoteDataSource.completeReceivable(invoiceId)
+            .onSuccess {
+                // 완료 성공 시 로컬 캐시 갱신
+                refreshArInvoiceDetail(invoiceId)
+            }
+    }
 }
 

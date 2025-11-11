@@ -33,6 +33,6 @@ interface FcmRepository {
     suspend fun getArInvoiceDetail(invoiceId: String): Result<InvoiceDetail>
 
     suspend fun updateArInvoice(invoiceId: String, request: InvoiceUpdateRequestDto): Result<Unit>
-//    suspend fun completeReceivable(invoiceId: String): Result<Unit>
+    suspend fun completeReceivable(invoiceId: String): Result<Unit>
 }
 

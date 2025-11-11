@@ -1,5 +1,6 @@
 package com.autoever.everp.data.repository
 
+import com.autoever.everp.data.datasource.local.AuthLocalDataSource
 import com.autoever.everp.data.datasource.local.UserLocalDataSource
 import com.autoever.everp.data.datasource.remote.UserRemoteDataSource
 import com.autoever.everp.data.datasource.remote.mapper.UserMapper
@@ -15,6 +16,7 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val userLocalDataSource: UserLocalDataSource,
     private val userRemoteDataSource: UserRemoteDataSource,
+    private val authLocalDataSource: AuthLocalDataSource
 ) : UserRepository {
 
     override fun observeUserInfo(): Flow<UserInfo?> =
@@ -33,5 +35,6 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun logout() {
         userLocalDataSource.clearUserInfo()
+        authLocalDataSource.clearAccessToken()
     }
 }
