@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,6 +25,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import com.autoever.everp.domain.model.invoice.InvoiceStatusEnum
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -48,6 +51,8 @@ fun InvoiceDetailScreen(
 ) {
     val invoiceDetail by viewModel.invoiceDetail.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
+    val completeResult by viewModel.completeResult.collectAsState()
+    val isAp = viewModel.isAp
 
     LaunchedEffect(Unit) {
         viewModel.loadInvoiceDetail()
@@ -285,11 +290,60 @@ fun InvoiceDetailScreen(
                                 }
                             }
                         }
+
+                        // 납부 확인 버튼 (PENDING 상태일 때만 표시)
+                        if (!isAp && detail.status == InvoiceStatusEnum.PENDING) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(
+                                onClick = { viewModel.completeReceivable() },
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                Text("납부 확인")
+                            }
+                        }
                     }
                 }
             }
 
             else -> {}
+        }
+
+        // 결과 모달 다이얼로그
+        completeResult?.let { result ->
+            AlertDialog(
+                onDismissRequest = {
+                    viewModel.clearCompleteResult()
+                    if (result.isSuccess) {
+                        navController.popBackStack()
+                    }
+                },
+                title = {
+                    Text(
+                        if (result.isSuccess) "처리 완료" else "처리 실패",
+                    )
+                },
+                text = {
+                    Text(
+                        if (result.isSuccess) {
+                            "납부 확인이 완료되었습니다."
+                        } else {
+                            result.exceptionOrNull()?.message ?: "처리 중 오류가 발생했습니다."
+                        },
+                    )
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            viewModel.clearCompleteResult()
+                            if (result.isSuccess) {
+                                navController.popBackStack()
+                            }
+                        },
+                    ) {
+                        Text("확인")
+                    }
+                },
+            )
         }
     }
 }

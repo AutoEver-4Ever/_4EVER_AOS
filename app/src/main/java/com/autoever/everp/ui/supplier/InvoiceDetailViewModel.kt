@@ -24,7 +24,7 @@ class InvoiceDetailViewModel @Inject constructor(
         SupplierSubNavigationItem.InvoiceDetailItem.ARG_ID,
     ) ?: ""
 
-    private val isAp: Boolean = savedStateHandle.get<Boolean>(
+    val isAp: Boolean = savedStateHandle.get<Boolean>(
         SupplierSubNavigationItem.InvoiceDetailItem.ARG_IS_AP,
     ) ?: true
 
@@ -33,6 +33,9 @@ class InvoiceDetailViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<UiResult<Unit>>(UiResult.Loading)
     val uiState: StateFlow<UiResult<Unit>> = _uiState.asStateFlow()
+
+    private val _completeResult = MutableStateFlow<Result<Unit>?>(null)
+    val completeResult: StateFlow<Result<Unit>?> = _completeResult.asStateFlow()
 
     init {
         if (invoiceId.isNotEmpty()) {
@@ -62,6 +65,7 @@ class InvoiceDetailViewModel @Inject constructor(
                         _uiState.value = UiResult.Error(e as Exception)
                     }
             } else {
+                // TODO 지금은 전표 없음으로 변경
                 fcmRepository.refreshArInvoiceDetail(invoiceId)
                     .onSuccess {
                         fcmRepository.getArInvoiceDetail(invoiceId)
@@ -80,6 +84,20 @@ class InvoiceDetailViewModel @Inject constructor(
                     }
             }
         }
+    }
+
+    fun completeReceivable() {
+        viewModelScope.launch {
+            _completeResult.value = fcmRepository.completeReceivable(invoiceId)
+                .onSuccess {
+                    // 성공 시 상세 정보 다시 로드
+                    loadInvoiceDetail()
+                }
+        }
+    }
+
+    fun clearCompleteResult() {
+        _completeResult.value = null
     }
 }
 
