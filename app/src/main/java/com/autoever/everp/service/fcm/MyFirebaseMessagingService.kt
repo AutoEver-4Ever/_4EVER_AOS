@@ -9,14 +9,34 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.autoever.everp.R
+import com.autoever.everp.domain.repository.AlarmRepository
+import com.autoever.everp.domain.repository.DeviceInfoRepository
+import com.autoever.everp.domain.repository.PushNotificationRepository
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyFirebaseMessagingService : FirebaseMessagingService() {
+
+    @Inject
+    lateinit var deviceInfoRepository: DeviceInfoRepository
+
+    @Inject
+    lateinit var pushNotificationRepository: PushNotificationRepository
+
+    @Inject
+    lateinit var alarmRepository: AlarmRepository
+
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     /**
      * FCM 토큰이 갱신될 때 호출됩니다.
@@ -24,7 +44,33 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Timber.tag(TAG).i("FCM new token: $token")
-        // TODO: 서버로 토큰 업로드 API 호출
+
+        // 새 토큰을 서버에 등록
+        registerFcmToken(token)
+    }
+
+    /**
+     * FCM 토큰을 서버에 등록합니다.
+     */
+    private fun registerFcmToken(token: String) {
+        serviceScope.launch {
+            try {
+                // Android ID 가져오기
+                val androidId = deviceInfoRepository.getAndroidId()
+                Timber.tag(TAG).d("[INFO] Android ID 획득: $androidId")
+
+                // 서버에 FCM 토큰 등록
+                alarmRepository.registerFcmToken(
+                    token = token,
+                    deviceId = androidId,
+                    deviceType = "ANDROID",
+                )
+                Timber.tag(TAG).i("[INFO] FCM 토큰 서버 등록 완료")
+            } catch (e: Exception) {
+                Timber.tag(TAG).e(e, "[ERROR] FCM 토큰 등록 실패: ${e.message}")
+                // FCM 토큰 등록 실패는 치명적이지 않으므로 로그만 남기고 계속 진행
+            }
+        }
     }
 
     /**
@@ -113,7 +159,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationId = NotificationIdProvider.next()
         try {
             val notificationManager = NotificationManagerCompat.from(this)
-            
+
             // 알림 표시 가능 여부 확인
             if (!notificationManager.areNotificationsEnabled()) {
                 Timber.tag(TAG).w("시스템 설정에서 알림이 비활성화되어 있습니다.")
@@ -121,7 +167,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }
 
             notificationManager.notify(notificationId, notification)
-            
+
             Timber.tag(TAG).i("✅ 알림 표시 완료 (Notification ID: $notificationId)")
             Timber.tag(TAG).d("========================================")
         } catch (e: Exception) {
@@ -167,6 +213,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // 2. 서비스가 종료될 때 스코프를 반드시 취소! -> 메모리 누수 방지
+        serviceScope.cancel()
+    }
+
 }
 
 private object NotificationIdProvider {
