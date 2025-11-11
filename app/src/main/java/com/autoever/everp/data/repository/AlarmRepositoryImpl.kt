@@ -10,6 +10,7 @@ import com.autoever.everp.domain.model.notification.NotificationListParams
 import com.autoever.everp.domain.model.notification.NotificationStatusEnum
 import com.autoever.everp.domain.repository.AlarmRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
@@ -55,19 +56,40 @@ class AlarmRepositoryImpl @Inject constructor(
     override fun observeNotificationCount(): Flow<NotificationCount> =
         alarmLocalDataSource.observeNotificationCount()
 
-    override suspend fun refreshNotificationCount(
-        status: NotificationStatusEnum,
-    ): Result<Unit> {
-        return getNotificationCount(status).map { count ->
+    override suspend fun refreshNotificationCount(): Result<Unit> {
+        return getNotificationCount().map { count ->
             alarmLocalDataSource.setNotificationCount(count)
         }
     }
 
     override suspend fun getNotificationCount(
-        status: NotificationStatusEnum
+
     ): Result<NotificationCount> = withContext(Dispatchers.Default) {
-        alarmRemoteDataSource.getNotificationCount(status = status)
-            .map { NotificationMapper.toDomain(it) }
+        // 1. 두 개의 작업을 'async'로 동시에 시작
+        val totalResultAsync = async {
+            alarmRemoteDataSource.getNotificationCount(status = NotificationStatusEnum.UNKNOWN)
+        }
+        val unreadResultAsync = async {
+            alarmRemoteDataSource.getNotificationCount(status = NotificationStatusEnum.UNREAD)
+        }
+
+        // 2. 두 작업의 결과를 'await'로 수집
+        val totalResult = totalResultAsync.await()
+        val unreadResult = unreadResultAsync.await()
+
+        // 3. 두 Result를 'runCatching'으로 안전하게 조합
+        runCatching {
+            val totalDto = totalResult.getOrThrow() // totalResult가 Failure라면 여기서 예외가 발생
+
+            val unreadDto = unreadResult.getOrThrow() // unreadResult가 Failure라면 여기서 예외가 발생
+
+            // 두 DTO를 성공적으로 가져온 경우에만 실행됨
+            NotificationCount(
+                totalCount = totalDto.count,
+                unreadCount = unreadDto.count,
+                readCount = totalDto.count - unreadDto.count,
+            )
+        } // runCatching 블록이 발생한 예외를 잡아 Result.failure로 반환해줌
     }
 
     override suspend fun markNotificationsAsRead(

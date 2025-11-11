@@ -91,7 +91,7 @@ class SupplierHomeViewModel @Inject constructor(
 
     private fun refreshNotificationCount() {
         viewModelScope.launch {
-            alarmRepository.refreshNotificationCount(NotificationStatusEnum.UNREAD)
+            alarmRepository.refreshNotificationCount()
                 .onFailure { e ->
                     Timber.e(e, "알림 개수 갱신 실패")
                 }
