@@ -35,6 +35,7 @@ import com.autoever.everp.ui.common.RecentActivityCard
 import com.autoever.everp.ui.common.components.QuickActionCard
 import com.autoever.everp.ui.common.components.QuickActionIcons
 import com.autoever.everp.ui.common.navigateToWorkflowDetail
+import timber.log.Timber
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +57,8 @@ fun CustomerHomeScreen(
                     Box(
                         modifier = Modifier
                             .padding(end = 8.dp)
-                            .size(48.dp),
+                            .size(48.dp)
+                            .padding(top = 16.dp, end = 16.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         IconButton(
@@ -75,8 +77,7 @@ fun CustomerHomeScreen(
                             Surface(
                                 modifier = Modifier
                                     .size(8.dp)
-                                    .align(Alignment.TopEnd)
-                                    .padding(top = 8.dp, end = 8.dp),
+                                    .align(Alignment.TopEnd),
                                 shape = CircleShape,
                                 color = Color.Red,
                             ) {

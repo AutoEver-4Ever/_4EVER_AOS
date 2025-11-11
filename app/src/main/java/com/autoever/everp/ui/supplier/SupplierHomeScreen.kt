@@ -63,7 +63,8 @@ fun SupplierHomeScreen(
                     Box(
                         modifier = Modifier
                             .padding(end = 8.dp)
-                            .size(48.dp),
+                            .size(48.dp)
+                            .padding(top = 16.dp, end = 16.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         IconButton(
@@ -82,8 +83,7 @@ fun SupplierHomeScreen(
                             Surface(
                                 modifier = Modifier
                                     .size(8.dp)
-                                    .align(Alignment.TopEnd)
-                                    .padding(top = 8.dp, end = 8.dp),
+                                    .align(Alignment.TopEnd),
                                 shape = CircleShape,
                                 color = Color.Red,
                             ) {
