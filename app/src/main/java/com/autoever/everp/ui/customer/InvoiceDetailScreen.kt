@@ -37,9 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.autoever.everp.ui.common.components.StatusBadge
 import com.autoever.everp.utils.state.UiResult
-import java.text.NumberFormat
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @Composable
 fun InvoiceDetailScreen(
@@ -261,10 +259,11 @@ fun InvoiceDetailScreen(
                         }
 
                         // 납부 확인 요청 버튼 (UNPAID 상태일 때만 표시)
-                        if (!isAp && detail.status == InvoiceStatusEnum.UNPAID) {
+                        if (detail.status == InvoiceStatusEnum.UNPAID) {
+//                            if (isAp && detail.status == InvoiceStatusEnum.UNPAID) {
                             Spacer(modifier = Modifier.height(16.dp))
                             Button(
-                                onClick = { viewModel.requestReceivable(invoiceId) },
+                                onClick = { viewModel.updateCustomerInvoiceStatus(invoiceId) },
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 Text("납부 확인 요청")
