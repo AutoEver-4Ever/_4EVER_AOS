@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import com.autoever.everp.domain.model.dashboard.DashboardTapEnum
 import com.autoever.everp.ui.common.components.StatusBadge
 import com.autoever.everp.ui.customer.CustomerSubNavigationItem
+import com.autoever.everp.ui.supplier.SupplierSubNavigationItem
 
 /**
  * 최근 활동 카드 컴포저블
@@ -92,19 +93,19 @@ fun navigateToWorkflowDetail(
     workflowId: String,
 ) {
     when (category) {
-        DashboardTapEnum.QT -> {
+        DashboardTapEnum.QT -> { // 견적
             navController.navigate(
                 CustomerSubNavigationItem.QuotationDetailItem.createRoute(quotationId = workflowId)
             )
         }
 
-        DashboardTapEnum.SO -> {
+        DashboardTapEnum.SO -> { // 주문
             navController.navigate(
                 CustomerSubNavigationItem.SalesOrderDetailItem.createRoute(workflowId)
             )
         }
 
-        DashboardTapEnum.AP -> {
+        DashboardTapEnum.AP -> { // 매입
             navController.navigate(
                 CustomerSubNavigationItem.InvoiceDetailItem.createRoute(
                     invoiceId = workflowId,
@@ -113,12 +114,20 @@ fun navigateToWorkflowDetail(
             )
         }
 
-        DashboardTapEnum.AR -> {
+        DashboardTapEnum.AR -> { // 매출
             navController.navigate(
-                CustomerSubNavigationItem.InvoiceDetailItem.createRoute(
+                SupplierSubNavigationItem.InvoiceDetailItem.createRoute(
                     invoiceId = workflowId,
                     isAp = false,
-                ),
+                )
+            )
+        }
+
+        DashboardTapEnum.PO -> { // 발주
+            navController.navigate(
+                SupplierSubNavigationItem.PurchaseOrderDetailItem.createRoute(
+                    workflowId
+                )
             )
         }
         // Customer 화면에서는 발주, 구매 등 상세로 이동하지 않음

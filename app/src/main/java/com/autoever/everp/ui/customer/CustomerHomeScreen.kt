@@ -175,7 +175,9 @@ fun CustomerHomeScreen(
                             title = activity.description,
                             date = activity.createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                             onClick = {
-                                navigateToWorkflowDetail(navController, category, activity.id)
+                                if (activity.tabCode.isCustomerRelated()) {
+                                    navigateToWorkflowDetail(navController, category, activity.id)
+                                }
                             },
                         )
                     }

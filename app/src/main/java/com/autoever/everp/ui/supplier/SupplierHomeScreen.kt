@@ -121,10 +121,11 @@ fun SupplierHomeScreen(
                         status = activity.status,
                         title = activity.description,
                         date = activity.createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                        onClick = {
-                            navigateToWorkflowDetail(navController, category, activity.id)
-                        },
-                    )
+                            onClick = {
+                                if (activity.tabCode.isSupplierRelated()) {
+                                    navigateToWorkflowDetail(navController, category, activity.id)
+                                }
+                            },
                 }
             }
         }
