@@ -75,6 +75,7 @@ fun NotificationScreen(
                     CircularProgressIndicator()
                 }
             }
+
             error != null -> {
                 Box(
                     modifier = Modifier
@@ -93,6 +94,7 @@ fun NotificationScreen(
                     }
                 }
             }
+
             notifications.content.isEmpty() -> {
                 Box(
                     modifier = Modifier
@@ -107,6 +109,7 @@ fun NotificationScreen(
                     )
                 }
             }
+
             else -> {
                 LazyColumn(
                     modifier = Modifier
@@ -154,49 +157,34 @@ private fun NotificationItem(
                 .padding(16.dp),
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top,
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text(
-                        text = notification.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = if (notification.isRead) FontWeight.Normal else FontWeight.Bold,
-                    )
-                    Text(
-                        text = notification.message,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(top = 4.dp),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-                if (!notification.isRead) {
-                    StatusBadge(
-                        text = "읽지 않음",
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(start = 8.dp),
-                    )
-                }
-            }
-            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = formatRelativeTime(notification.createdAt),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = notification.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = if (notification.isRead) FontWeight.Normal else FontWeight.Bold,
                 )
+
                 StatusBadge(
                     text = notification.source.toKorean(),
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = notification.source.toColor(),
                 )
             }
+
+            Text(
+                text = notification.message,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 4.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Text(
+                text = formatRelativeTime(notification.createdAt),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }
@@ -215,6 +203,7 @@ private fun navigateToDetail(
                 SupplierSubNavigationItem.PurchaseOrderDetailItem.createRoute(notification.linkId),
             )
         }
+
         NotificationLinkEnum.PURCHASE_INVOICE -> {
             navController.navigate(
                 SupplierSubNavigationItem.InvoiceDetailItem.createRoute(
@@ -223,6 +212,7 @@ private fun navigateToDetail(
                 ),
             )
         }
+
         else -> {
             // Supplier 화면에서는 발주와 매입 전표만 이동
         }
@@ -237,18 +227,23 @@ private fun formatRelativeTime(createdAt: LocalDateTime): String {
         duration.toSeconds() < 60 -> {
             "${duration.toSeconds()}초 전"
         }
+
         duration.toMinutes() < 60 -> {
             "${duration.toMinutes()}분 전"
         }
+
         duration.toHours() < 24 -> {
             "${duration.toHours()}시간 전"
         }
+
         duration.toDays() < 30 -> {
             "${duration.toDays()}일 전"
         }
+
         ChronoUnit.MONTHS.between(createdAt, now) < 12 -> {
             "${ChronoUnit.MONTHS.between(createdAt, now)}개월 전"
         }
+
         else -> {
             "${ChronoUnit.YEARS.between(createdAt, now)}년 전"
         }

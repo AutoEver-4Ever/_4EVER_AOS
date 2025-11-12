@@ -149,7 +149,7 @@ fun QuotationDetailScreen(
                                 )
                                 DetailRow(
                                     label = "납기일자",
-                                    value = detail.dueDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                                    value = detail.dueDate?.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) ?: "-",
                                 )
                                 DetailRow(
                                     label = "총 금액",

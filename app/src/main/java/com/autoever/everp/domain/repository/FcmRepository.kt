@@ -21,7 +21,7 @@ interface FcmRepository {
     suspend fun getApInvoiceDetail(invoiceId: String): Result<InvoiceDetail>
 
     suspend fun updateApInvoice(invoiceId: String, request: InvoiceUpdateRequestDto): Result<Unit>
-    suspend fun requestReceivable(invoiceId: String): Result<Unit>
+    suspend fun updateCustomerInvoiceStatus(invoiceId: String): Result<Unit>
 
     // ========== AR 인보이스 (매출) ==========
     fun observeArInvoiceList(): Flow<PageResponse<InvoiceListItem>>
@@ -33,6 +33,6 @@ interface FcmRepository {
     suspend fun getArInvoiceDetail(invoiceId: String): Result<InvoiceDetail>
 
     suspend fun updateArInvoice(invoiceId: String, request: InvoiceUpdateRequestDto): Result<Unit>
-    suspend fun completeReceivable(invoiceId: String): Result<Unit>
+    suspend fun updateSupplierInvoiceStatus(invoiceId: String): Result<Unit>
 }
 
