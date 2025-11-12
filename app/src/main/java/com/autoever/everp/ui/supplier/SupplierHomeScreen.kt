@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -157,7 +158,7 @@ fun SupplierHomeScreen(
 
             if (isLoading) {
                 item {
-                    Text(text = "로딩 중...")
+                    CircularProgressIndicator()
                 }
             } else {
                 recentActivities.forEach { activity ->

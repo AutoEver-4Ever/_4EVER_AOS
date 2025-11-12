@@ -67,9 +67,9 @@ class InvoiceDetailViewModel @Inject constructor(
         loadInvoiceDetail(invoiceId, isAp)
     }
 
-    fun requestReceivable(invoiceId: String) {
+    fun updateCustomerInvoiceStatus(invoiceId: String) {
         viewModelScope.launch {
-            _requestResult.value = fcmRepository.requestReceivable(invoiceId)
+            _requestResult.value = fcmRepository.updateCustomerInvoiceStatus(invoiceId)
                 .onSuccess {
                     // 성공 시 상세 정보 다시 로드
                     loadInvoiceDetail(invoiceId, false) // AR 인보이스

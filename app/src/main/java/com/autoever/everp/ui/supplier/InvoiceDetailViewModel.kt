@@ -86,9 +86,9 @@ class InvoiceDetailViewModel @Inject constructor(
         }
     }
 
-    fun completeReceivable() {
+    fun updateSupplierInvoiceStatus() {
         viewModelScope.launch {
-            _completeResult.value = fcmRepository.completeReceivable(invoiceId)
+            _completeResult.value = fcmRepository.updateSupplierInvoiceStatus(invoiceId)
                 .onSuccess {
                     // 성공 시 상세 정보 다시 로드
                     loadInvoiceDetail()

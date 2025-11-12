@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.autoever.everp.domain.model.notification.Notification
 import com.autoever.everp.domain.model.notification.NotificationLinkEnum
+import com.autoever.everp.domain.model.notification.NotificationSourceEnum
 import com.autoever.everp.ui.common.components.StatusBadge
 import com.autoever.everp.ui.supplier.SupplierSubNavigationItem
 import java.time.Duration
@@ -172,10 +173,12 @@ private fun NotificationItem(
                     fontWeight = if (notification.isRead) FontWeight.Normal else FontWeight.Bold,
                 )
 
-                StatusBadge(
-                    text = notification.source.toKorean(),
-                    color = notification.source.toColor(),
-                )
+                if (notification.source != NotificationSourceEnum.UNKNOWN) {
+                    StatusBadge(
+                        text = notification.source.toKorean(),
+                        color = notification.source.toColor(),
+                    )
+                }
             }
 
             Text(

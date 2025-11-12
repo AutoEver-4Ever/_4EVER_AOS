@@ -6,7 +6,7 @@ data class QuotationDetail(
     val id: String, // 견적서 ID
     val number: String, // 견적서 코드
     val issueDate: LocalDate, // 발행일, 견적일자
-    val dueDate: LocalDate, // 납기일
+    val dueDate: LocalDate? = null, // 납기일
     val status: QuotationStatusEnum, // 상태 값은 Enum으로 따로 관리
     val totalAmount: Long, // 총 금액
     val customer: QuotationDetailCustomer,

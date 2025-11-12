@@ -77,8 +77,8 @@ class FcmRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun requestReceivable(invoiceId: String): Result<Unit> {
-        return fcmFinanceRemoteDataSource.requestReceivable(invoiceId)
+    override suspend fun updateCustomerInvoiceStatus(invoiceId: String): Result<Unit> {
+        return fcmFinanceRemoteDataSource.updateCustomerInvoiceStatus(invoiceId)
     }
 
     // ========== AR 인보이스 (매출) ==========
@@ -135,8 +135,8 @@ class FcmRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun completeReceivable(invoiceId: String): Result<Unit> {
-        return fcmFinanceRemoteDataSource.completeReceivable(invoiceId)
+    override suspend fun updateSupplierInvoiceStatus(invoiceId: String): Result<Unit> {
+        return fcmFinanceRemoteDataSource.updateSupplierInvoiceStatus(invoiceId)
             .onSuccess {
                 // 완료 성공 시 로컬 캐시 갱신
                 refreshArInvoiceDetail(invoiceId)
