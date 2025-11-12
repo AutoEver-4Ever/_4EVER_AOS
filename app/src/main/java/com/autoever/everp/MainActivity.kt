@@ -37,15 +37,36 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun AppContent() {
     var showSplash by remember { mutableStateOf(true) }
+    var isDialogOpen by remember { mutableStateOf(false) }
+    var canProceed by remember { mutableStateOf(false) }
 
+    // 2초 후 SplashScreen을 넘어갈 수 있는지 확인
     LaunchedEffect(Unit) {
         delay(2000) // 2초간 SplashScreen 표시
-        showSplash = false
+        canProceed = true
+    }
+
+    // Dialog가 닫혀있고 2초가 지났을 때만 다음 화면으로 이동
+    LaunchedEffect(canProceed, isDialogOpen) {
+        if (canProceed && !isDialogOpen && showSplash) {
+            showSplash = false
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (showSplash) {
-            SplashScreen()
+            SplashScreen(
+                onPermissionResult = { _ ->
+                    // 권한 결과는 로깅용으로만 사용
+                },
+                onDialogStateChanged = { isOpen ->
+                    isDialogOpen = isOpen
+                    // Dialog가 닫혔고 2초가 지났으면 다음 화면으로 이동
+                    if (!isOpen && canProceed) {
+                        showSplash = false
+                    }
+                },
+            )
         } else {
             Surface(modifier = Modifier.fillMaxSize()) {
                 AppNavGraph()
