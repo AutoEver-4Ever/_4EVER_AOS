@@ -69,6 +69,8 @@ fun MainScreen(
                         popUpTo(Routes.HOME) { inclusive = true }
                         launchSingleTop = true
                     }
+                } else {
+                    homeVm.refreshUserIfAuthenticated()
                 }
             }
             .collect()
